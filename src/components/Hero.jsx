@@ -16,7 +16,7 @@ const Hero = () => {
             transition={{ duration: 0.6 }}
             className="text-4xl md:text-5xl lg:text-7xl font-extrabold mb-6  main-title-color drop-shadow-lg"
           >
-            Your Trusted Guide to the Stars
+            Your Trusted Guide to the Star
           </motion.h1>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
