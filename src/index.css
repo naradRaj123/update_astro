@@ -1,0 +1,209 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 240 33% 99%; /* Light gray-blue */
+    --foreground: 222.2 84% 4.9%; /* Dark blue */
+    --card: 0 0% 100%; /* White */
+    --card-foreground: 222.2 84% 4.9%; /* Dark blue */
+    --popover: 0 0% 100%; /* White */
+    --popover-foreground: 222.2 84% 4.9%; /* Dark blue */
+    --primary: 48 96% 59%; /* Bright Yellow */
+    --primary-foreground: 222.2 84% 4.9%; /* Dark blue for text on yellow */
+    --secondary: 210 40% 96.1%; /* Light gray */
+    --secondary-foreground: 222.2 47.4% 11.2%; /* Darker blue */
+    --muted: 210 40% 96.1%; /* Light gray */
+    --muted-foreground: 215.4 16.3% 46.9%; /* Muted gray */
+    --accent: 258 90% 66%; /* Purple (kept for accents) */
+    --accent-foreground: 210 40% 98%; /* Light color for accent text */
+    --destructive: 0 84.2% 60.2%; /* Red */
+    --destructive-foreground: 210 40% 98%; /* Light color for destructive text */
+    --border: 214.3 31.8% 91.4%; /* Light border */
+    --input: 214.3 31.8% 91.4%; /* Light input background */
+    --ring: 48 96% 59%; /* Bright Yellow for focus rings */
+    --radius: 0.5rem;
+  }
+ 
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 48 96% 59%; /* Bright Yellow */
+    --primary-foreground: 222.2 84% 4.9%; /* Dark blue for text on yellow */
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 258 90% 66%; /* Purple */
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 48 96% 59%; /* Bright Yellow */
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground font-poppins;
+  }
+}
+
+.cosmic-gradient {
+  background: linear-gradient(135deg, #facc15 0%, #eab308 50%, #ca8a04 100%); /* Yellow gradient */
+}
+
+.cosmic-text {
+  background: linear-gradient(90deg, #facc15, #ca8a04); /* Yellow gradient for text */
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.star-bg {
+  background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18l-5-5 5-5 5 5-5 5zm82 0l-5-5 5-5 5 5-5 5zm-41 0l-5-5 5-5 5 5-5 5zm-41 41l-5-5 5-5 5 5-5 5zm82 0l-5-5 5-5 5 5-5 5zm-41 0l-5-5 5-5 5 5-5 5zm-41 41l-5-5 5-5 5 5-5 5zm82 0l-5-5 5-5 5 5-5 5zm-41 0l-5-5 5-5 5 5-5 5z' fill='%23ca8a04' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
+}
+
+.font-poppins {
+  font-family: 'Poppins', sans-serif;
+}
+
+.hero-gradient-yellow {
+  background: linear-gradient(to right, rgba(250, 204, 21, 0.9), rgba(234, 179, 8, 0.9)), url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+.testimonial-card {
+  background: rgba(255, 255, 255, 0.9); /* Slightly more opaque for yellow theme */
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(229, 231, 235, 0.3); /* Lighter border */
+}
+
+.astrologer-card {
+  transition: all 0.3s ease;
+}
+
+.astrologer-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.service-card {
+  transition: all 0.3s ease;
+}
+
+.service-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.floating {
+  animation: floating 3s ease-in-out infinite;
+}
+
+@keyframes floating {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.zodiac-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.zodiac-card:hover {
+  transform: translateY(-8px) scale(1.03);
+  box-shadow: 0 15px 30px rgba(202, 138, 4, 0.3); /* Yellow shadow */
+}
+
+.news-logo {
+  filter: grayscale(100%);
+  transition: filter 0.3s ease;
+}
+.news-logo:hover {
+  filter: grayscale(0%);
+}
+.position-reg{
+  position: relative;
+  z-index: 49;
+}
+.register-m-t{
+  margin-top: 50px;
+}
+.register-padding{
+   padding: 0rem  2rem  2rem 2rem;
+}
+.common-margin-top{
+   margin-top: 30px;
+}
+.main-title-color{
+  color: #facc15  !important
+}
+.common-btn-color{
+  background-color: #facc15 !important;
+  color: #fff !important;
+}
+.common-btn-color:hover{
+  background-color: #fff !important;
+  border: 1px solid #facc15 !important;
+   color: #facc15 !important;
+}
+.color-black{
+  color: #000;
+}
+.connect-bg{
+
+}
+.logo-size{
+  width: 100px;
+  height: unset;
+  max-width: unset; 
+  height: unset;
+}
+.topheader-width{
+    width: 85% !important;
+    margin: 0 auto !important;
+}
+.margin-left-menu{
+  margin-left: 11rem;
+}
+@media(max-width:767px){
+  .hide-btn-mobile{
+      display: none;
+  }
+  .logo-size {
+    width: 229px;
+}
+.margin-left-menu {
+    margin-left: 0rem;
+}
+}
