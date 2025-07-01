@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Facebook, Twitter, Instagram, Youtube, Mail, Phone, MapPin } from "lucide-react";
+import { Facebook, Twitter, Instagram, Youtube, Mail, Phone, MapPin, LinkedinIcon } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
@@ -20,16 +20,16 @@ const Footer = () => {
               Connecting you with expert astrologers for guidance on life's journey.
             </p>
             <div className="flex space-x-4">
-              <a href="#" className="text-gray-400 hover:text-white transition-colors">
+              <a href="https://www.facebook.com/share/1EjUg7c5fc/" className="text-gray-400 hover:text-white transition-colors" target="_blank">
                 <Facebook className="h-5 w-5" />
               </a>
-              <a href="#" className="text-gray-400 hover:text-white transition-colors">
-                <Twitter className="h-5 w-5" />
+              <a href="https://www.linkedin.com/in/astrotruth-a6a428372?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" target="_blank" className="text-gray-400 hover:text-white transition-colors">
+                <LinkedinIcon className="h-5 w-5"  />
               </a>
-              <a href="#" className="text-gray-400 hover:text-white transition-colors">
+              <a href="https://www.instagram.com/astr.otruth?igsh=MW9rNGV5dmwxMG9oOA==" className="text-gray-400 hover:text-white transition-colors" target="_blank">
                 <Instagram className="h-5 w-5" />
               </a>
-              <a href="#" className="text-gray-400 hover:text-white transition-colors">
+              <a href="https://youtube.com/@astrotruthabc?si=cgJFqvA0PwZWmD7e" className="text-gray-400 hover:text-white transition-colors" target="_blank">
                 <Youtube className="h-5 w-5" />
               </a>
             </div>
@@ -51,12 +51,9 @@ const Footer = () => {
           <div>
             <h4 className="text-lg font-semibold mb-4">Services</h4>
             <ul className="space-y-2">
-              <li><Link to="/" className="text-gray-400 hover:text-white transition-colors">Home</Link></li>
-              <li><Link to="/astrologers" className="text-gray-400 hover:text-white transition-colors">Astrologers</Link></li>
-              <li><Link to="/services" className="text-gray-400 hover:text-white transition-colors">Services</Link></li>
-              <li><Link to="/testimonials" className="text-gray-400 hover:text-white transition-colors">Testimonials</Link></li>
-              <li><Link to="/blog" className="text-gray-400 hover:text-white transition-colors">Blog</Link></li>
-              <li><Link to="/contact" className="text-gray-400 hover:text-white transition-colors">Contact</Link></li>
+              <li><Link to="/kundalimatch" className="text-gray-400 hover:text-white transition-colors">Kundali Matching</Link></li>
+              <li><Link to="/" className="text-gray-400 hover:text-white transition-colors">Horoscope</Link></li>
+              <li><Link to="/" className="text-gray-400 hover:text-white transition-colors">Free Kundali</Link></li>            
             </ul>
 
           </div>
@@ -66,11 +63,13 @@ const Footer = () => {
             <div className="space-y-3">
               <p className="flex items-start">
                 <MapPin className="h-5 w-5 mr-2 mt-0.5 text-gray-400" />
-                <span className="text-gray-400">123 Cosmic Street, Spiritual City, India</span>
+                <span className="text-gray-400">SA.5/136, SANJAY NAGAR RAMAREY PUR, Varanasi Cantt, India</span>
               </p>
               <p className="flex items-center">
                 <Phone className="h-5 w-5 mr-2 text-gray-400" />
-                <span className="text-gray-400">+91 1234567890</span>
+                <a href="tel:+919415695659">
+                <span className="text-gray-400">+91 9415695659</span>
+                </a>
               </p>
               <p className="flex items-center">
                 <Mail className="h-5 w-5 mr-2 text-gray-400" />

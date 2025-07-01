@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import * as Select from '@radix-ui/react-select';
 import { BadgeCheck, Info, PlusCircle, ShieldX, Trash } from "lucide-react";
+import { RotatingLines } from "react-loader-spinner";
 
 const Astrologer = () => {
   const [astrologerlist, setAstrologers] = useState([]);
@@ -75,7 +76,7 @@ const Astrologer = () => {
       const res = await axios.post("https://astro-talk-backend.onrender.com/admin/astroChargeUpdate", {
         astroId: astroId,
         sessionCharge: chargeValue,
-        accountType:accountType
+        accountType: accountType
       });
 
       if (res.data.status) {
@@ -112,8 +113,20 @@ const Astrologer = () => {
           <tbody>
             {loading ? (
               <tr>
-                <td colSpan="4" className="text-center px-4 py-4">
-                  Loading...
+                <td colSpan="4" className="px-4 py-4">
+                  <div className="flex justify-center items-center">
+                    <RotatingLines
+                      visible={true}
+                      height="30"
+                      width="30"
+                      color="grey"
+                      strokeWidth="5"
+                      animationDuration="0.75"
+                      ariaLabel="rotating-lines-loading"
+                      wrapperStyle={{}}
+                      wrapperClass=""
+                    />
+                  </div>
                 </td>
               </tr>
             ) : astrologerlist.length > 0 ? (

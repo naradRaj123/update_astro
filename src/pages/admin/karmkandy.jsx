@@ -11,6 +11,7 @@ import {
     DialogDescription,
 } from "@/components/ui/dialog";
 import { BadgeCheck, Info, ShieldX } from "lucide-react";
+import { FallingLines, RotatingLines } from "react-loader-spinner";
 
 const Karmkandy = () => {
     const [astrologerlist, setAstrologers] = useState([]);
@@ -34,26 +35,26 @@ const Karmkandy = () => {
 
     // status change
     // status change 
-  const [status, setStatus] = useState(false);
-  const handleToggleStatus = async (astroId) => {
-    console.log(astroId)
-    setLoading(true);
-    try {
-      const response = await axios.post("https://astro-talk-backend.onrender.com/admin/astroUpdate", {
-        astroId: astroId,
-        status: !status, // toggle
-      });
+    const [status, setStatus] = useState(false);
+    const handleToggleStatus = async (astroId) => {
+        console.log(astroId)
+        setLoading(true);
+        try {
+            const response = await axios.post("https://astro-talk-backend.onrender.com/admin/astroUpdate", {
+                astroId: astroId,
+                status: !status, // toggle
+            });
 
-      if (response.data.status) {
-        setStatus(!status); // update UI
-        fetchAstrologers();
-      }
-    } catch (err) {
-      console.error("Error updating status:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
+            if (response.data.status) {
+                setStatus(!status); // update UI
+                fetchAstrologers();
+            }
+        } catch (err) {
+            console.error("Error updating status:", err);
+        } finally {
+            setLoading(false);
+        }
+    };
 
 
 
@@ -79,8 +80,20 @@ const Karmkandy = () => {
                     <tbody>
                         {loading ? (
                             <tr>
-                                <td colSpan="4" className="text-center px-4 py-4">
-                                    Loading...
+                                <td colSpan="4" className="px-4 py-4">
+                                    <div className="flex justify-center items-center">
+                                        <RotatingLines
+                                            visible={true}
+                                            height="30"
+                                            width="30"
+                                            color="grey"
+                                            strokeWidth="5"
+                                            animationDuration="0.75"
+                                            ariaLabel="rotating-lines-loading"
+                                            wrapperStyle={{}}
+                                            wrapperClass=""
+                                        />
+                                    </div>
                                 </td>
                             </tr>
                         ) : astrologerlist.length > 0 ? (

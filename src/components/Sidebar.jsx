@@ -13,6 +13,7 @@ const Sidebar = () =>
       <NavLink to="/admin/users" className="flex items-center gap-2 text-gray-800"><Users /> Users</NavLink>
       <NavLink to="/admin/karmkandy" className="flex items-center gap-2 text-gray-800"><BookOpen /> Karmkandi</NavLink>
       <NavLink to="/admin/addproduct" className="flex items-center gap-2 text-gray-800"><ShoppingCart /> Add Product</NavLink>
+      <NavLink to="/admin/productlist" className="flex items-center gap-2 text-gray-800"><ShoppingCart />Product List</NavLink>
     </nav>
   </div>
 )};

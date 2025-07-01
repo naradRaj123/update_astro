@@ -12,6 +12,7 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { BadgeCheck, Info, ShieldX } from "lucide-react";
+import { FallingLines, RotatingLines, RotatingSquare } from "react-loader-spinner";
 
 
 
@@ -22,11 +23,11 @@ const Users = () => {
   };
 
 
-   const [userlist, setUser] = useState([]);
+  const [userlist, setUser] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const [selectedUsers, setSelectedUsers] = useState(null);
-const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false);
 
   const fetchUsers = async () => {
     try {
@@ -47,8 +48,8 @@ const [open, setOpen] = useState(false);
 
   // status change of users
   const [status, setStatus] = useState(false)
-  const handleToggleStatusUsers= async (userId)=>{
-    
+  const handleToggleStatusUsers = async (userId) => {
+
     setLoading(true);
     try {
       const response = await axios.post("https://astro-talk-backend.onrender.com/admin/userupdate", {
@@ -85,43 +86,55 @@ const [open, setOpen] = useState(false);
             </thead>
             <tbody>
               {loading ? (
-              <tr>
-                <td colSpan="4" className="text-center px-4 py-4">
-                  Loading...
-                </td>
-              </tr>
-            ) : userlist.length > 0 ? (
-              userlist.map((v) => (
-                
-                <tr key={v._id} className="border-b">
-                  <td className="px-4 py-2">{v.user_name}</td>
-                  <td className="px-4 py-2">{v.email}</td>
-                  <td className="px-4 py-2 capitalize">
-                    {v.status ? ( <span className="p-1 px-2 text-white rounded-md text-[.6rem] font-bold bg-green-600 "> Verified</span>) : ( <span className="p-1 px-2 text-white rounded-md text-[.6rem] font-bold bg-red-600 "> Pending</span>)}
-                  </td>
-                  <td className="px-4 py-2">
-                    <button className="text-sm text-blue-600" onClick={() => {
-                  setSelectedUsers(v);
-                  setOpen(true);
-                  }} ><Info/></button>
-                    {/* <button className="ml-4 text-sm text-green-600">Approve</button> */}
-                    <button className={`ml-4 text-sm font-medium ${v.status ? "text-red-600" : "text-green-600"
-                      }`}
-                      onClick={()=>handleToggleStatusUsers(v._id)}
-                      >{loading ? "Please wait..." : v.status ? (<ShieldX />) : (<BadgeCheck/> )}</button>
+                <tr>
+                  <td colSpan="4" className="px-4 py-4">
+                    <div className="flex justify-center items-center">
+                      <RotatingLines
+                        visible={true}
+                        height="30"
+                        width="30"
+                        color="grey"
+                        strokeWidth="5"
+                        animationDuration="0.75"
+                        ariaLabel="rotating-lines-loading"
+                        wrapperStyle={{}}
+                        wrapperClass=""
+                      />
+                    </div>
                   </td>
                 </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="4" className="text-center text-gray-600 px-4 py-4">
-                  No astrologers found.
-                </td>
-              </tr>
-            )}
+              ) : userlist.length > 0 ? (
+                userlist.map((v) => (
+
+                  <tr key={v._id} className="border-b">
+                    <td className="px-4 py-2">{v.user_name}</td>
+                    <td className="px-4 py-2">{v.email}</td>
+                    <td className="px-4 py-2 capitalize">
+                      {v.status ? (<span className="p-1 px-2 text-white rounded-md text-[.6rem] font-bold bg-green-600 "> Verified</span>) : (<span className="p-1 px-2 text-white rounded-md text-[.6rem] font-bold bg-red-600 "> Pending</span>)}
+                    </td>
+                    <td className="px-4 py-2">
+                      <button className="text-sm text-blue-600" onClick={() => {
+                        setSelectedUsers(v);
+                        setOpen(true);
+                      }} ><Info /></button>
+                      {/* <button className="ml-4 text-sm text-green-600">Approve</button> */}
+                      <button className={`ml-4 text-sm font-medium ${v.status ? "text-red-600" : "text-green-600"
+                        }`}
+                        onClick={() => handleToggleStatusUsers(v._id)}
+                      >{loading ? "Please wait..." : v.status ? (<ShieldX />) : (<BadgeCheck />)}</button>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="4" className="text-center text-gray-600 px-4 py-4">
+                    No astrologers found.
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
-           <Dialog open={open} onOpenChange={setOpen}>
+          <Dialog open={open} onOpenChange={setOpen}>
             <DialogContent className="max-w-md">
               <DialogHeader>
                 <DialogTitle>Users  Details</DialogTitle>
@@ -129,12 +142,12 @@ const [open, setOpen] = useState(false);
               {selectedUsers && (
                 <div className="space-y-2">
                   <p><strong>Name:</strong> {selectedUsers.user_name}</p>
-                  <p><strong>Email:</strong> {selectedUsers.email}</p>                  
+                  <p><strong>Email:</strong> {selectedUsers.email}</p>
                 </div>
               )}
             </DialogContent>
           </Dialog>
-          
+
         </div>
       </div>
     </div>
