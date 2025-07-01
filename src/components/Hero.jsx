@@ -3,7 +3,8 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { PhoneCall, Users, ChevronRight, Star } from "lucide-react";
 import { Link } from "react-router-dom";
-
+// http://astrotruth.in/
+// http://astrotruth.in/api/
 const Hero = () => {
   return (
     <section className="pt-20 md:pt-28 pb-10 md:pb-16  relative overflow-hidden min-h-screen flex flex-col justify-center">

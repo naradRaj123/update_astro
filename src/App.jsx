@@ -30,6 +30,9 @@ import AdminLogin from "./pages/admin/AdminLogin";
 import Astrologers from "./pages/Astrologer";
 import KundliPage from "./pages/Kundalimatch";
 import AddProduct from "./pages/admin/Addproduct";
+import ProductList from "./pages/admin/Productlist";
+import UpdateProduct from "./pages/admin/UpdateProduct";
+import HoroscopePage from "./pages/HoroscopePage";
 
 
 
@@ -60,6 +63,7 @@ function App() {
             <Route path="/checkout/:id" element={<Checkout />} />
             <Route path="/karmkandidet/:id" element={<KaramkandiDetail />} />
             <Route path="/kundalimatch" element={<KundliPage />} />
+            <Route path="/horoscope" element={<HoroscopePage />} />
             
             {/* admin routes */}
             <Route path="/admin" element={<Dashboard />} />
@@ -69,6 +73,8 @@ function App() {
             <Route path="/admin-login" element={<AdminLogin />} />
             <Route path="/admin-login" element={<AdminLogin />} />
             <Route path="/admin/addproduct" element={<AddProduct />} />
+            <Route path="/admin/productlist" element={<ProductList />} />
+            <Route path="/admin/update/:id" element={<UpdateProduct />} />
 
 
           </Routes>

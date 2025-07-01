@@ -36,11 +36,11 @@ const ContactPage = () => {
               <h2 className="text-2xl font-semibold text-yellow-600">Contact Information</h2>
               <div className="flex items-center space-x-3">
                 <MapPin className="h-6 w-6 text-yellow-500" />
-                <p className="text-gray-700">123 Astro Lane, Cosmic City, Universe 78901</p>
+                <p className="text-gray-700">SA.5/136,SANJAY NAGAR RAMAREY PUR,Varanasi Cantt, 221002,Uttar Pradesh, India</p>
               </div>
               <div className="flex items-center space-x-3">
                 <Phone className="h-6 w-6 text-yellow-500" />
-                <p className="text-gray-700">+1 (234) 567-8900</p>
+                <p className="text-gray-700">+91 94156 95659</p>
               </div>
               <div className="flex items-center space-x-3">
                 <Mail className="h-6 w-6 text-yellow-500" />

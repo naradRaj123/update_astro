@@ -18,7 +18,7 @@ const HoroscopePage = () => {
   const { type } = useParams(); // e.g., today-horoscope, weekly-horoscope
   const [selectedZodiac, setSelectedZodiac] = React.useState(zodiacSigns[0]); // Default to Aries
 
-  const horoscopeTypeDisplay = type.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase());
+  // const horoscopeTypeDisplay = type.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase());
 
   const horoscopeDetails = {
     love: "Your love life looks promising today. Open communication will strengthen your bond.",
@@ -34,7 +34,7 @@ const HoroscopePage = () => {
   };
 
   return (
-    <div className="min-h-screen p-4 md:p-8" style={{backgroundColor: 'hsl(var(--light-red-secondary))'}}>
+    <div className="min-h-screen p-4 md:p-8 mt-14 " style={{backgroundColor: 'hsl(var(--light-red-secondary))'}}>
       <motion.div
         className="container mx-auto"
         initial={{ opacity: 0, y: 20 }}
@@ -51,10 +51,10 @@ const HoroscopePage = () => {
             >
               <Star className="h-16 w-16 text-primary-theme" />
             </motion.div>
-            <CardTitle className="text-4xl font-bold text-white">{horoscopeTypeDisplay}</CardTitle>
+            {/* <CardTitle className="text-4xl font-bold text-white">{horoscopeTypeDisplay}</CardTitle>
             <CardDescription className="text-lg text-red-100 mt-2">
               Select your zodiac sign to view your {horoscopeTypeDisplay.toLowerCase()}.
-            </CardDescription>
+            </CardDescription> */}
           </CardHeader>
           <CardContent className="p-6 md:p-10 bg-white">
             <div className="mb-8">
@@ -87,7 +87,7 @@ const HoroscopePage = () => {
                 <div className="flex items-center mb-6">
                   {React.createElement(selectedZodiac.icon, { className: "w-16 h-16 text-primary-theme mr-4"})}
                   <div>
-                    <h2 className="text-3xl font-bold text-primary-theme">{selectedZodiac.name} - {horoscopeTypeDisplay}</h2>
+                    {/* <h2 className="text-3xl font-bold text-primary-theme">{selectedZodiac.name} - {horoscopeTypeDisplay}</h2> */}
                     <p className="text-gray-600 text-md">{new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
                   </div>
                 </div>
