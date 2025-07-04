@@ -13,12 +13,13 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
-import { Mail, Lock } from "lucide-react";
+import { Mail, Lock, Eye, EyeOff } from "lucide-react";
 import axios from "axios";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -30,61 +31,61 @@ const LoginPage = () => {
     };
   }, [isLoading]);
 
- const handleSubmit = async (e) => {
-  e.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  if (!email || !password) {
-    toast({
-      title: "Missing Fields",
-      description: "Please enter both email and password.",
-      variant: "destructive",
-    });
-    return;
-  }
-
-  setIsLoading(true);
-
-  try {
-    const response = await axios.post("https://astro-talk-backend.onrender.com/web/login/", {
-      email,
-      password,
-    });
-
-    const data = response.data;
-
-    if (data?.token) {
-      // Store token, user, and userId
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify(data.user || {}));
-      localStorage.setItem("userId", data.user?._id || ""); // ✅ Store user ID separately
-
+    if (!email || !password) {
       toast({
-        title: "Login Successful!",
-        description: "Welcome back to Astro Truth!",
-      });
-
-      setTimeout(() => {
-        navigate("/user-dashboard");
-      }, 500);
-    } else {
-      toast({
-        title: "Invalid Credentials",
-        description: data?.message || "Please check your email and password.",
+        title: "Missing Fields",
+        description: "Please enter both email and password.",
         variant: "destructive",
       });
+      return;
     }
-  } catch (error) {
-    console.error("Login failed:", error.response || error);
-    toast({
-      title: "Login Failed",
-      description:
-        error.response?.data?.message || "Server error occurred. Please try again later.",
-      variant: "destructive",
-    });
-  } finally {
-    setIsLoading(false);
-  }
-};
+
+    setIsLoading(true);
+
+    try {
+      const response = await axios.post(
+        "https://astro-talk-backend.onrender.com/web/login/",
+        { email, password }
+      );
+
+      const data = response.data;
+
+      if (data?.token) {
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("user", JSON.stringify(data.user || {}));
+        localStorage.setItem("userId", data.user?._id || "");
+
+        toast({
+          title: "Login Successful!",
+          description: "Welcome back to Astro Truth!",
+        });
+
+        setTimeout(() => {
+          navigate("/user-dashboard");
+        }, 500);
+      } else {
+        toast({
+          title: "Invalid Credentials",
+          description: data?.message || "Please check your email and password.",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error("Login failed:", error.response || error);
+      toast({
+        title: "Login Failed",
+        description:
+          error.response?.data?.message ||
+          "Server error occurred. Please try again later.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-astro-indigo via-astro-purple to-astro-pink p-4 pt-24 star-bg">
@@ -95,12 +96,17 @@ const LoginPage = () => {
       >
         <Card className="w-full max-w-md shadow-2xl">
           <CardHeader className="text-center">
-            <CardTitle className="text-3xl font-bold cosmic-text">Welcome Back!</CardTitle>
-            <CardDescription>Log in to continue your cosmic journey.</CardDescription>
+            <CardTitle className="text-3xl font-bold cosmic-text">
+              Welcome Back!
+            </CardTitle>
+            <CardDescription>
+              Log in to continue your cosmic journey.
+            </CardDescription>
           </CardHeader>
 
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Email */}
               <div className="space-y-2">
                 <Label htmlFor="email">Email Address</Label>
                 <div className="relative">
@@ -117,22 +123,35 @@ const LoginPage = () => {
                 </div>
               </div>
 
+              {/* Password */}
               <div className="space-y-2">
                 <Label htmlFor="password">Password</Label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                   <Input
                     id="password"
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     placeholder="••••••••"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
-                    className="pl-10"
+                    className="pl-10 pr-10"
                   />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+                  >
+                    {showPassword ? (
+                      <EyeOff className="h-5 w-5" />
+                    ) : (
+                      <Eye className="h-5 w-5" />
+                    )}
+                  </button>
                 </div>
               </div>
 
+              {/* Submit Button */}
               <Button
                 type="submit"
                 className="w-full cosmic-gradient text-white"
@@ -149,7 +168,10 @@ const LoginPage = () => {
             </Link>
             <p className="text-sm text-muted-foreground">
               Don't have an account?{" "}
-              <Link to="/user-register" className="font-medium text-primary hover:underline">
+              <Link
+                to="/user-register"
+                className="font-medium text-primary hover:underline"
+              >
                 Sign up
               </Link>
             </p>
