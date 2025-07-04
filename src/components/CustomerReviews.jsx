@@ -18,7 +18,7 @@ const reviews = [
     location: "Delhi",
     rating: 5,
     title: "Life-Changing Insights",
-    text: "My relationship reading provided so much clarity. I understand my partner better now. Thank you, InstaAstro!",
+    text: "My relationship reading provided so much clarity. I understand my partner better now. Thank you, AstroTruth!",
     avatarFallback: "RK",
   },
   {
@@ -34,7 +34,7 @@ const reviews = [
     location: "Chennai",
     rating: 5,
     title: "Best Astrology Platform",
-    text: "I've tried a few platforms, but InstaAstro has the most genuine and knowledgeable astrologers. 24/7 support is a plus!",
+    text: "I've tried a few platforms, but AstroTruth has the most genuine and knowledgeable astrologers. 24/7 support is a plus!",
     avatarFallback: "VC",
   },
 ];
