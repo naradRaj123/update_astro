@@ -6,15 +6,14 @@ import {
   Card, CardContent, CardDescription, CardFooter,
   CardHeader, CardTitle
 } from '@/components/ui/card';
-
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
   UserPlus, Mail, KeyRound, User, Briefcase, Star,
-  CalendarDays, MapPin, Phone
+  CalendarDays, MapPin, Phone, X
 } from 'lucide-react';
 
 const AstrologerRegistrationPage = () => {
@@ -22,6 +21,7 @@ const AstrologerRegistrationPage = () => {
   const password = watch('password');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [serverError, setServerError] = useState('');
+  const navigate = useNavigate();
 
   const onSubmit = async (data) => {
     setIsSubmitting(true);
@@ -42,6 +42,7 @@ const AstrologerRegistrationPage = () => {
         chargePerSession: data.chargePerSession || '500',
         availableTime: data.availableTime || '10:00 AM - 6:00 PM',
         bankDetails: data.bankDetails.trim(),
+        userType: data.userType,
       };
 
       await axios.post('https://astro-talk-backend.onrender.com/web/astro', payload, {
@@ -72,7 +73,16 @@ const AstrologerRegistrationPage = () => {
         className="w-full max-w-3xl"
       >
         <form onSubmit={handleSubmit(onSubmit)} noValidate className='register-m-t'>
-          <Card className="shadow-2xl rounded-xl border border-yellow-300 overflow-hidden">
+          <Card className="shadow-2xl rounded-xl border border-yellow-300 overflow-hidden relative">
+            {/* Close Button */}
+            <button
+              onClick={() => navigate('/')}
+              className="absolute top-4 right-4 text-gray-400 hover:text-red-600 z-10"
+              aria-label="Close"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
             <CardHeader className="bg-gradient-to-r from-yellow-400 to-amber-500 text-center p-10">
               <motion.div
                 initial={{ scale: 0 }}
@@ -93,9 +103,9 @@ const AstrologerRegistrationPage = () => {
                 <p className="text-center text-red-700 font-semibold mb-4">{serverError}</p>
               )}
 
-              {/* Two-column grid for most inputs */}
+              {/* Grid of inputs */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* Full Name */}
+                {/* Name */}
                 <div className="flex flex-col">
                   <Label htmlFor="astroName" className="flex items-center gap-2 text-yellow-600 font-semibold">
                     <User className="w-5 h-5" /> Full Name
@@ -107,9 +117,7 @@ const AstrologerRegistrationPage = () => {
                     disabled={isSubmitting}
                     className="mt-1"
                   />
-                  {errors.astroName && (
-                    <p className="text-red-600 text-sm mt-1">{errors.astroName.message}</p>
-                  )}
+                  {errors.astroName && <p className="text-red-600 text-sm mt-1">{errors.astroName.message}</p>}
                 </div>
 
                 {/* Email */}
@@ -122,14 +130,12 @@ const AstrologerRegistrationPage = () => {
                     type="email"
                     {...register('email', {
                       required: "Email is required",
-                      pattern: { value: /^\S+@\S+$/i, message: "Invalid email address" }
+                      pattern: { value: /^\S+@\S+$/, message: "Invalid email address" }
                     })}
                     disabled={isSubmitting}
                     className="mt-1"
                   />
-                  {errors.email && (
-                    <p className="text-red-600 text-sm mt-1">{errors.email.message}</p>
-                  )}
+                  {errors.email && <p className="text-red-600 text-sm mt-1">{errors.email.message}</p>}
                 </div>
 
                 {/* Mobile */}
@@ -148,9 +154,7 @@ const AstrologerRegistrationPage = () => {
                     disabled={isSubmitting}
                     className="mt-1"
                   />
-                  {errors.mobile && (
-                    <p className="text-red-600 text-sm mt-1">{errors.mobile.message}</p>
-                  )}
+                  {errors.mobile && <p className="text-red-600 text-sm mt-1">{errors.mobile.message}</p>}
                 </div>
 
                 {/* Date of Birth */}
@@ -165,9 +169,7 @@ const AstrologerRegistrationPage = () => {
                     disabled={isSubmitting}
                     className="mt-1"
                   />
-                  {errors.astroDob && (
-                    <p className="text-red-600 text-sm mt-1">{errors.astroDob.message}</p>
-                  )}
+                  {errors.astroDob && <p className="text-red-600 text-sm mt-1">{errors.astroDob.message}</p>}
                 </div>
 
                 {/* City */}
@@ -177,14 +179,12 @@ const AstrologerRegistrationPage = () => {
                   </Label>
                   <Input
                     id="city"
-                    placeholder="Enter city Name"
+                    placeholder="Enter City Name"
                     {...register('city', { required: "City is required" })}
                     disabled={isSubmitting}
                     className="mt-1"
                   />
-                  {errors.city && (
-                    <p className="text-red-600 text-sm mt-1">{errors.city.message}</p>
-                  )}
+                  {errors.city && <p className="text-red-600 text-sm mt-1">{errors.city.message}</p>}
                 </div>
 
                 {/* Experience */}
@@ -200,9 +200,7 @@ const AstrologerRegistrationPage = () => {
                     disabled={isSubmitting}
                     className="mt-1"
                   />
-                  {errors.experience && (
-                    <p className="text-red-600 text-sm mt-1">{errors.experience.message}</p>
-                  )}
+                  {errors.experience && <p className="text-red-600 text-sm mt-1">{errors.experience.message}</p>}
                 </div>
 
                 {/* Expertise */}
@@ -212,14 +210,12 @@ const AstrologerRegistrationPage = () => {
                   </Label>
                   <Input
                     id="expertise"
-                    {...register('expertise', { required: "Expertise is required" })}
                     placeholder="Vedic, Tarot, etc."
+                    {...register('expertise', { required: "Expertise is required" })}
                     disabled={isSubmitting}
                     className="mt-1"
                   />
-                  {errors.expertise && (
-                    <p className="text-red-600 text-sm mt-1">{errors.expertise.message}</p>
-                  )}
+                  {errors.expertise && <p className="text-red-600 text-sm mt-1">{errors.expertise.message}</p>}
                 </div>
 
                 {/* Language */}
@@ -227,14 +223,12 @@ const AstrologerRegistrationPage = () => {
                   <Label htmlFor="language" className="font-semibold text-yellow-600">Language</Label>
                   <Input
                     id="language"
-                    {...register('language', { required: "Language is required" })}
                     placeholder="Hindi, English, etc."
+                    {...register('language', { required: "Language is required" })}
                     disabled={isSubmitting}
                     className="mt-1"
                   />
-                  {errors.language && (
-                    <p className="text-red-600 text-sm mt-1">{errors.language.message}</p>
-                  )}
+                  {errors.language && <p className="text-red-600 text-sm mt-1">{errors.language.message}</p>}
                 </div>
               </div>
 
@@ -244,14 +238,14 @@ const AstrologerRegistrationPage = () => {
                 <Textarea
                   id="shortBio"
                   rows={4}
+                  placeholder="Describe your approach..."
                   {...register('shortBio')}
-                  placeholder="Your approach and experience..."
                   disabled={isSubmitting}
                   className="mt-1"
                 />
               </div>
 
-              {/* Charge & Available Time side by side */}
+              {/* Charge & Time */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="flex flex-col">
                   <Label htmlFor="chargePerSession" className="font-semibold text-yellow-600">
@@ -260,9 +254,8 @@ const AstrologerRegistrationPage = () => {
                   <Input
                     id="chargePerSession"
                     type="number"
-                    min={0}
-                    {...register('chargePerSession')}
                     placeholder="500"
+                    {...register('chargePerSession')}
                     disabled={isSubmitting}
                     className="mt-1"
                   />
@@ -273,8 +266,8 @@ const AstrologerRegistrationPage = () => {
                   </Label>
                   <Input
                     id="availableTime"
-                    {...register('availableTime')}
                     placeholder="10:00 AM - 6:00 PM"
+                    {...register('availableTime')}
                     disabled={isSubmitting}
                     className="mt-1"
                   />
@@ -287,14 +280,12 @@ const AstrologerRegistrationPage = () => {
                 <Textarea
                   id="bankDetails"
                   rows={3}
+                  placeholder="Bank Name, Account Number, IFSC"
                   {...register('bankDetails', { required: "Bank details are required" })}
-                  placeholder="Bank Name, Account Number, IFSC, etc."
                   disabled={isSubmitting}
                   className="mt-1"
                 />
-                {errors.bankDetails && (
-                  <p className="text-red-600 text-sm mt-1">{errors.bankDetails.message}</p>
-                )}
+                {errors.bankDetails && <p className="text-red-600 text-sm mt-1">{errors.bankDetails.message}</p>}
               </div>
 
               {/* Password */}
@@ -312,60 +303,37 @@ const AstrologerRegistrationPage = () => {
                   disabled={isSubmitting}
                   className="mt-1"
                 />
-                {errors.password && (
-                  <p className="text-red-600 text-sm mt-1">{errors.password.message}</p>
-                )}
+                {errors.password && <p className="text-red-600 text-sm mt-1">{errors.password.message}</p>}
+              </div>
+
+              {/* User Type Radio */}
+              <div className="flex flex-col register-padding mt-4">
+                <div className="flex gap-4">
+                  <label className="flex items-center gap-2">
+                    <input type="radio" value="Karmkandi" {...register('userType', { required: "Please select a type" })} disabled={isSubmitting} />
+                    Karmkandi
+                  </label>
+                  <label className="flex items-center gap-2">
+                    <input type="radio" value="Astrologer" {...register('userType', { required: "Please select a type" })} disabled={isSubmitting} />
+                    Astrologer
+                  </label>
+                  <label className="flex items-center gap-2">
+                    <input type="radio" value="Both" {...register('userType', { required: "Please select a type" })} disabled={isSubmitting} />
+                    Both
+                  </label>
+                </div>
+                {errors.userType && <p className="text-red-600 text-sm mt-1">{errors.userType.message}</p>}
+              </div>
+
+              <div className="register-padding">
+                <Button type="submit" disabled={isSubmitting} className="w-full cosmic-gradient text-white">
+                  {isSubmitting ? 'Submitting...' : 'Register'}
+                </Button>
               </div>
             </CardContent>
-            {/* User Type Selection  here*/}
-                 <div className="flex flex-col mt-4 register-padding">
-              <div className="flex gap-4">
-                <label className="flex items-center gap-2">
-                  <input
-                    type="radio"
-                    value="Karmkandi"
-                    {...register('userType', { required: "Please select a type" })}
-                    disabled={isSubmitting}
-                  />
-                  Karmkandi
-                </label>
-                <label className="flex items-center gap-2">
-                  <input
-                    type="radio"
-                    value="Astrologer"
-                    {...register('userType', { required: "Please select a type" })}
-                    disabled={isSubmitting}
-                  />
-                  Astrologer
-                </label>
-                <label className="flex items-center gap-2">
-                  <input
-                    type="radio"
-                    value="Both"
-                    {...register('userType', { required: "Please select a type" })}
-                    disabled={isSubmitting}
-                  />
-                  Both
-                </label>
-              </div>
-              {errors.userType && (
-                <p className="text-red-600 text-sm mt-1">{errors.userType.message}</p>
-              )}
-            </div>
-            <div className="register-padding">
-              <Button
-                type="submit"
-                disabled={isSubmitting}
-                className="w-full cosmic-gradient text-white"
-              >
-                {isSubmitting ? 'Submitting...' : 'Register'}
-              </Button>
-            </div>
+
             <CardFooter className="bg-yellow-200 flex flex-col md:flex-row justify-between items-center gap-4 p-6">
-              <Link
-                to="/astro-login"
-                className="text-yellow-700 hover:underline font-semibold"
-              >
+              <Link to="/astro-login" className="text-yellow-700 hover:underline font-semibold">
                 Already have an account? Login
               </Link>
             </CardFooter>

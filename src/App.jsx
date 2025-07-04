@@ -33,6 +33,7 @@ import AddProduct from "./pages/admin/Addproduct";
 import ProductList from "./pages/admin/Productlist";
 import UpdateProduct from "./pages/admin/UpdateProduct";
 import HoroscopePage from "./pages/HoroscopePage";
+import UserProfile from "./pages/Profile/UserProfile";
 
 
 
@@ -75,6 +76,8 @@ function App() {
             <Route path="/admin/addproduct" element={<AddProduct />} />
             <Route path="/admin/productlist" element={<ProductList />} />
             <Route path="/admin/update/:id" element={<UpdateProduct />} />
+            <Route path="/user-profile" element={<UserProfile />} />
+
 
 
           </Routes>
