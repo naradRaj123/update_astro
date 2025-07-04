@@ -36,7 +36,7 @@ const categoryDetails = {
   pendants: { title: "Zodiac Pendants", icon: Star },
   rituals: { title: "Online Rituals & Puja", icon: Zap },
   reports: { title: "Astrology Reports", icon: ScrollText },
-  default: { title: "Insta Store", icon: ShoppingCart }
+  default: { title: "AstroTruth Store", icon: ShoppingCart }
 };
 
 const ProductCard = ({ item, delay }) => {

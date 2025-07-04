@@ -54,7 +54,7 @@ const RegisterPage = () => {
               Create Your Account
             </CardTitle>
             <CardDescription>
-              Join InstaAstro and start your cosmic journey today!
+              Join Astro Truth and start your cosmic journey today!
             </CardDescription>
           </CardHeader>
           <CardContent>
