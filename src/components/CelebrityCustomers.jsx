@@ -8,14 +8,14 @@ const celebrityReviews = [
   {
     name: "Aarav Sharma",
     profession: "Film Actor",
-    reviewText: "InstaAstro's guidance has been invaluable for my career choices. Their astrologers are truly insightful!",
+    reviewText: "AstroTruth's guidance has been invaluable for my career choices. Their astrologers are truly insightful!",
     avatarFallback: "AS",
     videoThumbnailAlt: "Video thumbnail of Aarav Sharma giving a testimonial",
   },
   {
     name: "Priya Singh",
     profession: "Playback Singer",
-    reviewText: "Whenever I face a dilemma, I turn to InstaAstro. Their predictions are accurate and advice practical.",
+    reviewText: "Whenever I face a dilemma, I turn to AstroTruth. Their predictions are accurate and advice practical.",
     avatarFallback: "PS",
     videoThumbnailAlt: "Video thumbnail of Priya Singh sharing her experience",
   },
@@ -42,7 +42,7 @@ const CelebrityCustomers = () => {
             Our <span className="text-yellow-600">Celebrity Customers</span>
           </h2>
           <p className="text-lg text-gray-700 max-w-2xl mx-auto">
-            Hear from renowned personalities who trust InstaAstro for astrological guidance.
+            Hear from renowned personalities who trust AstroTruth for astrological guidance.
           </p>
         </motion.div>
 

@@ -53,7 +53,7 @@ const CustomerReviews = () => {
             CUSTOMERS <span className="text-yellow-600">REVIEWS</span>
           </h2>
           <p className="text-lg text-gray-700 max-w-2xl mx-auto">
-            Hear what our valued clients have to say about their experiences with InstaAstro.
+            Hear what our valued clients have to say about their experiences with AstroTruth.
           </p>
         </motion.div>
 
