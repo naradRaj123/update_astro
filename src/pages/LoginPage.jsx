@@ -13,7 +13,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
-import { Mail, Lock, Eye, EyeOff } from "lucide-react";
+import { Mail, Lock, Eye, EyeOff, X } from "lucide-react";
 import axios from "axios";
 
 const LoginPage = () => {
@@ -94,7 +94,16 @@ const LoginPage = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <Card className="w-full max-w-md shadow-2xl">
+        <Card className="w-full max-w-md shadow-2xl relative">
+          {/* Close Icon */}
+          <button
+            onClick={() => navigate("/")}
+            className="absolute top-4 right-4 text-gray-400 hover:text-red-500"
+            aria-label="Close"
+          >
+            <X className="w-5 h-5" />
+          </button>
+
           <CardHeader className="text-center">
             <CardTitle className="text-3xl font-bold cosmic-text">
               Welcome Back!

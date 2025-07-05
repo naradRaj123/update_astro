@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import axios from "axios";
-import { Mail, Lock, User, Phone } from "lucide-react";
+import { Mail, Lock, User, Phone, X } from "lucide-react";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import {
@@ -33,9 +33,11 @@ const RegisterPage = () => {
         data
       );
       console.log("Registration successful:", response.data);
-      alert("regitration susssfuly go to login page ")
+      alert("Registration successful! Please log in.");
+      navigate("/user-login");
     } catch (error) {
       console.error("Registration failed:", error.response?.data || error.message);
+      alert("Registration failed. Try again.");
     } finally {
       setLoading(false);
     }
@@ -48,7 +50,16 @@ const RegisterPage = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <Card className="w-full max-w-md shadow-2xl">
+        <Card className="w-full max-w-md shadow-2xl relative">
+          {/* Close Icon */}
+          <button
+            onClick={() => navigate("/")}
+            className="absolute top-4 right-4 text-gray-400 hover:text-red-500"
+            aria-label="Close"
+          >
+            <X className="w-5 h-5" />
+          </button>
+
           <CardHeader className="text-center">
             <CardTitle className="text-3xl font-bold cosmic-text">
               Create Your Account
@@ -57,6 +68,7 @@ const RegisterPage = () => {
               Join Astro Truth and start your cosmic journey today!
             </CardDescription>
           </CardHeader>
+
           <CardContent>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
               {/* Full Name */}
@@ -116,6 +128,27 @@ const RegisterPage = () => {
                 {errors.mobile && <p className="text-red-500 text-sm">{errors.mobile.message}</p>}
               </div>
 
+              {/* Address */}
+              <div className="space-y-2">
+                <Label htmlFor="address">Address</Label>
+                <Input
+                  type="text"
+                  placeholder="123, Galaxy Street, Earth"
+                  {...register("address", { required: "Address is required" })}
+                />
+                {errors.address && <p className="text-red-500 text-sm">{errors.address.message}</p>}
+              </div>
+
+              {/* Date of Birth */}
+              <div className="space-y-2">
+                <Label htmlFor="dob">Date of Birth</Label>
+                <Input
+                  type="date"
+                  {...register("dob", { required: "DOB is required" })}
+                />
+                {errors.dob && <p className="text-red-500 text-sm">{errors.dob.message}</p>}
+              </div>
+
               {/* Password */}
               <div className="space-y-2">
                 <Label htmlFor="password">Password</Label>
@@ -134,9 +167,12 @@ const RegisterPage = () => {
                     className="pl-10"
                   />
                 </div>
-                {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>}
+                {errors.password && (
+                  <p className="text-red-500 text-sm">{errors.password.message}</p>
+                )}
               </div>
 
+              {/* Submit Button */}
               <Button
                 type="submit"
                 className="w-full cosmic-gradient text-white"
@@ -146,6 +182,7 @@ const RegisterPage = () => {
               </Button>
             </form>
           </CardContent>
+
           <CardFooter className="flex flex-col items-center">
             <p className="text-sm text-muted-foreground">
               Already have an account?{" "}
