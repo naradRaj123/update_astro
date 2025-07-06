@@ -75,16 +75,24 @@ const UserDashboard = () => {
             Welcome, {user?.user_name || "User"}!
           </h1>
           <div className="flex space-x-2">
-            <Button variant="outline" className="border-red-500 text-red-500 hover:bg-red-500 hover:text-white">
-              <Settings className="mr-2 h-4 w-4" /> Account Settings
+            <Button
+              variant="outline"
+              className="border-red-500 text-red-500 hover:bg-red-500 hover:text-white"
+              onClick={() => navigate("/user-update")}
+            >
+              <Settings className="mr-2 h-4 w-4" />
+              Account Settings
             </Button>
+
             <Button variant="ghost" size="icon" className="text-red-500 hover:bg-red-100">
               <Bell className="h-6 w-6" />
             </Button>
+
             <Button variant="destructive" size="lg" onClick={handleLogout}>
-            <LogOut className="mr-2 h-5 w-5" /> Logout
-          </Button>
+              <LogOut className="mr-2 h-5 w-5" /> Logout
+            </Button>
           </div>
+
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
@@ -93,7 +101,7 @@ const UserDashboard = () => {
             description="View and update your personal information and preferences."
             icon={User}
             actionText="View Profile"
-            onActionClick={() => navigate("/profile")}
+            onActionClick={() => navigate("/user-profile")}
             bgColorClass="bg-red-50"
           />
           <DashboardCard
@@ -172,7 +180,7 @@ const UserDashboard = () => {
         </Card>
 
         <div className="text-center mt-10">
-          
+
         </div>
       </motion.div>
     </div>

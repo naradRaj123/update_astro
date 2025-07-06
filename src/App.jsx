@@ -1,5 +1,5 @@
 import React from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom"; // ✅ Navigate added
 import { Toaster } from "@/components/ui/toaster";
 import LoginPage from "@/pages/LoginPage";
 import RegisterPage from "@/pages/RegisterPage";
@@ -10,7 +10,6 @@ import Layouts from "./pages/Layouts";
 import AstrologerDashboard from "./pages/AstrologerDashboard";
 import AstrologerRegistrationPage from "./pages/AstrologerRegistrationPage";
 import AstroLogin from "./pages/AstroLogin";
-// import Astrologers from "./components/Astrologers";
 import Testimonials from "./components/Testimonials";
 import Blog from "./components/Blog";
 import ContactPage from "./pages/ContactPage";
@@ -34,8 +33,9 @@ import ProductList from "./pages/admin/Productlist";
 import UpdateProduct from "./pages/admin/UpdateProduct";
 import HoroscopePage from "./pages/HoroscopePage";
 import UserProfile from "./pages/Profile/UserProfile";
-
-
+import AstroProfile from "./pages/Profile/AstroProfile";
+import UserUpdate from "./pages/Profile/UserUpdate";
+import AstroUpdate from "./pages/Profile/AstroUpdate";
 
 function App() {
   return (
@@ -50,14 +50,13 @@ function App() {
             <Route path="/user-dashboard" element={<UserDashboard />} />
             <Route path="/astro-dashboard" element={<AstrologerDashboard />} />
             <Route path="/astro-register" element={<AstrologerRegistrationPage />} />
-            <Route path="/astrologers" element={<Astrologers/>} />
+            <Route path="/astrologers" element={<Astrologers />} />
             <Route path="/services" element={<Services />} />
             <Route path="/testimonials" element={<Testimonials />} />
             <Route path="/blog" element={<Blog />} />
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
             <Route path="/terms" element={<TermsConditionsPage />} />
-            <Route path="/privacy-policy" element={<TermsConditionsPage />} />
             <Route path="/karamkandi" element={<Karamkandi />} />
             <Route path="/store" element={<Store />} />
             <Route path="/product/:id" element={<ProductDetail />} />
@@ -65,21 +64,22 @@ function App() {
             <Route path="/karmkandidet/:id" element={<KaramkandiDetail />} />
             <Route path="/kundalimatch" element={<KundliPage />} />
             <Route path="/horoscope" element={<HoroscopePage />} />
-            
+
             {/* admin routes */}
             <Route path="/admin" element={<Dashboard />} />
             <Route path="/admin/astrologer" element={<Astrologer />} />
             <Route path="/admin/users" element={<Users />} />
             <Route path="/admin/karmkandy" element={<Karmkandy />} />
             <Route path="/admin-login" element={<AdminLogin />} />
-            <Route path="/admin-login" element={<AdminLogin />} />
             <Route path="/admin/addproduct" element={<AddProduct />} />
             <Route path="/admin/productlist" element={<ProductList />} />
             <Route path="/admin/update/:id" element={<UpdateProduct />} />
+
+            {/* profile routes */}
             <Route path="/user-profile" element={<UserProfile />} />
-
-
-
+            <Route path="/user-update" element={<UserUpdate />} />
+            <Route path="/astro-profile" element={ <AstroProfile />} />
+            <Route path="/astro-update"   element={<AstroUpdate />}   />
           </Routes>
         </Layouts>
         <Toaster />
