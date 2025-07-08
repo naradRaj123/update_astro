@@ -13,7 +13,6 @@ import logo from "../assets/images/logo.png";
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
   const { user, logout } = useAuth();
   const location = useLocation();
 
@@ -26,7 +25,7 @@ const Navbar = () => {
   }, []);
 
   useEffect(() => {
-    setDropdownOpen(false); // Close dropdown on route change
+    setIsOpen(false);
   }, [location]);
 
   const navLinks = [
@@ -59,34 +58,27 @@ const Navbar = () => {
           </div>
 
           {/* Desktop Navigation */}
-          <div className="hidden xl:flex items-center space-x-4">
+          <div className="hidden xl:flex items-center space-x-4 relative">
             {navLinks.map((link) =>
               link.dropdown ? (
-                <div
-                  className="relative"
-                  key={link.name}
-                  onMouseEnter={() => setDropdownOpen(true)}
-                  onMouseLeave={() => setDropdownOpen(false)}
-                >
+                <div className="relative group" key={link.name}>
                   <div className="flex items-center cursor-pointer px-3 py-2 text-gray-700 hover:text-primary text-sm font-medium transition-colors">
                     {link.name}
                     {link.icon}
                   </div>
 
-                  {dropdownOpen && (
-                    <div className="absolute top-full left-0 bg-white shadow-lg rounded-md py-2 mt-1 w-48 z-50">
-                      {link.dropdown.map((sublink) => (
-                        <Link
-                          key={sublink.name}
-                          to={sublink.href}
-                          onClick={() => setDropdownOpen(false)}
-                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                        >
-                          {sublink.name}
-                        </Link>
-                      ))}
-                    </div>
-                  )}
+                <div className="absolute top-full left-0 invisible opacity-0 group-hover:visible group-hover:opacity-100 bg-white shadow-lg rounded-md py-2 mt-1 w-48 z-50 transition-all duration-200 ease-out transform translate-y-2 group-hover:translate-y-0">
+
+                    {link.dropdown.map((sublink) => (
+                      <Link
+                        key={sublink.name}
+                        to={sublink.href}
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      >
+                        {sublink.name}
+                      </Link>
+                    ))}
+                  </div>
                 </div>
               ) : (
                 <Link
