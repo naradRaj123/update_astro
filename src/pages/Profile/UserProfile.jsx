@@ -8,24 +8,19 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import {
-  Settings,
-  Bell,
-  LogOut,
-  ArrowLeft,
-} from "lucide-react";
+import { Settings, Bell, LogOut, ArrowLeft } from "lucide-react";
 
 const UserProfile = () => {
   const user = JSON.parse(localStorage.getItem("user") || "{}");
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("userToken"); // ✅ Fixed token key
     if (!token) navigate("/user-login");
   }, [navigate]);
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
+    localStorage.removeItem("userToken"); // ✅ Match token key used in login
     localStorage.removeItem("user");
     navigate("/user-login");
   };

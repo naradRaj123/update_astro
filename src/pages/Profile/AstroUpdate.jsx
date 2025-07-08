@@ -15,7 +15,7 @@ import axios from 'axios';
 
 const AstroUpdate = () => {
   const navigate = useNavigate();
-  const astro = JSON.parse(localStorage.getItem("astroUser") || "{}");
+  const astro = JSON.parse(localStorage.getItem("astroUser") || "{}"); // ✅ fixed
   const { register, handleSubmit, setValue } = useForm();
   const [previewImage, setPreviewImage] = useState(astro?.profileimg || null);
 
@@ -39,7 +39,7 @@ const AstroUpdate = () => {
     navigate("/astro-login");
   };
 
-  const handleImageChange = async (e) => {
+  const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
     const reader = new FileReader();
@@ -52,14 +52,16 @@ const AstroUpdate = () => {
 
   const onSubmit = async (data) => {
     try {
-      data.id = astro.id; // Required to identify astrologer
+      data.id = astro.id; // backend uses this to identify the astrologer
+
       const response = await axios.post(
         "https://astro-talk-backend.onrender.com/web/astro/update",
         data
       );
 
-      // Update localStorage
+      // Update local storage with new data
       localStorage.setItem("astroUser", JSON.stringify(response.data));
+      alert("Profile updated successfully!");
       navigate("/astro-profile");
     } catch (error) {
       console.error("Update failed:", error);
@@ -138,7 +140,7 @@ const AstroUpdate = () => {
               <Input type="number" {...register("chargePerSession")} />
             </div>
 
-            {/* Hidden field to send base64 image */}
+            {/* Hidden field for profile image base64 */}
             <input type="hidden" {...register("profileimg")} />
 
             <Button type="submit" className="w-full bg-red-500 hover:bg-red-600 text-white">

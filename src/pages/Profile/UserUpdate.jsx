@@ -31,15 +31,15 @@ const UserUpdate = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) navigate("/user-login");
-  }, [navigate]);
-
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    navigate("/user-login");
-  };
+     const token = localStorage.getItem("userToken"); // ✅ Fixed token key
+     if (!token) navigate("/user-login");
+   }, [navigate]);
+ 
+   const handleLogout = () => {
+     localStorage.removeItem("userToken"); // ✅ Match token key used in login
+     localStorage.removeItem("user");
+     navigate("/user-login");
+   };
 
   const handleChange = (e) => {
     setFormData((prev) => ({

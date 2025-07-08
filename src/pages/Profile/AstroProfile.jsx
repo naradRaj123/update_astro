@@ -11,13 +11,11 @@ import { Bell, LogOut, Settings, ArrowLeft } from 'lucide-react';
 
 const AstroProfile = () => {
   const navigate = useNavigate();
-  const astro = JSON.parse(localStorage.getItem("astroUser") || "{}");
+  const astro = JSON.parse(localStorage.getItem("astroUser") || "{}"); // ✅ Correct key
 
   useEffect(() => {
-    const token = localStorage.getItem("astroToken");
-    if (!token) {
-      navigate("/astro-login");
-    }
+    const token = localStorage.getItem("astroToken"); // ✅ Check token
+    if (!token) navigate("/astro-login");
   }, [navigate]);
 
   const handleLogout = () => {
