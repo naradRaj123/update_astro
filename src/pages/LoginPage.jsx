@@ -1,3 +1,5 @@
+// Step 1: Updated LoginPage.jsx
+
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -54,7 +56,7 @@ const LoginPage = () => {
       const data = response.data;
 
       if (data?.token) {
-        localStorage.setItem("token", data.token);
+        localStorage.setItem("userToken", data.token);
         localStorage.setItem("user", JSON.stringify(data.user || {}));
         localStorage.setItem("userId", data.user?._id || "");
 
@@ -63,9 +65,8 @@ const LoginPage = () => {
           description: "Welcome back to Astro Truth!",
         });
 
-        setTimeout(() => {
-          navigate("/user-dashboard");
-        }, 500);
+        console.log("Login successful. Navigating...");
+        navigate("/user-dashboard");
       } else {
         toast({
           title: "Invalid Credentials",
@@ -95,7 +96,6 @@ const LoginPage = () => {
         transition={{ duration: 0.5 }}
       >
         <Card className="w-full max-w-md shadow-2xl relative">
-          {/* Close Icon */}
           <button
             onClick={() => navigate("/")}
             className="absolute top-4 right-4 text-gray-400 hover:text-red-500"
@@ -115,7 +115,6 @@ const LoginPage = () => {
 
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Email */}
               <div className="space-y-2">
                 <Label htmlFor="email">Email Address</Label>
                 <div className="relative">
@@ -132,7 +131,6 @@ const LoginPage = () => {
                 </div>
               </div>
 
-              {/* Password */}
               <div className="space-y-2">
                 <Label htmlFor="password">Password</Label>
                 <div className="relative">
@@ -140,7 +138,7 @@ const LoginPage = () => {
                   <Input
                     id="password"
                     type={showPassword ? "text" : "password"}
-                    placeholder="••••••••"
+                    placeholder="\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
@@ -151,16 +149,11 @@ const LoginPage = () => {
                     onClick={() => setShowPassword(!showPassword)}
                     className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
                   >
-                    {showPassword ? (
-                      <EyeOff className="h-5 w-5" />
-                    ) : (
-                      <Eye className="h-5 w-5" />
-                    )}
+                    {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                   </button>
                 </div>
               </div>
 
-              {/* Submit Button */}
               <Button
                 type="submit"
                 className="w-full cosmic-gradient text-white"
@@ -176,7 +169,7 @@ const LoginPage = () => {
               Forgot your password?
             </Link>
             <p className="text-sm text-muted-foreground">
-              Don't have an account?{" "}
+              Don't have an account?{' '}
               <Link
                 to="/user-register"
                 className="font-medium text-primary hover:underline"

@@ -13,7 +13,8 @@ import {
   HelpCircle,
   LogOut,
   Zap,
-  Heart
+  Heart,
+  Package
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
@@ -48,13 +49,13 @@ const UserDashboard = () => {
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem("user") || "{}");
 
-  // Redirect if not logged in
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      navigate("/user-login");
-    }
-  }, [navigate]);
+  const token = localStorage.getItem("userToken");
+  if (!token) {
+    navigate("/user-login"); // Optional fallback
+  }
+}, []);
+
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -70,6 +71,7 @@ const UserDashboard = () => {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
       >
+        {/* Header */}
         <div className="flex flex-col md:flex-row justify-between items-center mb-8">
           <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4 md:mb-0">
             Welcome, {user?.user_name || "User"}!
@@ -83,19 +85,25 @@ const UserDashboard = () => {
               <Settings className="mr-2 h-4 w-4" />
               Account Settings
             </Button>
-
             <Button variant="ghost" size="icon" className="text-red-500 hover:bg-red-100">
               <Bell className="h-6 w-6" />
             </Button>
-
             <Button variant="destructive" size="lg" onClick={handleLogout}>
               <LogOut className="mr-2 h-5 w-5" /> Logout
             </Button>
           </div>
-
         </div>
 
+        {/* Dashboard Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+          <DashboardCard
+            title="Store"
+            description="Buy gemstones, yantras, kundli reports, and more."
+            icon={ShoppingBag}
+            actionText="Visit Store"
+            onActionClick={() => navigate("/store")}
+            bgColorClass="bg-pink-50"
+          />
           <DashboardCard
             title="My Profile"
             description="View and update your personal information and preferences."
@@ -107,7 +115,7 @@ const UserDashboard = () => {
           <DashboardCard
             title="Order History"
             description="Track your past consultations, reports, and product purchases."
-            icon={ShoppingBag}
+            icon={Package}
             actionText="View Orders"
             onActionClick={() => navigate("/orders")}
           />
@@ -142,6 +150,7 @@ const UserDashboard = () => {
           />
         </div>
 
+        {/* Quick Actions */}
         <Card className="shadow-lg rounded-xl mb-8">
           <CardHeader>
             <CardTitle className="text-xl font-semibold text-gray-700">Quick Actions</CardTitle>
@@ -179,9 +188,7 @@ const UserDashboard = () => {
           </CardContent>
         </Card>
 
-        <div className="text-center mt-10">
-
-        </div>
+        <div className="text-center mt-10"></div>
       </motion.div>
     </div>
   );
