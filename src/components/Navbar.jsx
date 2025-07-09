@@ -206,11 +206,6 @@ const Navbar = () => {
                 </>
               ) : (
                 <>
-                  <Link to="/user-login" onClick={() => setIsOpen(false)}>
-                    <Button variant="ghost" className="text-gray-700 hover:text-primary w-full justify-start">
-                      User Login
-                    </Button>
-                  </Link>
                   <Link to="/user-register" onClick={() => setIsOpen(false)}>
                     <Button className="cosmic-gradient text-white w-full">
                       <User className="mr-2 h-4 w-4" /> User Register
