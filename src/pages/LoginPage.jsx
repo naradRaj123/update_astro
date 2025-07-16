@@ -45,7 +45,7 @@ const LoginPage = () => {
   setIsLoading(true);
 
   try {
-    const response = await axios.post("https://astro-talk-backend.onrender.com/web/login/", {
+    const response = await axios.post("http://localhost:8000/web/login/", {
       email,
       password,
     });

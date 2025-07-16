@@ -33,6 +33,9 @@ import AddProduct from "./pages/admin/Addproduct";
 import ProductList from "./pages/admin/Productlist";
 import UpdateProduct from "./pages/admin/UpdateProduct";
 import HoroscopePage from "./pages/HoroscopePage";
+import PaymentRequestList from "./pages/admin/Paymentrequestlist";
+import DashakootPage from "./pages/Dashakoot";
+import AshtakootPage from "./pages/Ashtakoot";
 
 
 
@@ -64,6 +67,8 @@ function App() {
             <Route path="/karmkandidet/:id" element={<KaramkandiDetail />} />
             <Route path="/kundalimatch" element={<KundliPage />} />
             <Route path="/horoscope" element={<HoroscopePage />} />
+            <Route path="/dashakoot" element={<DashakootPage />} />
+            <Route path="/ashtakoot" element={<AshtakootPage />} />
             
             {/* admin routes */}
             <Route path="/admin" element={<Dashboard />} />
@@ -75,7 +80,7 @@ function App() {
             <Route path="/admin/addproduct" element={<AddProduct />} />
             <Route path="/admin/productlist" element={<ProductList />} />
             <Route path="/admin/update/:id" element={<UpdateProduct />} />
-
+            <Route path="/admin/paymentrequest" element={<PaymentRequestList/>} />
 
           </Routes>
         </Layouts>

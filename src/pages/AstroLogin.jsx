@@ -15,6 +15,7 @@ import {
 import { useToast } from "@/components/ui/use-toast";
 import { Mail, Lock } from "lucide-react";
 import axios from "axios";
+import CryptoJS from "crypto-js";
 
 const AstroLogin = () => {
   const [email, setEmail] = useState("");
@@ -39,17 +40,25 @@ const AstroLogin = () => {
 
     try {
       const response = await axios.post(
-        "https://astro-talk-backend.onrender.com/web/astro/login",
+        "http://localhost:8000/web/astro/login",
         { email, password }
       );
 
-      const data = response.data;
+      const secrateKey="AstroTruthSecret123!";
 
+      const data = response.data;
+      const userData=data.data;
+
+      // Encrypt user data
+      // const stringified = JSON.stringify(userData);
+      // const encrypted = CryptoJS.AES.encrypt(stringified, secretKey).toString();
+
+      
       if (data?.token) {
         // Save token and user info for dashboard
         localStorage.setItem("astroToken", data.token);
         // Make sure user info contains astroName or relevant name field
-        localStorage.setItem("astroUser", JSON.stringify(data.user || {}));
+        localStorage.setItem("astroUser", JSON.stringify(userData || {}));
 
         toast({
           title: "Login Successful!",
@@ -68,7 +77,7 @@ const AstroLogin = () => {
       toast({
         title: "Login Failed",
         description:
-          error.response?.data?.message || "Server error occurred. Please try again later.",
+          error.response?.data?.message || "Your account is pending verification by the administrator. Please wait for approval before logging in.",
         variant: "destructive",
       });
     } finally {

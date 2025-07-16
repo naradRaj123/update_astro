@@ -27,6 +27,7 @@
     "class-variance-authority": "^0.7.0",
     "classnames": "^2.5.1",
     "clsx": "^2.0.0",
+    "crypto-js": "^4.2.0",
     "framer-motion": "^10.16.4",
     "lucide-react": "^0.285.0",
     "react": "^18.2.0",
