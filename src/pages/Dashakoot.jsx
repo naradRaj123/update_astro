@@ -35,7 +35,7 @@ const DashakootPage = () => {
         };
 
         try {
-            const response = await axios.get("http://localhost:8000/matching/dashakoot", { params });
+            const response = await axios.get("https://astro-talk-backend.onrender.com/matching/dashakoot", { params });
             console.log("✅ Match Result:", response.data);
             setMatchResult(response.data.response);
             setBoy({

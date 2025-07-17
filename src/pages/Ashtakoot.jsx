@@ -36,7 +36,7 @@ const AashakootPage = () => {
     };
 
     try {
-      const response = await axios.get('http://localhost:8000/matching/ashakoot', { params });
+      const response = await axios.get('https://astro-talk-backend.onrender.com/matching/ashakoot', { params });
       setMatchResult(response.data.response);
       setBoy({ day: '', month: '', year: '', hour: '', minute: '', second: '', place: '' });
       setGirl({ day: '', month: '', year: '', hour: '', minute: '', second: '', place: '' });
