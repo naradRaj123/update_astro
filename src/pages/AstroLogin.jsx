@@ -13,13 +13,14 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
-import { Mail, Lock } from "lucide-react";
+import { Mail, Lock, Eye, EyeOff, X } from "lucide-react";
 import axios from "axios";
 import CryptoJS from "crypto-js";
 
 const AstroLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -40,7 +41,7 @@ const AstroLogin = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:8000/web/astro/login",
+        "https://astro-talk-backend.onrender.com/web/astro/login",
         { email, password }
       );
 
@@ -55,10 +56,12 @@ const AstroLogin = () => {
 
       
       if (data?.token) {
-        // Save token and user info for dashboard
         localStorage.setItem("astroToken", data.token);
+
         // Make sure user info contains astroName or relevant name field
         localStorage.setItem("astroUser", JSON.stringify(userData || {}));
+        
+
 
         toast({
           title: "Login Successful!",
@@ -92,7 +95,16 @@ const AstroLogin = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <Card className="w-full max-w-md shadow-2xl">
+        <Card className="w-full max-w-md shadow-2xl relative">
+          {/* Close Button */}
+          <button
+            onClick={() => navigate("/")}
+            className="absolute top-4 right-4 text-gray-400 hover:text-red-500"
+            aria-label="Close login form"
+          >
+            <X className="w-5 h-5" />
+          </button>
+
           <CardHeader className="text-center">
             <CardTitle className="text-3xl font-bold cosmic-text">Welcome Back!</CardTitle>
             <CardDescription>Log in to continue your cosmic journey.</CardDescription>
@@ -100,6 +112,7 @@ const AstroLogin = () => {
 
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6" noValidate>
+              {/* Email Input */}
               <div className="space-y-2 relative">
                 <Label htmlFor="email">Email Address</Label>
                 <Mail className="absolute left-3 top-10 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -114,20 +127,29 @@ const AstroLogin = () => {
                 />
               </div>
 
+              {/* Password Input with Toggle */}
               <div className="space-y-2 relative">
                 <Label htmlFor="password">Password</Label>
                 <Lock className="absolute left-3 top-10 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                 <Input
                   id="password"
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  className="pl-10"
+                  className="pl-10 pr-10"
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  className="absolute right-3 top-10 transform -translate-y-1/2 text-gray-500"
+                >
+                  {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                </button>
               </div>
 
+              {/* Submit */}
               <Button
                 type="submit"
                 className="w-full cosmic-gradient text-white"

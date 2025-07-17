@@ -21,7 +21,7 @@ const InNews = () => {
           className="text-center mb-12"
         >
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            InstaAstro <span className="text-yellow-600">In News</span>
+            Astro Truth <span className="text-yellow-600">In News</span>
           </h2>
           <p className="text-lg text-gray-700 max-w-2xl mx-auto">
             Recognized by leading publications for our trusted astrological services.

@@ -37,69 +37,84 @@ const Karamkandi = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {astrologerList.length > 0 ? astrologerList.filter((v) => v.role === "karamkandi" ||v.role === "both"  ).map((astrologer, index) => (
-            <motion.div
-              key={astrologer._id}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: index * 0.1 }}
-              viewport={{ once: true }}
-            >
-              <Card className="overflow-hidden h-full shadow-sm">
-                <div className="relative">
-                  <img
-                    src={astrologer.image || "https://via.placeholder.com/300x200?text=No+Image"}
-                    alt={astrologer.astroName}
-                    className="w-full h-48 object-cover"
-                  />
-                  <Badge
-                    className="absolute top-3 right-3"
-                    variant={astrologer.status === "Online" ? "cosmic" : "secondary"}
-                  >
-                    {astrologer.status || "Offline"}
-                  </Badge>
-                </div>
-                <CardContent className="p-5">
-                  <div className="flex justify-between mb-2">
-                    <div>
-                      <h3 className="font-bold text-lg">{astrologer.astroName || "No Name"}</h3>
-                      <p className="text-sm text-gray-500">{astrologer.specialty || "N/A"}</p>
-                    </div>
-                    <div className="flex items-center bg-yellow-100 px-2 py-1 rounded">
-                      <Star className="h-4 w-4 text-yellow-500 mr-1" fill="currentColor" />
-                      <span className="text-sm font-semibold">{astrologer.rating || "4.5"}</span>
-                    </div>
-                  </div>
-
-                  <p className="text-sm text-gray-600 mb-1">
-                    <strong>Experience:</strong> {astrologer.experience || "N/A"}
-                  </p>
-                  <p className="text-sm text-gray-600 mb-1">
-                    <strong>Languages:</strong> {astrologer.langauge || "N/A"}
-                  </p>
-
-                  <div className="flex flex-wrap gap-1 my-2">
-                    {Array.isArray(astrologer.expertise) && astrologer.expertise.length > 0
-                      ? astrologer.expertise.map((topic, i) => (
-                          <Badge key={i} variant="outline">{topic}</Badge>
-                        ))
-                      : <Badge variant="outline">No Expertise</Badge>}
-                  </div>
-
-                  <div className="flex justify-between items-center mt-4">
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      className="rounded-full"
-                      onClick={() => navigate(`/karmkandidet/${astrologer._id}`)}
+          {astrologerList.length > 0 ? astrologerList
+            .filter((v) => v.role === "karamkandi" || v.role === "both")
+            .map((astrologer, index) => (
+              <motion.div
+                key={astrologer._id}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: index * 0.1 }}
+                viewport={{ once: true }}
+              >
+                <Card className="overflow-hidden h-full shadow-sm">
+                  <div className="relative">
+                    <img
+                      src={
+                        astrologer.image
+                          ? `https://astro-talk-backend.onrender.com/${astrologer.image.replace(/^\/?/, "")}`
+                          : "https://via.placeholder.com/300x200?text=No+Image"
+                      }
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = "https://via.placeholder.com/300x200?text=Image+Not+Found";
+                      }}
+                      alt={astrologer.astroName || "Astrologer"}
+                      className="w-full h-48 object-cover"
+                    />
+                    <Badge
+                      className="absolute top-3 right-3"
+                      variant={astrologer.status === "Online" ? "cosmic" : "secondary"}
                     >
-                      Book for Puja
-                    </Button>
+                      {astrologer.status || "Offline"}
+                    </Badge>
                   </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-          )) : (
+
+                  <CardContent className="p-5">
+                    <div className="flex justify-between mb-2">
+                      <div>
+                        <h3 className="font-bold text-lg">{astrologer.astroName || "No Name"}</h3>
+                        <p className="text-sm text-gray-500">{astrologer.specialty || "N/A"}</p>
+                      </div>
+                      <div className="flex items-center bg-yellow-100 px-2 py-1 rounded">
+                        <Star className="h-4 w-4 text-yellow-500 mr-1" fill="currentColor" />
+                        <span className="text-sm font-semibold">{astrologer.rating || "4.5"}</span>
+                      </div>
+                    </div>
+
+                    <p className="text-sm text-gray-600 mb-1">
+                      <strong>Experience:</strong> {astrologer.experience || "N/A"}
+                    </p>
+                    <p className="text-sm text-gray-600 mb-1">
+                      <strong>Languages:</strong> {astrologer.langauge || "N/A"}
+                    </p>
+
+                    <div className="flex flex-wrap gap-1 my-2">
+                      {Array.isArray(astrologer.expertise) && astrologer.expertise.length > 0 ? (
+                        astrologer.expertise.map((topic, i) => (
+                          <Badge key={i} variant="outline">
+                            {topic}
+                          </Badge>
+                        ))
+                      ) : (
+                        <Badge variant="outline">No Expertise</Badge>
+                      )}
+                    </div>
+
+                    <div className="flex justify-between items-center mt-4">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="rounded-full"
+                        onClick={() => navigate(`/karmkandidet/${astrologer._id}`)}
+                      >
+                        Book for Puja
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            )) : (
             <div className="col-span-full text-center text-gray-500 text-lg">
               No Astrologers Found
             </div>

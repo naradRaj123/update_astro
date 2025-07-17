@@ -7,7 +7,8 @@ const Layouts = ({ children }) => {
   const location = useLocation();
 
   // Paths where header/footer should be hidden
-  const hideHeaderFooterPaths = ["/user-dashboard", "/astro-dashboard","/admin","/astrologer","/users","/karmkandy"];
+  const hideHeaderFooterPaths = ["/user-dashboard", "/astro-dashboard","/admin","/astrologer","/users","/karmkandy","/user-profile",
+    "/astro-profile","/user-update","/astro-update","/store","/product","/checkout"];
 
   // Hide if the current pathname starts with any of the specified paths
   const hideHeaderFooter = hideHeaderFooterPaths.some((path) =>
