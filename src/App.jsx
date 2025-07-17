@@ -37,6 +37,7 @@ import AstroProfile from "./pages/Profile/AstroProfile";
 import UserUpdate from "./pages/Profile/UserUpdate";
 import AstroUpdate from "./pages/Profile/AstroUpdate";
 import PrivateRoute from "./lib/PrivateRoute";
+import ForgotPassword from "./pages/ForgotPassword";
 
 // ✅ Import PrivateRoute
 
@@ -68,6 +69,9 @@ function App() {
             <Route path="/kundalimatch" element={<KundliPage />} />
             <Route path="/horoscope" element={<HoroscopePage />} />
             <Route path="/admin-login" element={<AdminLogin />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+
+            
 
             {/* Protected Admin Routes */}
             <Route

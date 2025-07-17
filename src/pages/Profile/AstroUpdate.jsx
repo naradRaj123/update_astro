@@ -15,9 +15,9 @@ import axios from 'axios';
 
 const AstroUpdate = () => {
   const navigate = useNavigate();
-  const astro = JSON.parse(localStorage.getItem("astroUser") || "{}"); // ✅ fixed
+  const astro = JSON.parse(localStorage.getItem("astroUser") || "{}");
   const { register, handleSubmit, setValue } = useForm();
-  const [previewImage, setPreviewImage] = useState(astro?.profileimg || null);
+  const [previewImage, setPreviewImage] = useState(astro?.profileImg || null);
 
   useEffect(() => {
     const token = localStorage.getItem("astroToken");
@@ -44,22 +44,19 @@ const AstroUpdate = () => {
     if (!file) return;
     const reader = new FileReader();
     reader.onloadend = () => {
-      setPreviewImage(reader.result); // for preview
-      setValue("profileimg", reader.result); // set for submission
+      setPreviewImage(reader.result);
+      setValue("profileImg", reader.result); // ✅ Updated key
     };
     reader.readAsDataURL(file);
   };
 
   const onSubmit = async (data) => {
     try {
-      data.id = astro.id; // backend uses this to identify the astrologer
-
       const response = await axios.post(
-        "https://astro-talk-backend.onrender.com/web/astro/update",
+        `https://astro-talk-backend.onrender.com/web/astro/updateById/${astro._id}`, // ✅ New endpoint
         data
       );
 
-      // Update local storage with new data
       localStorage.setItem("astroUser", JSON.stringify(response.data));
       alert("Profile updated successfully!");
       navigate("/astro-profile");
@@ -96,13 +93,14 @@ const AstroUpdate = () => {
       </div>
 
       {/* Form */}
-      <Card className="max-w-2xl mx-auto shadow-lg rounded-xl border border-gray-200 bg-white">
+      <Card className="max-w-3xl mx-auto shadow-lg rounded-xl border border-gray-200 bg-white">
         <CardHeader>
           <CardTitle className="text-xl text-gray-800">Update Astrologer Profile</CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-            {/* Profile Image Upload */}
+
+            {/* Profile Image */}
             <div>
               <Label>Profile Image</Label>
               {previewImage && (
@@ -113,35 +111,21 @@ const AstroUpdate = () => {
                 />
               )}
               <Input type="file" accept="image/*" onChange={handleImageChange} />
+              <input type="hidden" {...register("profileImg")} />
             </div>
 
-            <div>
-              <Label>Name</Label>
-              <Input {...register("astroName")} />
-            </div>
-            <div>
-              <Label>Email</Label>
-              <Input type="email" {...register("email")} />
-            </div>
-            <div>
-              <Label>Phone</Label>
-              <Input {...register("mobile")} />
-            </div>
-            <div>
-              <Label>City</Label>
-              <Input {...register("city")} />
-            </div>
-            <div>
-              <Label>Experience (years)</Label>
-              <Input type="number" {...register("experience")} />
-            </div>
-            <div>
-              <Label>Charge per Session</Label>
-              <Input type="number" {...register("chargePerSession")} />
-            </div>
-
-            {/* Hidden field for profile image base64 */}
-            <input type="hidden" {...register("profileimg")} />
+            <div><Label>Name</Label><Input {...register("astroName")} /></div>
+            <div><Label>Date of Birth</Label><Input type="date" {...register("astroDob")} /></div>
+            <div><Label>Email</Label><Input type="email" {...register("email")} /></div>
+            <div><Label>Password</Label><Input type="password" {...register("password")} /></div>
+            <div><Label>Phone</Label><Input {...register("mobile")} /></div>
+            <div><Label>City</Label><Input {...register("city")} /></div>
+            <div><Label>Experience (Years)</Label><Input type="number" {...register("experience")} /></div>
+            <div><Label>Expertise</Label><Input {...register("expertise")} /></div>
+            <div><Label>Languages</Label><Input {...register("langauge")} /></div>
+            <div><Label>Short Bio</Label><Input {...register("shortBio")} /></div>
+            <div><Label>Charge per Session</Label><Input type="number" {...register("chargePerSession")} /></div>
+            <div><Label>Available Time</Label><Input {...register("availableTime")} /></div>
 
             <Button type="submit" className="w-full bg-red-500 hover:bg-red-600 text-white">
               Update Profile

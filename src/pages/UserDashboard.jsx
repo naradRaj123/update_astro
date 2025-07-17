@@ -24,6 +24,7 @@ import {
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
+import DailyNakshatraPrediction from './Vedik/DailyNakshatraPrediction';
 
 const DashboardCard = ({
   title,
@@ -217,7 +218,7 @@ const UserDashboard = () => {
             </Button>
           </CardContent>
         </Card>
-
+         <DailyNakshatraPrediction />
         <div className="text-center mt-10"></div>
       </motion.div>
     </div>
