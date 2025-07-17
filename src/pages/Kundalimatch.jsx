@@ -9,10 +9,7 @@ import { Label } from '@/components/ui/label';
 
 const KundliPage = () => {
 
-    // kundalimatching api base url
-    const BASE_URL = 'https://api.vedicastroapi.com/v3-json/';
-    console.log(BASE_URL)
-
+    
 
     return (
         <div className="min-h-screen p-4 md:p-8 mt-[4rem] " style={{ backgroundColor: 'hsl(var(--light-red-secondary))' }}>

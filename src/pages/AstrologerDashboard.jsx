@@ -26,7 +26,15 @@ import {
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+
+// import CryptoJS from 'crypto-js';
+import * as Dialog from '@radix-ui/react-dialog';
+import axios from "axios";
+import toastr from 'toastr';
+import 'toastr/build/toastr.min.css';
+
 import { toast } from "@/components/ui/use-toast";
+
 
 const StatBox = ({
   title,
@@ -70,6 +78,7 @@ const ActionButton = ({
   );
 };
 
+
 const DashboardActionItem = ({ title, description, icon: IconComponent, onClick }) => (
   <motion.div
     className="p-4 bg-rose-50 rounded-lg hover:bg-rose-100 transition-colors cursor-pointer border border-rose-200"
@@ -92,6 +101,7 @@ const AstrologerDashboard = () => {
   const [isCallEnabled, setIsCallEnabled] = useState(true);
   const [isChatEnabled, setIsChatEnabled] = useState(true);
   const [isVideoEnabled, setIsVideoEnabled] = useState(false);
+
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem("astroUser") || "{}");
 
@@ -115,9 +125,50 @@ const AstrologerDashboard = () => {
     navigate("/astro-login");
   };
 
+
+
+  const encryptedUser = localStorage.getItem("astroUser");
+  const astroFilterData = JSON.parse(encryptedUser)
+
+
+  // open withdrawal modal
+  const [openModal, setOpenModal] = useState(false);
+  const [walletInput, setWalletInput] = useState(astroFilterData.wallet);
+  const handleModal=()=>{
+    setOpenModal(true);
+  }
+
+  // request for payment
+
+
+  // login astrologer id
+  console.log(astroFilterData._id);
+  
+  const handlePaymentRequest=async(e)=>{
+    e.preventDefault();
+    
+    // request create
+    const paymentData=await axios.post('http://localhost:8000/create-order', 
+      { amount:walletInput, astrologerId:astroFilterData._id })
+    .then((res)=>{
+        
+        if(res.data.status){
+          setOpenModal(false)
+          toastr.success("Withdrawal request submitted successfully.")
+        }
+    })
+    .catch((error)=>{
+      setOpenModal(false)
+          toastr.error("Withdrawal request submitted Failed.")
+    })
+    
+  }
+
+
   const handleProfileSettingsClick = () => {
     navigate("/astro-update");
   };
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-50 via-rose-50 to-red-50 p-4 md:p-8">
@@ -127,6 +178,12 @@ const AstrologerDashboard = () => {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
       >
+
+        <div className="flex flex-col md:flex-row justify-between items-center mb-8">
+          <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4 md:mb-0">
+            Welcome, {user?.astroName || user?.name || "Astrologer"}
+          </h1>
+
         <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
           <div className="flex items-center space-x-4">
             <img
@@ -138,6 +195,7 @@ const AstrologerDashboard = () => {
               Welcome, {user?.astroName || "Astrologer"}
             </h1>
           </div>
+
           <div className="flex items-center space-x-3">
             <Button variant="outline" size="icon" className="text-red-500 border-red-300 hover:bg-red-100">
               <Bell className="h-5 w-5" />
@@ -155,8 +213,19 @@ const AstrologerDashboard = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-          <StatBox title="Today's Earnings" value="₹1,250" icon={DollarSign} bgColor="bg-green-100" textColor="text-green-700" />
+
+        <div  className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+          <div onClick={(handleModal)}>
+          <StatBox
+            title="Today's Earnings"
+            value={`₹ ${astroFilterData.wallet}  `}
+            icon={DollarSign}
+            bgColor="bg-green-100"
+            textColor="text-green-700"
+            style={{ cursor: 'pointer' }}
+            
+          />
+          </div>
           <StatBox title="Total Earnings" value="₹85,600" icon={DollarSign} />
           <StatBox title="Followers" value="1.2K" icon={Users} />
           <StatBox title="Profile Shares" value="350" icon={Share2} bgColor="bg-blue-100" textColor="text-blue-700" />
@@ -220,6 +289,52 @@ const AstrologerDashboard = () => {
           </CardContent>
         </Card>
       </motion.div>
+
+      {/* withdrawal modal */}
+      {openModal && (
+        <Dialog.Root open={openModal} onOpenChange={setOpenModal}>
+          <Dialog.Trigger asChild>
+            <button className="cursor-pointer bg-green-100 text-green-700 px-4 py-2 rounded">
+              Update Wallet
+            </button>
+          </Dialog.Trigger>
+
+          <Dialog.Portal>
+            <Dialog.Overlay className="fixed inset-0 bg-black/50 z-40" />
+            <Dialog.Content className="fixed left-1/2 top-1/2 w-[90%] max-w-sm -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded-lg shadow-xl z-50">
+              <Dialog.Title className="text-lg font-semibold mb-4">Update Wallet</Dialog.Title>
+
+              <form onSubmit={handlePaymentRequest}>
+                <input
+                  type="number"
+                  className="w-full p-2 border border-gray-300 rounded mb-4"
+                  value={walletInput}
+                  onChange={(e) => setWalletInput(e.target.value)}
+                  placeholder="Enter new wallet amount"
+                  name="paymentValue"
+                />
+
+                <div className="flex justify-end gap-2">
+                  <Dialog.Close asChild>
+                    <button type="button" className="bg-gray-200 px-4 py-2 rounded">
+                      Cancel
+                    </button>
+                  </Dialog.Close>
+                  <button
+                    type="submit"
+                    className="bg-green-600 text-white px-4 py-2 rounded"
+                  >
+                    Save
+                  </button>
+                </div>
+              </form>
+            </Dialog.Content>
+          </Dialog.Portal>
+        </Dialog.Root>
+      )
+      }
+
+
     </div>
   );
 };

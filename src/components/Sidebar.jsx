@@ -1,5 +1,5 @@
 // components/Sidebar.jsx
-import { Users, Star, BookOpen, LayoutDashboard, ShoppingCart } from 'lucide-react';
+import { Users, Star, BookOpen, LayoutDashboard, ShoppingCart, Wallet } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 
 const Sidebar = () => 
@@ -14,6 +14,7 @@ const Sidebar = () =>
       <NavLink to="/admin/karmkandy" className="flex items-center gap-2 text-gray-800"><BookOpen /> Karmkandi</NavLink>
       <NavLink to="/admin/addproduct" className="flex items-center gap-2 text-gray-800"><ShoppingCart /> Add Product</NavLink>
       <NavLink to="/admin/productlist" className="flex items-center gap-2 text-gray-800"><ShoppingCart />Product List</NavLink>
+      <NavLink to="/admin/paymentrequest" className="flex items-center gap-2 text-gray-800"><Wallet />Payment Request</NavLink>
     </nav>
   </div>
 )};

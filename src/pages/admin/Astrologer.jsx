@@ -18,12 +18,16 @@ const Astrologer = () => {
   const [astrologerlist, setAstrologers] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // const baseUrl=import.meta.env.VITE_BASE_URL;
+  const baseUrlLocal='http://localhost:8000';
+  // console.log(baseUrl);
+
   const [selectedAstrologer, setSelectedAstrologer] = useState(null);
   const [open, setOpen] = useState(false);
 
   const fetchAstrologers = async () => {
     try {
-      const res = await axios.get("https://astro-talk-backend.onrender.com/web/astro/astrolist");
+      const res = await axios.get(`${baseUrlLocal}/web/astro/astrolist`);
       setAstrologers(res.data.data || []);
     } catch (error) {
       console.error("Error fetching astrologers:", error);
@@ -40,7 +44,7 @@ const Astrologer = () => {
     console.log(astroId)
     setLoading(true);
     try {
-      const response = await axios.post("https://astro-talk-backend.onrender.com/admin/astroUpdate", {
+      const response = await axios.post(`${baseUrlLocal}/admin/astroUpdate`, {
         astroId: astroId,
         status: !status, // toggle
       });
@@ -73,7 +77,7 @@ const Astrologer = () => {
   const handleChargeSubmit = async (e) => {
     e.preventDefault()
     try {
-      const res = await axios.post("https://astro-talk-backend.onrender.com/admin/astroChargeUpdate", {
+      const res = await axios.post(`${baseUrlLocal}/admin/astroChargeUpdate`, {
         astroId: astroId,
         sessionCharge: chargeValue,
         accountType: accountType

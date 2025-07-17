@@ -32,6 +32,10 @@ import AddProduct from "./pages/admin/Addproduct";
 import ProductList from "./pages/admin/Productlist";
 import UpdateProduct from "./pages/admin/UpdateProduct";
 import HoroscopePage from "./pages/HoroscopePage";
+
+import PaymentRequestList from "./pages/admin/Paymentrequestlist";
+import DashakootPage from "./pages/Dashakoot";
+import AshtakootPage from "./pages/Ashtakoot";
 import UserProfile from "./pages/Profile/UserProfile";
 import AstroProfile from "./pages/Profile/AstroProfile";
 import UserUpdate from "./pages/Profile/UserUpdate";
@@ -68,6 +72,13 @@ function App() {
             <Route path="/karmkandidet/:id" element={<KaramkandiDetail />} />
             <Route path="/kundalimatch" element={<KundliPage />} />
             <Route path="/horoscope" element={<HoroscopePage />} />
+
+            <Route path="/dashakoot" element={<DashakootPage />} />
+            <Route path="/ashtakoot" element={<AshtakootPage />} />
+            
+            {/* admin routes */}
+           
+            <Route path="/admin/paymentrequest" element={<PaymentRequestList/>} />
             <Route path="/admin-login" element={<AdminLogin />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
 
@@ -130,6 +141,7 @@ function App() {
                 </PrivateRoute>
               }
             />
+
 
             {/* Protected User & Astro Profile Routes */}
             <Route

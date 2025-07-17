@@ -35,12 +35,24 @@ const Navbar = () => {
       name: "Services",
       icon: <ChevronDown className="ml-1 inline-block w-4 h-4" />,
       dropdown: [
-        { name: "Store", href: "/store" },
-        { name: "Karamkandi", href: "/karamkandi" },
-        { name: "Horoscope", href: "/horoscope" },
-        { name: "Kundali Matching", href: "/kundalimatch" },
+
+      { name: "Store", href: "/store" },
+      { name: "Karamkandi", href: "/karamkandi" },
+      { name: "Horoscope", href: "/horoscope" },     
+    ],
+     },
+     { name: "Matching ",
+      icon: <ChevronDown className="ml-1 inline-block w-4 h-4" />,
+      dropdown: [
+      { name: "Dashakoot", href: "/dashakoot" },
+      { name: "Ashtakoot", href: "/ashtakoot" },     
+    ],
+     },    
+
+       
       ],
     },
+
     { name: "Testimonials", href: "/testimonials" },
     { name: "Blog", href: "/blog" },
     { name: "Contact", href: "/contact" },

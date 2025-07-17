@@ -23,7 +23,7 @@ const Karmkandy = () => {
     const fetchAstrologers = async () => {
         try {
             const res = await axios.get("https://astro-talk-backend.onrender.com/web/astro/astrolist");
-            console.log(res.data.data)
+            // console.log(res.data.data)
             setAstrologers(res.data.data || []);
         } catch (error) {
             console.error("Error fetching astrologers:", error);
@@ -37,7 +37,7 @@ const Karmkandy = () => {
     // status change 
     const [status, setStatus] = useState(false);
     const handleToggleStatus = async (astroId) => {
-        console.log(astroId)
+        // console.log(astroId)
         setLoading(true);
         try {
             const response = await axios.post("https://astro-talk-backend.onrender.com/admin/astroUpdate", {
@@ -98,7 +98,6 @@ const Karmkandy = () => {
                             </tr>
                         ) : astrologerlist.length > 0 ? (
                             astrologerlist.filter((v) => v.role === "Karmkandi" || v.role === "both").map((v) => (
-
                                 <tr key={v._id} className="border-b">
                                     <td className="px-4 py-2">{v.astroName}</td>
                                     <td className="px-4 py-2">{v.email}</td>
