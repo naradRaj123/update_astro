@@ -161,7 +161,7 @@ const AstroLogin = () => {
           </CardContent>
 
           <CardFooter className="flex flex-col items-center space-y-2">
-            <Link to="#" className="text-sm text-primary hover:underline">
+            <Link to="/forgot-password" className="text-sm text-primary hover:underline">
               Forgot your password?
             </Link>
             <p className="text-sm text-muted-foreground">
