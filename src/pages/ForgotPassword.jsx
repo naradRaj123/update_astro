@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import {
@@ -11,21 +11,31 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Mail, KeyRound, Lock } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const ForgotPassword = () => {
   const [step, setStep] = useState(1);
   const [email, setEmail] = useState("");
-  const { register, handleSubmit, reset } = useForm();
+  const { register, handleSubmit, reset, formState: { errors } } = useForm();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    reset(); // Clear form on step change
+  }, [step]);
 
   // Step 1: Send OTP
   const sendOtp = async (data) => {
     const userEmail = data.email.trim().toLowerCase();
+    if (!userEmail) {
+      alert("Please enter a valid email.");
+      return;
+    }
     try {
       await axios.post(
         "https://astro-talk-backend.onrender.com/web/astro/sendOtp",
         { email: userEmail }
       );
-      setEmail(userEmail); // store lowercase email
+      setEmail(userEmail);
       alert("OTP sent to your email.");
       setStep(2);
     } catch (err) {
@@ -37,10 +47,16 @@ const ForgotPassword = () => {
   // Step 2: Verify OTP
   const verifyOtp = async (data) => {
     const otpValue = data.otp.trim();
+    const userEmail = email.trim();
+    if (!userEmail || !otpValue) {
+      alert("Please enter both email and OTP.");
+      return;
+    }
+
     try {
       await axios.post(
         "https://astro-talk-backend.onrender.com/web/astro/verifyOtp",
-        { email, otp: otpValue }
+        { email: userEmail, otp: otpValue }
       );
       alert("OTP verified successfully.");
       setStep(3);
@@ -67,7 +83,7 @@ const ForgotPassword = () => {
         }
       );
       alert("Password reset successfully! Please login.");
-      window.location.href = "/astro-login";
+      navigate("/astro-login");
     } catch (err) {
       console.error("Reset Password Error:", err.response?.data || err.message);
       alert(err.response?.data?.message || "Failed to reset password.");
@@ -94,10 +110,19 @@ const ForgotPassword = () => {
                   <Input
                     type="email"
                     placeholder="you@example.com"
-                    {...register("email", { required: true })}
+                    {...register("email", {
+                      required: "Email is required",
+                      pattern: {
+                        value: /^\S+@\S+$/i,
+                        message: "Invalid email format",
+                      },
+                    })}
                     className="pl-10"
                   />
                 </div>
+                {errors.email && (
+                  <p className="text-red-500 text-sm">{errors.email.message}</p>
+                )}
               </div>
               <Button type="submit" className="w-full bg-red-500 text-white hover:bg-red-600">
                 Send OTP
@@ -114,10 +139,13 @@ const ForgotPassword = () => {
                   <Input
                     type="text"
                     placeholder="Enter OTP"
-                    {...register("otp", { required: true })}
+                    {...register("otp", { required: "OTP is required" })}
                     className="pl-10"
                   />
                 </div>
+                {errors.otp && (
+                  <p className="text-red-500 text-sm">{errors.otp.message}</p>
+                )}
               </div>
               <Button type="submit" className="w-full bg-green-600 text-white hover:bg-green-700">
                 Verify OTP
@@ -142,10 +170,13 @@ const ForgotPassword = () => {
                   <Input
                     type="password"
                     placeholder="New password"
-                    {...register("newPassword", { required: true })}
+                    {...register("newPassword", { required: "New password is required" })}
                     className="pl-10"
                   />
                 </div>
+                {errors.newPassword && (
+                  <p className="text-red-500 text-sm">{errors.newPassword.message}</p>
+                )}
               </div>
               <div>
                 <Label>Confirm Password</Label>
@@ -154,10 +185,13 @@ const ForgotPassword = () => {
                   <Input
                     type="password"
                     placeholder="Confirm password"
-                    {...register("confirmPassword", { required: true })}
+                    {...register("confirmPassword", { required: "Confirm your password" })}
                     className="pl-10"
                   />
                 </div>
+                {errors.confirmPassword && (
+                  <p className="text-red-500 text-sm">{errors.confirmPassword.message}</p>
+                )}
               </div>
               <Button type="submit" className="w-full bg-blue-600 text-white hover:bg-blue-700">
                 Reset Password

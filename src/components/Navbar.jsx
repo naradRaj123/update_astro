@@ -48,11 +48,6 @@ const Navbar = () => {
       { name: "Ashtakoot", href: "/ashtakoot" },     
     ],
      },    
-
-       
-      ],
-    },
-
     { name: "Testimonials", href: "/testimonials" },
     { name: "Blog", href: "/blog" },
     { name: "Contact", href: "/contact" },
