@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import axios from 'axios';
 
-const AashakootPage = () => {
+const MachingPage = () => {
   const [matchResult, setMatchResult] = useState(null);
   const [loading, setLoading] = useState(false);
   const [boy, setBoy] = useState({ day: '', month: '', year: '', hour: '', minute: '', second: '', place: '' });
@@ -15,7 +15,6 @@ const AashakootPage = () => {
   const handleGenerateKundliMatch = async (e) => {
     e.preventDefault();
     setLoading(true);
-
     const boyDob = `${boy.day}/${boy.month}/${boy.year}`;
     const boyTob = `${boy.hour}:${boy.minute}`;
     const girlDob = `${girl.day}/${girl.month}/${girl.year}`;
@@ -36,7 +35,7 @@ const AashakootPage = () => {
     };
 
     try {
-      const response = await axios.get('https://astro-talk-backend.onrender.com/matching/ashakoot', { params });
+      const response = await axios.get('http://localhost:8000/matching/d', { params });
       setMatchResult(response.data.response);
       setBoy({ day: '', month: '', year: '', hour: '', minute: '', second: '', place: '' });
       setGirl({ day: '', month: '', year: '', hour: '', minute: '', second: '', place: '' });
@@ -48,12 +47,14 @@ const AashakootPage = () => {
     }
   };
 
+  const matchKeys = ['dina', 'gana', 'mahendra', 'rajju', 'rasi', 'rasiathi', 'sthree', 'vasya', 'vedha', 'yoni'];
+
   return (
     <div className="min-h-screen p-4 md:p-8 mt-[4rem]" style={{ backgroundColor: 'hsl(var(--light-red-secondary))' }}>
       <motion.div className="container mx-auto" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
         <Card className="shadow-2xl rounded-xl overflow-hidden border-2 border-primary-theme">
           <CardHeader className="text-center p-8 bg-gradient-to-br from-red-400 via-pink-400 to-rose-300">
-            <CardTitle className="text-4xl font-bold text-white">Aashakoot Matching</CardTitle>
+            <CardTitle className="text-4xl font-bold text-white">Dashakoot Matching</CardTitle>
             <CardDescription className="text-lg text-red-100 mt-2">
               Discover your cosmic blueprint. Enter your birth details to generate your personalized Kundli.
             </CardDescription>
@@ -70,53 +71,66 @@ const AashakootPage = () => {
                 </Button>
               </motion.div>
               <p className="text-center text-sm text-gray-600">
-                By generating Kundli, you agree to our <a href="/terms-of-service" className="text-primary-theme hover:underline">Terms of Service</a> and <a href="/privacy-policy" className="text-primary-theme hover:underline">Privacy Policy</a>.
+                By generating Kundli, you agree to our <a href="/terms-of-service" className="text-primary-theme hover:underline">Terms of Service</a> and{' '}
+                <a href="/privacy-policy" className="text-primary-theme hover:underline">Privacy Policy</a>.
               </p>
             </CardContent>
           </form>
         </Card>
 
         {matchResult && (
-          <motion.div className="mt-10 p-6 bg-white rounded-xl shadow-lg" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5, duration: 0.5 }}>
-            <h2 className="text-2xl font-semibold text-gray-700 text-center mb-4">Summary of Matchmaking Results</h2>
-            <p className="text-center text-lg font-medium text-green-600 mb-6">{matchResult.bot_response}</p>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-gray-700 mb-6">
-              <div className="bg-gray-100 p-4 rounded-lg shadow-sm">
-                <p><strong>Ashtakoot Score:</strong> {matchResult.ashtakoot_score}</p>
-                <p><strong>Dashkoot Score:</strong> {matchResult.dashkoot_score}</p>
-                <p><strong>Overall Score:</strong> {matchResult.score}/100</p>
-              </div>
-              <div className="bg-gray-100 p-4 rounded-lg shadow-sm">
-                <p><strong>Rajju Dosha:</strong> {matchResult.rajjudosh ? 'Yes' : 'No'}</p>
-                <p><strong>Vedha Dosha:</strong> {matchResult.vedhadosh ? 'Yes' : 'No'}</p>
-                <p><strong>Kaal Sarp Dosha:</strong> {matchResult.kaalsarpdosh}</p>
-              </div>
+          <motion.div className="mt-10 space-y-6" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5, duration: 0.5 }}>
+            <div className="bg-gradient-to-r from-pink-100 via-rose-100 to-red-50 p-6 rounded-xl shadow-md">
+              <h2 className="text-2xl font-bold text-red-700 text-center mb-2">Match Summary</h2>
+              <p className="text-center text-green-700 text-lg font-medium">{matchResult.bot_response}</p>
+              <p className="text-center mt-2 text-gray-600 font-semibold">
+                Compatibility Score:{' '}
+                <span className={`font-bold ${matchResult.score >= 7 ? 'text-green-600' : matchResult.score >= 4 ? 'text-yellow-600' : 'text-red-600'}`}>
+                  {matchResult.score}/10
+                </span>
+              </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-gray-700 mb-6">
-              <div className="bg-red-50 p-4 rounded-lg shadow-sm">
-                <p><strong>Mangal Dosh:</strong> {matchResult.mangaldosh}</p>
-                <p><strong>Boy Points:</strong> {matchResult.mangaldosh_points?.boy}</p>
-                <p><strong>Girl Points:</strong> {matchResult.mangaldosh_points?.girl}</p>
-              </div>
-              <div className="bg-red-50 p-4 rounded-lg shadow-sm">
-                <p><strong>Manglik by Saturn:</strong> {matchResult.manglikdosh_saturn}</p>
-                <p><strong>Boy:</strong> {matchResult.manglikdosh_saturn_points?.boy ? 'Yes' : 'No'}</p>
-                <p><strong>Girl:</strong> {matchResult.manglikdosh_saturn_points?.girl ? 'Yes' : 'No'}</p>
-              </div>
-            </div>
+            <div className="overflow-x-auto bg-white rounded-xl shadow-lg">
+              <table className="min-w-full text-sm border border-gray-200 rounded-md overflow-hidden">
+                <thead className="bg-red-200 text-red-800">
+                  <tr>
+                    <th className="px-6 py-3 text-left">Attribute</th>
+                    <th className="px-6 py-3 text-left">Boy</th>
+                    <th className="px-6 py-3 text-left">Girl</th>
+                    <th className="px-6 py-3 text-left">Score</th>
+                    <th className="px-6 py-3 text-left">Score</th>
+                    <th className="px-6 py-3 text-left">Description</th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white text-gray-700">
+                  {matchKeys.map((key) => {
+                    const item = matchResult[key];
+                    if (!item) return null;
 
-            <div className="bg-yellow-50 p-4 rounded-lg shadow-sm text-gray-700 mb-6">
-              <h3 className="text-lg font-semibold mb-2">Pitra Dosha</h3>
-              <p><strong>Description:</strong> {matchResult.pitradosh}</p>
-              <p><strong>Boy:</strong> {matchResult.pitradosh_points?.boy ? 'Yes' : 'No'}</p>
-              <p><strong>Girl:</strong> {matchResult.pitradosh_points?.girl ? 'Yes' : 'No'}</p>
-            </div>
+                    const boyVal =
+                      item[`boy_star`] || item[`boy_gana`] || item[`boy_rajju`] || item[`boy_rasi`] || item[`boy_lord`] || item[`boy_yoni`] || '—';
+                    const girlVal =
+                      item[`girl_star`] || item[`girl_gana`] || item[`girl_rajju`] || item[`girl_rasi`] || item[`girl_lord`] || item[`girl_yoni`] || '—';
 
-            <div className="mt-6 bg-blue-50 p-4 rounded-lg text-gray-800">
-              <h3 className="text-lg font-semibold mb-2">Extended Analysis</h3>
-              <p>{matchResult.extended_response}</p>
+                    return (
+                      <tr key={key} className="border-t border-gray-100 hover:bg-gray-50">
+                        <td className="px-6 py-4 font-medium text-red-700">{item.name}</td>
+                        <td className="px-6 py-4">{boyVal}</td>
+                        <td className="px-6 py-4">{girlVal}</td>
+                        <td className="px-6 py-4 font-semibold text-blue-600">{item[key]}</td>
+                        <td className="px-6 py-4 text-gray-600">{item.description}</td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+              <div className='p-4 flex  justify-content-between bg-red-400 text-center border-3 '>
+                  <div className='p-4 bg-red-900 text-white '></div>
+                  <div className=''>Kundli</div>
+                  <div className=''>Kundli</div>
+                  <div className=''>Kundli</div>
+              </div>
             </div>
           </motion.div>
         )}
@@ -149,4 +163,4 @@ const FormSection = ({ title, state, setState }) => (
   </div>
 );
 
-export default AashakootPage;
+export default MachingPage;

@@ -33,7 +33,7 @@ const ProductList = () => {
 
     const fetchProduct = async () => {
         try {
-            const res = await axios.get("https://astro-talk-backend.onrender.com/web/productlist");
+            const res = await axios.get("http://localhost:8000/web/productlist");
             // console.log(res.data.staticPath)
             setProduct(res.data.data || []);
             setPath(res.data.staticPath);
@@ -55,7 +55,7 @@ const ProductList = () => {
 
         setLoading(true);
         try {
-            const response = await axios.post(`https://astro-talk-backend.onrender.com/admin/userupdate`);
+            const response = await axios.post(`http://localhost:8000/admin/userupdate`);
 
             if (response.data.status) {
                 setStatus(!status); // update UI
@@ -67,7 +67,7 @@ const ProductList = () => {
             setLoading(false);
         }
     }
-
+    console.log(productlist)
     return (
         <div className="flex">
             <Sidebar />
@@ -114,7 +114,8 @@ const ProductList = () => {
                                     <tr key={v._id} className="border-b">
                                         <td className="px-4 py-2">{v.productName}</td>
                                         <td className="px-4 py-2">
-                                            <img src={`${staticPath}/${v.productCoverImg}`} alt="Product" height={100} width={100} />
+                                            {/* <img src={`${staticPath}/${v.productCoverImg}`} alt="Product" height={100} width={100} /> */}
+                                            <img crossOrigin="anonymous" src={`http://localhost:8000/upload/${v.productCoverImg}`} alt="Product" height={100} width={100} /> 
                                         </td>
 
                                         <td className="px-4 py-2">₹ {v.productPrice}</td>

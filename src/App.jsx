@@ -36,6 +36,8 @@ import HoroscopePage from "./pages/HoroscopePage";
 import PaymentRequestList from "./pages/admin/Paymentrequestlist";
 import DashakootPage from "./pages/Dashakoot";
 import AshtakootPage from "./pages/Ashtakoot";
+import NakshatraMatchPage from "./pages/NakshatraMatch";
+import MachingPage from "./pages/Maching";
 
 
 
@@ -69,7 +71,9 @@ function App() {
             <Route path="/horoscope" element={<HoroscopePage />} />
             <Route path="/dashakoot" element={<DashakootPage />} />
             <Route path="/ashtakoot" element={<AshtakootPage />} />
-            
+            <Route path="/nakshatra" element={<NakshatraMatchPage />} />
+            <Route path="/d" element={<MachingPage />} />
+
             {/* admin routes */}
             <Route path="/admin" element={<Dashboard />} />
             <Route path="/admin/astrologer" element={<Astrologer />} />

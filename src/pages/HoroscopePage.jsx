@@ -33,7 +33,7 @@ const HoroscopePage = () => {
     const currentDate = new Date();
     const formattedDate = currentDate.toLocaleDateString('en-GB'); // DD/MM/YYYY
      try {
-    const response = await axios.post('http://localhost:8000/prediction/daily', {
+    const response = await axios.post('https://astro-talk-backend.onrender.com/prediction/daily', {
       zodiacName: sign.name,
       date: formattedDate,
     });

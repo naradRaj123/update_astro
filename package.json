@@ -30,6 +30,7 @@
     "crypto-js": "^4.2.0",
     "framer-motion": "^10.16.4",
     "lucide-react": "^0.285.0",
+    "moment": "^2.30.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.57.0",

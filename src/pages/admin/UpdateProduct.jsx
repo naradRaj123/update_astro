@@ -76,100 +76,94 @@ const UpdateProduct = () => {
 
     // submit form
     const formRef = useRef(null);
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        // if (!validateForm()) {
-        //     return;
-        // }
-        setLoading(true)
-        // toastr.info("");
-        console.log(productData.productCoverImg)
-        // console.log(formData.image)
-        // ✅ Create FormData object for file upload
-        const data = new FormData();
-        data.append("title", formData.title);
-        data.append("shorttitle", formData.shorttitle);
-        data.append("description", formData.description);
-        data.append("price", formData.price);
-        data.append("discount", formData.discount);
-        data.append("status", formData.status);
-        // data.append("image", formData.image); // important: File object
-        if (formData.image) {
-            data.append("image", formData.image); // New image selected
-        } else {
-            data.append("existingImage", productData.productCoverImg); // Use existing
-        }
-        console.log("this is upded image",formData.image)
-        try {
-            const res = await axios.post(
-                `https://astro-talk-backend.onrender.com/web/productUpdate/${id}`,
-                data,
-                {
-                    headers: {
-                        "Content-Type": "multipart/form-data",
-                    },
-                }
-            );
+   const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
 
-            if (res.data?.status) {
-                setLoading(false)
-                toastr.success(res.data.msg || "Product Update successfully!");
-                setForm({
-                    title: "",
-                    shorttitle: "",
-                    description: "",
-                    price: "",
-                    discount: "",
-                    status: "",
-                    image: null,
-                });
-                formRef.current.reset();
-                // window.location.href='/admin/productlist';
-                fetchProduct();
-            } else {
-                toastr.error(res.data.msg || "Something went wrong");
+    const data = new FormData();
+    data.append("productName", formData.title);
+    data.append("productSortTitle", formData.shorttitle);
+    data.append("productDesc", formData.description);
+    data.append("productPrice", formData.price);
+    data.append("discount", formData.discount);
+    data.append("productStatus", formData.status);
+
+    if (formData.image) {
+        data.append("image", formData.image);
+    } else {
+        data.append("existingImage", productData.productCoverImg);
+    }
+
+    try {
+        const res = await axios.post(
+            `http://localhost:8000/web/productUpdate/${id}`,
+            data,
+            {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
             }
-        } catch (error) {
-            console.error("Upload Error:", error);
-            if (error.response) {
-                toastr.error(error.response.data?.msg || "Server error", "Server Error");
-            } else if (error.request) {
-                toastr.error("No response from server", "Network Error");
-            } else {
-                toastr.error(error.message || "Unexpected error", "Error");
-            }
+        );
+
+        if (res.data?.status) {
+            setLoading(false);
+            toastr.success(res.data.msg || "Product updated successfully!");
+            setForm({
+                title: "",
+                shorttitle: "",
+                description: "",
+                price: "",
+                discount: "",
+                status: "",
+                image: null,
+            });
+            formRef.current.reset();
+            fetchProduct();
+        } else {
+            toastr.error(res.data.msg || "Something went wrong");
         }
-    };
+    } catch (error) {
+        console.error("Upload Error:", error);
+        if (error.response) {
+            toastr.error(error.response.data?.msg || "Server error", "Server Error");
+        } else if (error.request) {
+            toastr.error("No response from server", "Network Error");
+        } else {
+            toastr.error(error.message || "Unexpected error", "Error");
+        }
+    }
+};
+
 
 
 
     // get data of product by id
 
     // fetchProduct();
-     const fetchProduct = async () => {
-            try {
-                const res = await axios.get(`https://astro-talk-backend.onrender.com/web/getProductById/${id}`);
-                const product = res.data.data;
-                setProduct(product);
-                // ✅ Now set form
-                setForm({
-                    title: product.productName || "",
-                    shorttitle: product.productSortTitle || "",
-                    description: product.productDesc || "",
-                    price: product.productPrice || "",
-                    discount: product.discount || "",
-                    status: product.status?.toString() || "",
-                    image: null
-                });
-            } catch (err) {
-                console.error("Error fetching product:", err);
-                setProduct({});
-            } finally {
-                setLoading(false);
-            }
-        };
+    const fetchProduct = async () => {
+        try {
+            const res = await axios.get(`http://localhost:8000/web/getProductById/${id}`);
+            const product = res.data.data;
+            setProduct(product);
+            // ✅ Now set form
+            setForm({
+                title: product.productName || "",
+                shorttitle: product.productSortTitle || "",
+                description: product.productDesc || "",
+                price: product.productPrice || "",
+                discount: product.discount || "",
+                status: product.status?.toString() || "",
+                image: null
+            });
+        } catch (err) {
+            console.error("Error fetching product:", err);
+            setProduct({});
+        } finally {
+            setLoading(false);
+        }
+    };
     useEffect(() => {
-       
+
 
         fetchProduct();
     }, [id]); // ✅ important: use `id` from `useParams`
@@ -250,7 +244,7 @@ const UpdateProduct = () => {
                                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                             />
                             <img
-                                src={`https://astro-talk-backend.onrender.com/upload/${productData.productCoverImg}`}
+                                src={`http://localhost:8000/upload/${productData.productCoverImg}`}
                                 alt="Current"
                                 className="w-32 h-32 object-cover border rounded"
                             />

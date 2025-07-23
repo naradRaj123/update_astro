@@ -160,25 +160,29 @@ const AstrologerDashboard = () => {
   // login astrologer id
   console.log(astroFilterData._id);
   
-  const handlePaymentRequest=async(e)=>{
-    e.preventDefault();
-    
-    // request create
-    const paymentData=await axios.post('http://localhost:8000/create-order', 
-      { amount:walletInput, astrologerId:astroFilterData._id })
-    .then((res)=>{
-        
-        if(res.data.status){
-          setOpenModal(false)
-          toastr.success("Withdrawal request submitted successfully.")
-        }
-    })
-    .catch((error)=>{
-      setOpenModal(false)
-          toastr.error("Withdrawal request submitted Failed.")
-    })
-    
+ const handlePaymentRequest = async (e) => {
+  e.preventDefault();
+
+  try {
+    const response = await axios.post('http://localhost:8000/create-order', {
+      amount: Number(walletInput),
+      astrologerId: astroFilterData._id
+    });
+    console.log(response)
+    if (response.data.status) {
+      setOpenModal(false);
+      toastr.success("Withdrawal request submitted successfully.");
+    } else {
+      setOpenModal(false);
+      toastr.error(response.data.message || "Request failed.");
+    }
+  } catch (error) {
+    setOpenModal(false);
+    console.error("Payment request error:", error);
+    toastr.error(error.response?.data?.message || "Withdrawal request submission failed.");
   }
+};
+
 
 
   return (

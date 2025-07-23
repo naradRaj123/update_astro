@@ -39,8 +39,10 @@ const Navbar = () => {
      { name: "Matching ",
       icon: <ChevronDown className="ml-1 inline-block w-4 h-4" />,
       dropdown: [
-      { name: "Dashakoot", href: "/dashakoot" },
-      { name: "Ashtakoot", href: "/ashtakoot" },     
+      { name: "Dashakoot ", href: "/dashakoot" },
+      { name: "Ashtakoot ", href: "/ashtakoot" },
+      { name: "Makshatra-match ", href: "/nakshatra" },
+      { name: "Ashtakoot & Dashakoot ", href: "/d" },     
     ],
      },    
     { name: "Testimonials", href: "/testimonials" },

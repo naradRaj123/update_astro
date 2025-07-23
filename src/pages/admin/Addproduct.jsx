@@ -17,7 +17,7 @@ const AddProduct = () => {
 
   const fetchAstrologers = async () => {
     try {
-      const res = await axios.get("https://astro-talk-backend.onrender.com/web/astro/astrolist");
+      const res = await axios.get("http://localhost:8000/web/astro/astrolist");
       setAstrologers(res.data.data || []);
     } catch (error) {
       console.error("Error fetching astrologers:", error);
@@ -105,7 +105,7 @@ const AddProduct = () => {
 
   try {
     const res = await axios.post(
-      `https://astro-talk-backend.onrender.com/web/addproduct`,
+      `http://localhost:8000/web/addproduct`,
       data,
       {
         headers: {

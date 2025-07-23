@@ -42,9 +42,7 @@ const ProductDetail = () => {
 
   const product = products.find((p) => p.id === id);
 
-  // const handleBuyNow = () => {
-  //   navigate(`/checkout/${product.id}`, { state: { product } });
-  // };
+  
 
   const handleBuyNow = () => {
   const isLoggedIn = localStorage.getItem("token"); // Adjust key if different
