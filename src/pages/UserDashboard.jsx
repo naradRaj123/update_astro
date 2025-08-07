@@ -50,7 +50,7 @@ const UserDashboard = () => {
 
   // Redirect if not logged in
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("userToken");
     if (!token) {
       navigate("/user-login");
     }
