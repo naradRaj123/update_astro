@@ -164,7 +164,7 @@ const UserDashboard = () => {
             <Button
               variant="outline"
               className="w-full justify-start text-left py-3 border-red-300 hover:border-red-500 hover:bg-red-50"
-              onClick={() => navigate("/chat")}
+              onClick={() => navigate("/astrologers")}
             >
               <MessageSquare className="mr-3 h-5 w-5 text-red-500" /> Chat with Astrologer
             </Button>

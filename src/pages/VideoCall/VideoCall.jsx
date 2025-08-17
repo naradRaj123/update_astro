@@ -1,6 +1,20 @@
 import React, { useRef, useState } from 'react';
 import AgoraRTC from 'agora-rtc-sdk-ng';
 import axios from 'axios';
+import { Button } from '@/components/ui/button';
+import {
+  User,
+  Settings,
+  Bell,
+  ShoppingBag,
+  Star,
+  MessageSquare,
+  Video,
+  HelpCircle,
+  LogOut,
+  Zap,
+  Heart
+} from 'lucide-react';
 
 
 const VideoCall = ({ channel, uid }) => {
@@ -13,6 +27,7 @@ const VideoCall = ({ channel, uid }) => {
 
   const joinCall = async () => {
     console.log("join call button clicked.")
+    setJoined(true);
     try {
       // 1. Fetch the App ID and Token
       const res = await axios.get(`https://astro-talk-backend.onrender.com/web/agora/astro/token`, {
@@ -50,9 +65,9 @@ const VideoCall = ({ channel, uid }) => {
         remoteRef.current.innerHTML = '';
       });
 
-      setJoined(true);
     } catch (error) {
       console.error('Failed to join call:', error);
+      setJoined(false);
     }
   };
 
@@ -75,16 +90,78 @@ const VideoCall = ({ channel, uid }) => {
 
   return (
     <div>
-      <h2>1-to-1 Agora Video Call</h2>
       {!joined ? (
-        <button style={{backgroundColor:"pink"}} onClick={joinCall}>Join Call</button>
+        <Button
+          variant="outline"
+          className="w-full justify-start text-left py-3 border-red-300 hover:border-red-500 hover:bg-red-50"
+          onClick={joinCall}
+        >
+          <MessageSquare className="mr-3 h-5 w-5 text-red-500" /> Join Call
+        </Button>
       ) : (
         <button onClick={leaveCall}>Leave Call</button>
       )}
-      <div style={{ display: 'flex', gap: '20px', marginTop: '20px' }}>
+      {/* <div style={{ display: 'flex', gap: '20px', marginTop: '20px' }}>
         <div ref={localRef} style={{ width: '320px', height: '240px', border: '1px solid #333' }}></div>
         <div ref={remoteRef} style={{ width: '320px', height: '240px', border: '1px solid #333' }}></div>
-      </div>
+      </div> */}
+      {/* Modal for Video Call */}
+      {joined && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100vw",
+            height: "100vh",
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: 1000,
+          }}
+        >
+          <div>
+            <div
+              style={{
+                display: "flex",
+                gap: "20px",
+                background: "#222",
+                padding: "20px",
+                borderRadius: "8px",
+              }}
+            >
+              <div
+                ref={localRef}
+                style={{ width: "620px", height: "500px", background: "black" }}
+              ></div>
+              <div
+                ref={remoteRef}
+                style={{ width: "620px", height: "500px", background: "black" }}
+              ></div>
+            </div>
+
+            <div style={{ display: "flex", justifyContent: "center", marginTop: "2rem" }}>
+              <button
+                onClick={leaveCall}
+                style={{
+                  // position: "absolute",
+                  // top: "20px",
+                  // right: "20px",
+                  background: "red",
+                  color: "white",
+                  border: "none",
+                  padding: "10px 15px",
+                  borderRadius: "5px",
+                  cursor: "pointer",
+                }}
+              >
+                Leave Call
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
