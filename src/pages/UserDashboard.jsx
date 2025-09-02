@@ -115,7 +115,7 @@ const UserDashboard = () => {
             description="Review your past chat conversations with astrologers."
             icon={MessageSquare}
             actionText="View Chats"
-            onActionClick={() => navigate("/chats")}
+            onActionClick={() => navigate("/user-chats")}
           />
           <DashboardCard
             title="Call Recordings"
@@ -175,6 +175,7 @@ const UserDashboard = () => {
           
         </div>
       </motion.div>
+      
     </div>
   );
 };
