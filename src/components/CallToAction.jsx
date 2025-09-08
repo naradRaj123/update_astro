@@ -25,7 +25,7 @@ const CallToAction = () => {
             <Button size="lg" className="bg-white text-primary hover:bg-white/90">
               <PhoneCall className="mr-2 h-5 w-5" /> Talk to Astrologer
             </Button>
-            <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10">
+            <Button size="lg" variant="outline" className="border-white text-primary hover:bg-white/10">
               <MessageCircle className="mr-2 h-5 w-5" /> Chat Consultation
             </Button>
           </div>
