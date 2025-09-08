@@ -1,0 +1,127 @@
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<link rel="icon" type="image/png" href="/logo.png?v=2" />
+
+		<meta name="generator" content="Hostinger Horizons" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Astrotruth - Online Astrology Consultation</title>
+		<meta name="description" content="Connect with expert astrologers for personalized readings, horoscopes, and spiritual guidance. Get instant solutions for life's challenges through online astrology consultation." />
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+		<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+		<script type="module" crossorigin src="/assets/index-2e079d0c.js"></script>
+		<link rel="stylesheet" href="/assets/index-724d1a85.css">
+		<script type="module">
+window.onerror = (message, source, lineno, colno, errorObj) => {
+  const errorDetails = errorObj ? JSON.stringify({
+    name: errorObj.name,
+    message: errorObj.message,
+    stack: errorObj.stack,
+    source,
+    lineno,
+    colno,
+  }) : null;
+
+  window.parent.postMessage({
+    type: 'horizons-runtime-error',
+    message,
+    error: errorDetails
+  }, '*');
+};
+</script>
+		<script type="module">
+const observer = new MutationObserver((mutations) => {
+  for (const mutation of mutations) {
+    for (const addedNode of mutation.addedNodes) {
+      if (
+        addedNode.nodeType === Node.ELEMENT_NODE &&
+        (
+          addedNode.tagName?.toLowerCase() === 'vite-error-overlay' ||
+          addedNode.classList?.contains('backdrop')
+        )
+      ) {
+        handleViteOverlay(addedNode);
+      }
+    }
+  }
+});
+
+observer.observe(document.documentElement, {
+  childList: true,
+  subtree: true
+});
+
+function handleViteOverlay(node) {
+  if (!node.shadowRoot) return;
+
+  const backdrop = node.shadowRoot.querySelector('.backdrop');
+  if (backdrop) {
+    const overlayHtml = backdrop.outerHTML;
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(overlayHtml, 'text/html');
+    const message = doc.querySelector('.message-body')?.textContent.trim() || '';
+    const file = doc.querySelector('.file')?.textContent.trim() || '';
+
+    window.parent.postMessage({
+      type: 'horizons-vite-error',
+      error: message + (file ? ' File: ' + file : ''),
+    }, '*');
+  }
+}
+</script>
+		<script type="module">
+const originalConsoleError = console.error;
+console.error = function(...args) {
+  originalConsoleError.apply(console, args);
+
+  let errorString = '';
+  for (const arg of args) {
+    if (arg instanceof Error) {
+      errorString = arg.stack || `${arg.name}: ${arg.message}`;
+      break;
+    }
+  }
+
+  if (!errorString) {
+    errorString = args.map(arg => typeof arg === 'object' ? JSON.stringify(arg) : String(arg)).join(' ');
+  }
+
+  window.parent.postMessage({
+    type: 'horizons-console-error',
+    error: errorString
+  }, '*');
+};
+</script>
+		<script type="module">
+const originalFetch = window.fetch;
+window.fetch = function(...args) {
+  const url = args[0] instanceof Request ? args[0].url : args[0];
+  if (url.startsWith('ws:') || url.startsWith('wss:')) return originalFetch.apply(this, args);
+
+  return originalFetch.apply(this, args)
+    .then(async response => {
+      const contentType = response.headers.get('Content-Type') || '';
+      const isDocument = contentType.includes('text/html') || contentType.includes('application/xhtml+xml');
+      if (!response.ok && !isDocument) {
+        const errorText = await response.clone().text();
+        console.error(`Fetch error from ${response.url}: ${errorText}`);
+      }
+      return response;
+    })
+    .catch(error => {
+      if (!url.match(/\.html?$/i)) console.error(error);
+      throw error;
+    });
+};
+</script>
+	</head>
+	<body>
+		<div id="root"></div>
+		
+		
+	</body>
+</html>
