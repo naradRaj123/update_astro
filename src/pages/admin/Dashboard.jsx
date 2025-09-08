@@ -42,16 +42,16 @@ const Dashboard = () => {
 
 
   // check location 
-  const location=useLocation();
+  const location = useLocation();
   console.log(location.pathname)
-  
+
   // get token from localstorage
-  const loginToken=localStorage.getItem('admin_token');
-    if(loginToken==""){
-      window.location.href='/admin-login';
-    }
-    
-  
+  // const loginToken=localStorage.getItem('admin_token');
+  //   if(loginToken==""){
+  //     window.location.href='/admin-login';
+  //   }
+
+
 
 
   return (

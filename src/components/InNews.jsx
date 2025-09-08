@@ -37,7 +37,7 @@ const InNews = () => {
               transition={{ duration: 0.5, delay: index * 0.1 }}
               className="flex justify-center"
             >
-              <img  className="h-12 md:h-16 news-logo" alt={logo.alt} src="https://images.unsplash.com/photo-1485531865381-286666aa80a9" />
+              <img  className="h-12 md:h-40 news-logo" alt={logo.alt} src="https://images.unsplash.com/photo-1485531865381-286666aa80a9" />
             </motion.div>
           ))}
         </div>

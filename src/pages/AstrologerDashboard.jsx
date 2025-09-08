@@ -31,6 +31,7 @@ import * as Dialog from '@radix-ui/react-dialog';
 import axios from "axios";
 import toastr from 'toastr';
 import 'toastr/build/toastr.min.css';
+import VideoCall from "./VideoCall/VideoCall";
 
 
 const StatBox = ({
@@ -158,7 +159,7 @@ const AstrologerDashboard = () => {
 
 
   // login astrologer id
-  console.log(astroFilterData._id);
+  console.log("astrologer encripted data",astroFilterData);
   
  const handlePaymentRequest = async (e) => {
   e.preventDefault();
@@ -276,6 +277,7 @@ const AstrologerDashboard = () => {
                 variant={isVideoEnabled ? "destructive" : "default"}
                 className={isVideoEnabled ? "" : "bg-green-500 hover:bg-green-600"}
               />
+              <VideoCall channel={astroFilterData?.agoraChannel} uid={Math.floor(Math.random() * 1000000)} />
               <ActionButton
                 label="Go Live"
                 icon={CalendarCheck2}

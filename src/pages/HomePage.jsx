@@ -17,6 +17,7 @@ import AstrologicalRemedies from "@/components/AstrologicalRemedies";
 import CelebrityCustomers from "@/components/CelebrityCustomers";
 import AccurateAnswers from "@/components/AccurateAnswers";
 import VideosPage from "./VideosPage";
+import VideoCall from "./VideoCall/VideoCall";
 
 
 const HomePage = () => {
@@ -40,6 +41,7 @@ const HomePage = () => {
       <FAQ />
       <Blog />
       <CallToAction />
+      {/* <VideoCall /> */}
     </>
   );
 };

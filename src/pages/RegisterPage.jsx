@@ -78,7 +78,7 @@ const RegisterPage = () => {
                   <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                   <Input
                     type="text"
-                    placeholder="John Doe"
+                    placeholder="Name"
                     {...register("name", { required: "Name is required" })}
                     className="pl-10"
                   />
@@ -93,7 +93,7 @@ const RegisterPage = () => {
                   <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                   <Input
                     type="email"
-                    placeholder="you@example.com"
+                    placeholder="Email"
                     {...register("email", {
                       required: "Email is required",
                       pattern: {
@@ -114,7 +114,7 @@ const RegisterPage = () => {
                   <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                   <Input
                     type="tel"
-                    placeholder="9876543210"
+                    placeholder="Mobile number"
                     {...register("mobile", {
                       required: "Mobile number is required",
                       pattern: {
@@ -133,7 +133,7 @@ const RegisterPage = () => {
                 <Label htmlFor="address">Address</Label>
                 <Input
                   type="text"
-                  placeholder="123, Galaxy Street, Earth"
+                  placeholder="Address"
                   {...register("address", { required: "Address is required" })}
                 />
                 {errors.address && <p className="text-red-500 text-sm">{errors.address.message}</p>}
