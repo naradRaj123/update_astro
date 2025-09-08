@@ -123,21 +123,15 @@ const VideoCall = ({ channel, uid }) => {
         >
           <div>
             <div
-              style={{
-                display: "flex",
-                gap: "20px",
-                background: "#222",
-                padding: "20px",
-                borderRadius: "8px",
-              }}
+              className="flex flex-col md:flex-row gap-5 bg-[#222] p-5 rounded-lg"
             >
               <div
                 ref={localRef}
-                style={{ width: "620px", height: "500px", background: "black" }}
+                className="w-[320px] h-[240px] md:w-[620px] md:h-[500px] bg-black"
               ></div>
               <div
                 ref={remoteRef}
-                style={{ width: "620px", height: "500px", background: "black" }}
+                className="w-[320px] h-[240px] md:w-[620px] md:h-[500px] bg-black"
               ></div>
             </div>
 

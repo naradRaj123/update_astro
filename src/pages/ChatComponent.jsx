@@ -44,7 +44,7 @@ const ChatComponent = () => {
     return (
         <div className="min-h-screen bg-gradient-to-br from-red-100 via-pink-100 to-rose-100 ">
             <motion.div
-                className="container mx-auto"
+                className="container md:mx-auto"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.5 }}
@@ -53,7 +53,7 @@ const ChatComponent = () => {
                     {/* Sidebar - shown only if no user is selected */}
                     {selectedUser === null && (
                         <div className="h-full flex items-center justify-center">
-                            <div className="w-[50%] bg-white shadow-lg h-full rounded-xl">
+                            <div className="md:w-[50%] w-full bg-white shadow-lg h-full rounded-xl">
                                 <div className="p-4 border-b-4 flex justify-between">
                                     <button
                                         onClick={() => navigate("/user-dashboard")}
