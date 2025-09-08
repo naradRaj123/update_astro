@@ -41,7 +41,7 @@ const HomePage = () => {
       <FAQ />
       <Blog />
       <CallToAction />
-      <VideoCall />
+      {/* <VideoCall /> */}
     </>
   );
 };

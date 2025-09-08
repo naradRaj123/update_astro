@@ -1,13 +1,14 @@
 
 import React from "react";
-import { Facebook, Twitter, Instagram, Youtube, Mail, Phone, MapPin, LinkedinIcon } from "lucide-react";
+import { Facebook, Twitter, Instagram, Youtube, Mail, Phone, MapPin, LinkedinIcon, Home, Sparkles, Play, MessageCircle, History } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import logo from '../assets/images/logo.png'
 const Footer = () => {
   return (
-    <footer className="bg-gray-900 text-white pt-16 pb-8">
+    <>
+    <footer className="hidden md:block bg-gray-900 text-white pt-16 pb-8">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
           <div className="flex flex-col items-start lg:items-start">
@@ -107,6 +108,31 @@ const Footer = () => {
         </div>
       </div>
     </footer>
+
+
+    <div className="md:hidden fixed bottom-0 left-0 w-full bg-white border-t shadow flex justify-around py-2">
+        <Link to="/" className="flex flex-col items-center text-gray-700">
+          <Home className="h-6 w-6" />
+          <span className="text-xs">Home</span>
+        </Link>
+        <Link to="/astrologers" className="flex flex-col items-center text-gray-700">
+          <Sparkles className="h-6 w-6" />
+          <span className="text-xs">Astro</span>
+        </Link>
+        <Link to="/live" className="flex flex-col items-center text-gray-700">
+          <Play className="h-6 w-6" />
+          <span className="text-xs">Live</span>
+        </Link>
+        <Link to="/chat" className="flex flex-col items-center text-gray-700">
+          <MessageCircle className="h-6 w-6" />
+          <span className="text-xs">Chat</span>
+        </Link>
+        <Link to="/history" className="flex flex-col items-center text-gray-700">
+          <History className="h-6 w-6" />
+          <span className="text-xs">History</span>
+        </Link>
+      </div>
+    </>
   );
 };
 
