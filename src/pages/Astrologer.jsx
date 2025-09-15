@@ -9,14 +9,22 @@ import axios from "axios";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import VideoCall from "./VideoCall/VideoCall";
+import {io} from 'socket.io-client';
+
+// connet socket io from backend
+const socket = io("http://localhost:8000/", {
+  autoConnect: true,  
+});
 
 const Astrologer = () => {
   const [astrologerList, setAstrologerList] = useState([]);
   const navigate = useNavigate();
 
+  // https://astro-talk-backend.onrender.com
+
   const fetchAstrologers = async () => {
     try {
-      const res = await axios.get("https://astro-talk-backend.onrender.com/web/astro/astrolist");
+      const res = await axios.get("http://localhost:8000/web/astro/astrolist");
       setAstrologerList(res.data?.data || []);
     } catch (err) {
       console.error("Error fetching astrologers:", err);
@@ -25,7 +33,29 @@ const Astrologer = () => {
 
   useEffect(() => {
     fetchAstrologers();
+    // listen message from backend
+    socket.on("onlineUsers", (data) => {
+      console.log("✅ All Online users:", data);
+    });
+    socket.on('onlineAstrologer',(allAstro)=>{
+      console.log(allAstro);
+    })
+    // return () => {
+    //   socket.off("onlineAstro");
+    // };
   }, []);
+   socket.on('onlineAstrologer',(allAstro)=>{
+      console.log(allAstro);
+    })
+    // socket.emit('sendMessage',{asto})
+  const sendMessage = () => {   
+    socket.emit("registerAstro", {astro_id: "Astro1300",message:"This is new message 120 "});
+  };
+  // disconnect user
+  const disconnectUser = () => {
+    socket.disconnect();
+    console.log("User disconnected manually");
+  };
 
   return (
     <>
@@ -100,6 +130,29 @@ const Astrologer = () => {
                       >
                         Book for Puja
                       </Button>
+
+                    </div>
+                    <div className="flex justify-between items-center mt-4">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="rounded-full"
+                        onClick={sendMessage}
+                      >
+                        Chat 
+                      </Button>
+                      
+                    </div>
+                    <div className="flex justify-between items-center mt-4">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="rounded-full"
+                        onClick={disconnectUser}
+                      >
+                        Disconnect 
+                      </Button>
+                      
                     </div>
                   </CardContent>
                   <VideoCall

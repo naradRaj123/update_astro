@@ -41,7 +41,7 @@ const AstroLogin = () => {
 
     try {
       const response = await axios.post(
-        "https://astro-talk-backend.onrender.com/web/astro/login",
+        "http://localhost:8000/web/astro/login",
         { email, password }
       );
 

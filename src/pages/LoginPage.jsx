@@ -49,11 +49,11 @@ const LoginPage = () => {
 
 
  
-   
+  //  https://astro-talk-backend.onrender.com
 
     try {
       const response = await axios.post(
-        "https://astro-talk-backend.onrender.com/web/login/",
+        "http://localhost:8000/web/login/",
         { email, password }
       );
 
