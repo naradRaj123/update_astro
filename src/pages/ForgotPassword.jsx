@@ -30,9 +30,10 @@ const ForgotPassword = () => {
       alert("Please enter a valid email.");
       return;
     }
+    // https://astro-talk-backend.onrender.com
     try {
       await axios.post(
-        "https://astro-talk-backend.onrender.com/web/astro/sendOtp",
+        "http://localhost:8000/web/user/sendOtpUsers",
         { email: userEmail }
       );
       setEmail(userEmail);
@@ -40,7 +41,8 @@ const ForgotPassword = () => {
       setStep(2);
     } catch (err) {
       console.error("Send OTP Error:", err.response?.data || err.message);
-      alert(err.response?.data?.message || "Failed to send OTP.");
+      // alert(err.response?.data?.message || "Failed to send OTP.");
+      // show uere 
     }
   };
 
@@ -55,7 +57,7 @@ const ForgotPassword = () => {
 
     try {
       await axios.post(
-        "https://astro-talk-backend.onrender.com/web/astro/verifyOtp",
+        "http://localhost:8000/web/user/verifyOtpUsers",
         { email: userEmail, otp: otpValue }
       );
       alert("OTP verified successfully.");
@@ -76,7 +78,7 @@ const ForgotPassword = () => {
 
     try {
       await axios.post(
-        "https://astro-talk-backend.onrender.com/web/astro/resetPassword",
+        "http://localhost:8000/web/user/resetPasswordUsers",
         {
           email,
           newPassword,

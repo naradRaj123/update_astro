@@ -119,15 +119,15 @@ const Footer = () => {
           <Sparkles className="h-6 w-6" />
           <span className="text-xs">Astro</span>
         </Link>
-        <Link to="/live" className="flex flex-col items-center text-gray-700">
+        <Link to="/astrologers" className="flex flex-col items-center text-gray-700">
           <Play className="h-6 w-6" />
           <span className="text-xs">Live</span>
         </Link>
-        <Link to="/chat" className="flex flex-col items-center text-gray-700">
+        <Link to="/user-chats" className="flex flex-col items-center text-gray-700">
           <MessageCircle className="h-6 w-6" />
           <span className="text-xs">Chat</span>
         </Link>
-        <Link to="/history" className="flex flex-col items-center text-gray-700">
+        <Link to="/astrologers" className="flex flex-col items-center text-gray-700">
           <History className="h-6 w-6" />
           <span className="text-xs">History</span>
         </Link>
