@@ -43,7 +43,11 @@ import AstroUpdate from "./pages/Profile/AstroUpdate";
 import PrivateRoute from "./lib/PrivateRoute";
 import ForgotPassword from "./pages/ForgotPassword";
 import JoinCall from "./pages/VideoCall/JoinCall";
+
 import ChatPage from "./pages/chat";
+
+import ChatComponent from "./pages/ChatComponent";
+
 
 // ✅ Import PrivateRoute
 
@@ -153,6 +157,14 @@ function App() {
               element={
                 <PrivateRoute>
                   <UserDashboard />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/user-chats"
+              element={
+                <PrivateRoute>
+                  <ChatComponent />
                 </PrivateRoute>
               }
             />
