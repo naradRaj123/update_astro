@@ -33,7 +33,7 @@ const PaymentRequestList = () => {
 
     const fetchPaymentRequest = async () => {
         try {
-            const res = await axios.get("http://localhost:8000/web/paymentRequest");
+            const res = await axios.get("https://astro-talk-backend.onrender.com/web/paymentRequest");
             console.log(res.data.data)
             setPayment(res.data.data || []);
             setPath(res.data.staticPath);
@@ -49,7 +49,7 @@ const PaymentRequestList = () => {
     const getInfoAstrologerInfoById = async (astrologerId) => {
         console.log(astrologerId)
         try {
-            const response = await fetch('http://localhost:8000/web/astro/astrolinfo', {
+            const response = await fetch('https://astro-talk-backend.onrender.com/web/astro/astrolinfo', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -85,7 +85,7 @@ const PaymentRequestList = () => {
 
         try {
             // Step 1: Create Razorpay order
-            const res = await axios.post(`http://localhost:8000/create-order`, {
+            const res = await axios.post(`https://astro-talk-backend.onrender.com/create-order`, {
                 amount: v.requestAmount,
                 astrologerId:v.astrologerId,
             });

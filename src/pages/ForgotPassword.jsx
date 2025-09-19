@@ -33,7 +33,7 @@ const ForgotPassword = () => {
     // https://astro-talk-backend.onrender.com
     try {
       await axios.post(
-        "http://localhost:8000/web/user/sendOtpUsers",
+        "https://astro-talk-backend.onrender.com/web/user/sendOtpUsers",
         { email: userEmail }
       );
       setEmail(userEmail);
@@ -57,7 +57,7 @@ const ForgotPassword = () => {
 
     try {
       await axios.post(
-        "http://localhost:8000/web/user/verifyOtpUsers",
+        "https://astro-talk-backend.onrender.com/web/user/verifyOtpUsers",
         { email: userEmail, otp: otpValue }
       );
       alert("OTP verified successfully.");
@@ -78,7 +78,7 @@ const ForgotPassword = () => {
 
     try {
       await axios.post(
-        "http://localhost:8000/web/user/resetPasswordUsers",
+        "http://https://astro-talk-backend.onrender.com/web/user/resetPasswordUsers",
         {
           email,
           newPassword,
