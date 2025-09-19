@@ -185,13 +185,26 @@ const Astrologer = () => {
                           size="sm"
                           variant="outline"
                           className="rounded-full"
-                          onClick={() => console.log("Chat with", astrologer._id)}
+                          onClick={() => navigate("/user-chats", {
+                            state: {
+                              user: {
+                                id: 1,
+                                name: "Alice",
+                                img: "https://i.pravatar.cc/50?img=1",
+                                messages: [
+                                  { sender: "Alice", text: "Hi there!" },
+                                  { sender: "me", text: "Hello Alice 👋" },
+                                ],
+                              },
+                            }
+                          }
+                          )}
                         >
                           Chat
                         </Button>
                       </div>
 
-                      <div className="flex justify-between items-center mt-4">
+                      {/* <div className="flex justify-between items-center mt-4">
                         <Button
                           size="sm"
                           variant="outline"
@@ -200,7 +213,7 @@ const Astrologer = () => {
                         >
                           Disconnect
                         </Button>
-                      </div>
+                      </div> */}
 
                       <div className="flex justify-between items-center mt-4">
                         <VideoCall
