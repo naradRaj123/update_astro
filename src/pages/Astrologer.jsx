@@ -47,7 +47,7 @@ const Astrologer = () => {
     socket.on("onlineAstrologers", (onlineAstrolist) => {
       console.log("🔮 Full Online Astrologers:", onlineAstrolist);
       // Store only astroIds in state
-    // setOnlineAstrologers(Object.keys(onlineAstrolist || {})); // store as object
+      // setOnlineAstrologers(Object.keys(onlineAstrolist || {})); // store as object
     });
 
     return () => {
@@ -65,7 +65,7 @@ const Astrologer = () => {
   }, []);
 
   console.log("online astro list", onlineAstrologers)
-  
+
   socket.on("onlineAstrologers", ({ onlineAstrolist }) => {
     console.log("🔮 Full Online Astrologers:", onlineAstrolist);
     setOnlineAstrologers(Object.keys(onlineAstrolist || {}));
@@ -200,6 +200,14 @@ const Astrologer = () => {
                         >
                           Disconnect
                         </Button>
+                      </div>
+
+                      <div className="flex justify-between items-center mt-4">
+                        <VideoCall
+                          channel={astrologer.agoraChannel}
+                          token={astrologer.agoraToken}
+                          uid={astrologer.agoraUID}
+                        />
                       </div>
                     </CardContent>
                   </Card>
