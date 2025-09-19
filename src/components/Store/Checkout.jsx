@@ -30,7 +30,7 @@ const Checkout = () => {
     }
 
     try {
-      const { data } = await axios.post("http://localhost:8000/paynow", {
+      const { data } = await axios.post("https://astro-talk-backend.onrender.com/paynow", {
         amount: product.price * 100, // Razorpay accepts paise
         currency: "INR",
       });

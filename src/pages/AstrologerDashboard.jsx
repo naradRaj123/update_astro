@@ -175,7 +175,7 @@ const AstrologerDashboard = () => {
   e.preventDefault();
 
   try {
-    const response = await axios.post('http://localhost:8000/create-order', {
+    const response = await axios.post('https://astro-talk-backend.onrender.com/create-order', {
       amount: Number(walletInput),
       astrologerId: astroFilterData._id
     });

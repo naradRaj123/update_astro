@@ -19,7 +19,7 @@ const Astrologer = () => {
   const [loading, setLoading] = useState(true);
 
   // const baseUrl=import.meta.env.VITE_BASE_URL;
-  const baseUrlLocal='http://localhost:8000';
+  const baseUrlLocal='https://astro-talk-backend.onrender.com';
   // console.log(baseUrl);
 
   const [selectedAstrologer, setSelectedAstrologer] = useState(null);
