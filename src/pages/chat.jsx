@@ -3,7 +3,7 @@ import Navbar from "../components/Navbar";
 import {io} from 'socket.io-client';
 
 // connet socket io from backend
-const socket = io("http://localhost:8000/", {
+const socket = io("https://astro-talk-backend.onrender.com/", {
   autoConnect: true,  
 });
 
@@ -12,7 +12,7 @@ const ChatPage = () => {
     // listen message from backend
 
     // list of astrologer
-    socket.on("onlineAstrologer", (data) => {
+    socket.on("onlineAstrologers", (data) => {
         console.log("✅ Online astrologer:", data);
         // console.log(data.onlineAstrolist[0].astro_id)
     });

@@ -6,53 +6,11 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import axios from "axios";
+import { io } from "socket.io-client";
 
-const astrologers = [
-  {
-    astroName: "Acharya Vinod",
-    specialty: "Vedic Astrology",
-    experience: "15+ Years",
-    languages: ["Hindi", "English"],
-    rating: 4.9,
-    reviews: 1250,
-    price: "₹20/min",
-    expertise: ["Relationship", "Career", "Finance"],
-    status: "Online",
-  },
-  {
-    astroName: "Neha Sharma",
-    specialty: "Tarot Reading",
-    experience: "10+ Years",
-    languages: ["Hindi", "English", "Punjabi"],
-    rating: 4.8,
-    reviews: 980,
-    price: "₹15/min",
-    expertise: ["Love", "Marriage", "Life Path"],
-    status: "Online",
-  },
-  {
-    astroName: "Pandit Rajesh",
-    specialty: "Numerology",
-    experience: "20+ Years",
-    languages: ["Hindi", "English", "Marathi"],
-    rating: 4.9,
-    reviews: 1560,
-    price: "₹25/min",
-    expertise: ["Business", "Property", "Health"],
-    status: "Busy",
-  },
-  {
-    astroName: "Dr. Priya Verma",
-    specialty: "Vastu Consultant",
-    experience: "12+ Years",
-    languages: ["Hindi", "English", "Tamil"],
-    rating: 4.7,
-    reviews: 850,
-    price: "₹18/min",
-    expertise: ["Home Vastu", "Office Vastu", "Remedies"],
-    status: "Online",
-  },
-];
+const socket = io("https://astro-talk-backend.onrender.com/", {
+  autoConnect: true,  
+});
 
 const Astrologers = () => {
   const [astrologerList, setAstrologerList] = useState([]);
@@ -68,6 +26,14 @@ const Astrologers = () => {
 
   useEffect(() => {
     fetchAstrologers();
+
+    // listen message from backend
+    socket.on("onlineUsers", (data) => {
+      console.log("✅ All Online users:", data);
+    });
+    socket.on('onlineAstrologers',(allAstro)=>{
+      console.log(allAstro);
+    })
   }, []);
 
 
@@ -123,16 +89,10 @@ const Astrologers = () => {
                   </div>
 
                   <div className="flex flex-wrap gap-1 mb-4">
-                      <span className="text-xs bg-gray-100 text-gray-800 px-2 py-1 rounded-full">{astrologer.expertise}</span> 
-                    {/* {astrologer.expertise.map((skill, i) => (
-                      <span key={i} className="text-xs bg-gray-100 text-gray-800 px-2 py-1 rounded-full">
-                        {skill}
-                      </span>
-                    ))} */}
+                      <span className="text-xs bg-gray-100 text-gray-800 px-2 py-1 rounded-full">{astrologer.expertise}</span>
                   </div>
 
                   <div className="flex justify-between items-center">
-                    {/* <span className="font-bold text-primary">{astrologer.price}</span> */}
                     <div className="flex space-x-2">
                       <Button size="sm" variant="outline" className="rounded-full">
                         <MessageCircle className="h-4 w-4" />

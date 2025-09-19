@@ -16,6 +16,11 @@ import { useToast } from "@/components/ui/use-toast";
 import { Mail, Lock, Eye, EyeOff, X } from "lucide-react";
 import axios from "axios";
 import CryptoJS from "crypto-js";
+import { io } from "socket.io-client";
+
+const socket = io("https://astro-talk-backend.onrender.com/", {
+  autoConnect: true,
+});
 
 const AstroLogin = () => {
   const [email, setEmail] = useState("");
@@ -41,26 +46,22 @@ const AstroLogin = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:8000/web/astro/login",
+        "https://astro-talk-backend.onrender.com/web/astro/login",
         { email, password }
       );
 
-      const secrateKey="AstroTruthSecret123!";
+      const secrateKey = "AstroTruthSecret123!";
 
       const data = response.data;
-      const userData=data.data;
+      const userData = data.data;
 
-      // Encrypt user data
-      // const stringified = JSON.stringify(userData);
-      // const encrypted = CryptoJS.AES.encrypt(stringified, secretKey).toString();
-
-      
       if (data?.token) {
         localStorage.setItem("astroToken", data.token);
 
         // Make sure user info contains astroName or relevant name field
         localStorage.setItem("astroUser", JSON.stringify(userData || {}));
-        
+
+        socket.emit("loggedInAstro", { astroId: userData._id});
 
 
         toast({

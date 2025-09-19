@@ -32,7 +32,11 @@ import axios from "axios";
 import toastr from 'toastr';
 import 'toastr/build/toastr.min.css';
 import VideoCall from "./VideoCall/VideoCall";
+import { io } from "socket.io-client";
 
+const socket = io("https://astro-talk-backend.onrender.com/", {
+  autoConnect: true,
+});
 
 const StatBox = ({
   title,
@@ -130,11 +134,17 @@ const AstrologerDashboard = () => {
 
   const user = JSON.parse(localStorage.getItem("astroUser") || "{}");
 
+
+
   useEffect(() => {
     const token = localStorage.getItem("astroToken");
+    socket.on("onlineAstrologers", (data) => {
+      console.log("✅ All Online astrologers:", data);
+    })
     if (!token) {
       navigate("/astro-login");
     }
+    
   }, [navigate]);
 
   const handleLogout = () => {

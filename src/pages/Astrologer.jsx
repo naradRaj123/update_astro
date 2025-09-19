@@ -9,22 +9,24 @@ import axios from "axios";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import VideoCall from "./VideoCall/VideoCall";
-import {io} from 'socket.io-client';
+import { io } from 'socket.io-client';
 
 // connet socket io from backend
-const socket = io("http://localhost:8000/", {
-  autoConnect: true,  
+const socket = io("https://astro-talk-backend.onrender.com/", {
+  autoConnect: true,
 });
 
 const Astrologer = () => {
   const [astrologerList, setAstrologerList] = useState([]);
   const navigate = useNavigate();
+  const [onlineAstrologers, setOnlineAstrologers] = useState([]);
+
 
   // https://astro-talk-backend.onrender.com
 
   const fetchAstrologers = async () => {
     try {
-      const res = await axios.get("http://localhost:8000/web/astro/astrolist");
+      const res = await axios.get("https://astro-talk-backend.onrender.com/web/astro/astrolist");
       setAstrologerList(res.data?.data || []);
     } catch (err) {
       console.error("Error fetching astrologers:", err);
@@ -33,23 +35,43 @@ const Astrologer = () => {
 
   useEffect(() => {
     fetchAstrologers();
-    // listen message from backend
+
     socket.on("onlineUsers", (data) => {
       console.log("✅ All Online users:", data);
     });
-    socket.on('onlineAstrologer',(allAstro)=>{
-      console.log(allAstro);
+
+    socket.on("onlineAstrologers", (data) => {
+      console.log("✅ All Online astrologers:", data);
     })
-    // return () => {
-    //   socket.off("onlineAstro");
-    // };
+    // ✅ Listen for online astrologers list
+    socket.on("onlineAstrologers", (onlineAstrolist) => {
+      console.log("🔮 Full Online Astrologers:", onlineAstrolist);
+      // Store only astroIds in state
+    // setOnlineAstrologers(Object.keys(onlineAstrolist || {})); // store as object
+    });
+
+    return () => {
+      socket.off("onlineAstrologers");
+    };
+
   }, []);
-   socket.on('onlineAstrologer',(allAstro)=>{
-      console.log(allAstro);
+
+  useEffect(() => {
+    console.log("this is useEffect 2")
+    socket.on("onlineAstrologers", (data) => {
+      console.log("✅ All online astrologers:", data);
     })
-    // socket.emit('sendMessage',{asto})
-  const sendMessage = () => {   
-    socket.emit("registerAstro", {astro_id: "Astro1300",message:"This is new message 120 "});
+
+  }, []);
+
+  console.log("online astro list", onlineAstrologers)
+  
+  socket.on("onlineAstrologers", ({ onlineAstrolist }) => {
+    console.log("🔮 Full Online Astrologers:", onlineAstrolist);
+    setOnlineAstrologers(Object.keys(onlineAstrolist || {}));
+  });
+  const sendMessage = () => {
+    socket.emit("logedInAstro", { astro_id: "Astro1312", message: "This is new message 120 " });
   };
   // disconnect user
   const disconnectUser = () => {
@@ -72,101 +94,123 @@ const Astrologer = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {astrologerList.length > 0 ? astrologerList.map((astrologer, index) => (
-              <motion.div
-                key={astrologer._id}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: index * 0.1 }}
-                viewport={{ once: true }}
-              >
-                <Card className="overflow-hidden h-full shadow-sm">
-                  <div className="relative">
-                    <img
-                      src={astrologer.image || "https://via.placeholder.com/300x200?text=No+Image"}
-                      alt={astrologer.astroName}
-                      className="w-full h-48 object-cover"
-                    />
-                    <Badge
-                      className="absolute top-3 right-3"
-                      variant={astrologer.status === "Online" ? "cosmic" : "secondary"}
-                    >
-                      {astrologer.status || "Offline"}
-                    </Badge>
-                  </div>
-                  <CardContent className="p-5">
-                    <div className="flex justify-between mb-2">
-                      <div>
-                        <h3 className="font-bold text-lg">{astrologer.astroName || "No Name"}</h3>
-                        <p className="text-sm text-gray-500">{astrologer.specialty || "N/A"}</p>
+            {astrologerList.length > 0 ? (
+              astrologerList.map((astrologer, index) => (
+                <motion.div
+                  key={astrologer._id}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4, delay: index * 0.1 }}
+                  viewport={{ once: true }}
+                >
+                  <Card className="overflow-hidden h-full shadow-sm">
+                    <div className="relative">
+                      <img
+                        src={
+                          astrologer.image ||
+                          "https://via.placeholder.com/300x200?text=No+Image"
+                        }
+                        alt={astrologer.astroName}
+                        className="w-full h-48 object-cover"
+                      />
+                      {/* ✅ Show Online / Offline */}
+                      <Badge
+                        className="absolute top-3 right-3"
+                        variant={
+                          onlineAstrologers[astrologer._id]
+                            ? "cosmic"
+                            : "secondary"
+                        }
+                      >
+                        {onlineAstrologers.includes(astrologer._id) ? "Online" : "Offline"}
+                      </Badge>
+                    </div>
+
+                    <CardContent className="p-5">
+                      <div className="flex justify-between mb-2">
+                        <div>
+                          <h3 className="font-bold text-lg">
+                            {astrologer.astroName || "No Name"}
+                          </h3>
+                          <p className="text-sm text-gray-500">
+                            {astrologer.specialty || "N/A"}
+                          </p>
+                        </div>
+                        <div className="flex items-center bg-yellow-100 px-2 py-1 rounded">
+                          <Star
+                            className="h-4 w-4 text-yellow-500 mr-1"
+                            fill="currentColor"
+                          />
+                          <span className="text-sm font-semibold">
+                            {astrologer.rating || "4.5"}
+                          </span>
+                        </div>
                       </div>
-                      <div className="flex items-center bg-yellow-100 px-2 py-1 rounded">
-                        <Star className="h-4 w-4 text-yellow-500 mr-1" fill="currentColor" />
-                        <span className="text-sm font-semibold">{astrologer.rating || "4.5"}</span>
+
+                      <p className="text-sm text-gray-600 mb-1">
+                        <strong>Experience:</strong> {astrologer.experience || "N/A"}
+                      </p>
+                      <p className="text-sm text-gray-600 mb-1">
+                        <strong>Languages:</strong> {astrologer.langauge || "N/A"}
+                      </p>
+
+                      <div className="flex flex-wrap gap-1 my-2">
+                        {Array.isArray(astrologer.expertise) &&
+                          astrologer.expertise.length > 0 ? (
+                          astrologer.expertise.map((topic, i) => (
+                            <Badge key={i} variant="outline">
+                              {topic}
+                            </Badge>
+                          ))
+                        ) : (
+                          <Badge variant="outline">No Expertise</Badge>
+                        )}
                       </div>
-                    </div>
 
-                    <p className="text-sm text-gray-600 mb-1">
-                      <strong>Experience:</strong> {astrologer.experience || "N/A"}
-                    </p>
-                    <p className="text-sm text-gray-600 mb-1">
-                      <strong>Languages:</strong> {astrologer.langauge || "N/A"}
-                    </p>
+                      <div className="flex justify-between items-center mt-4">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="rounded-full"
+                          onClick={() =>
+                            navigate(`/karmkandidet/${astrologer._id}`)
+                          }
+                        >
+                          Book for Puja
+                        </Button>
+                      </div>
 
-                    <div className="flex flex-wrap gap-1 my-2">
-                      {Array.isArray(astrologer.expertise) && astrologer.expertise.length > 0
-                        ? astrologer.expertise.map((topic, i) => (
-                          <Badge key={i} variant="outline">{topic}</Badge>
-                        ))
-                        : <Badge variant="outline">No Expertise</Badge>}
-                    </div>
+                      <div className="flex justify-between items-center mt-4">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="rounded-full"
+                          onClick={() => console.log("Chat with", astrologer._id)}
+                        >
+                          Chat
+                        </Button>
+                      </div>
 
-                    <div className="flex justify-between items-center mt-4">
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        className="rounded-full"
-                        onClick={() => navigate(`/karmkandidet/${astrologer._id}`)}
-                      >
-                        Book for Puja
-                      </Button>
-
-                    </div>
-                    <div className="flex justify-between items-center mt-4">
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        className="rounded-full"
-                        onClick={sendMessage}
-                      >
-                        Chat 
-                      </Button>
-                      
-                    </div>
-                    <div className="flex justify-between items-center mt-4">
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        className="rounded-full"
-                        onClick={disconnectUser}
-                      >
-                        Disconnect 
-                      </Button>
-                      
-                    </div>
-                  </CardContent>
-                  <VideoCall
-                    channel={astrologer.agoraChannel}
-                    token={astrologer.agoraToken}
-                    uid={astrologer.agoraUID}
-                  />
-                </Card>
-              </motion.div>
-            )) : (
+                      <div className="flex justify-between items-center mt-4">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="rounded-full"
+                          onClick={() => console.log("Disconnect", astrologer._id)}
+                        >
+                          Disconnect
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              ))
+            ) : (
               <div className="col-span-full text-center text-gray-500 text-lg">
                 No Astrologers Found
               </div>
             )}
+
           </div>
 
           <div className="text-center mt-10">
