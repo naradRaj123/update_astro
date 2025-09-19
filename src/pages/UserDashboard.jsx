@@ -82,8 +82,8 @@ const UserDashboard = () => {
               <Bell className="h-6 w-6" />
             </Button>
             <Button variant="destructive" size="lg" onClick={handleLogout}>
-            <LogOut className="mr-2 h-5 w-5" /> Logout
-          </Button>
+              <LogOut className="mr-2 h-5 w-5" /> Logout
+            </Button>
           </div>
         </div>
 
@@ -115,7 +115,20 @@ const UserDashboard = () => {
             description="Review your past chat conversations with astrologers."
             icon={MessageSquare}
             actionText="View Chats"
-            onActionClick={() => navigate("/user-chats")}
+            onActionClick={() => navigate("/user-chats", {
+              state: {
+                user: {
+                  id: 1,
+                  name: "Alice",
+                  img: "https://i.pravatar.cc/50?img=1",
+                  messages: [
+                    { sender: "Alice", text: "Hi there!" },
+                    { sender: "me", text: "Hello Alice 👋" },
+                  ],
+                },
+              }
+            }
+            )}
           />
           <DashboardCard
             title="Call Recordings"
@@ -172,10 +185,10 @@ const UserDashboard = () => {
         </Card>
 
         <div className="text-center mt-10">
-          
+
         </div>
       </motion.div>
-      
+
     </div>
   );
 };
