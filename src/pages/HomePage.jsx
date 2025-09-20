@@ -18,6 +18,7 @@ import CelebrityCustomers from "@/components/CelebrityCustomers";
 import AccurateAnswers from "@/components/AccurateAnswers";
 import VideosPage from "./VideosPage";
 import VideoCall from "./VideoCall/VideoCall";
+import AboutUs from "./AboutUs";
 
 
 const HomePage = () => {
@@ -25,8 +26,8 @@ const HomePage = () => {
     <>
       <Hero />
       <ConnectWithAstrologers />
-      <Features />
       <Astrologers />
+      <Features />
       <ChooseZodiac /> 
       <OurPromise />
       <AstrologicalRemedies />
@@ -37,10 +38,11 @@ const HomePage = () => {
       <CustomerReviews />
       <InNews />
       <UnderstandingAstrology />
-      <VideosPage />
+      {/* <VideosPage /> */}
       <FAQ />
       <Blog />
-      <CallToAction />
+      <AboutUs />
+      {/* <CallToAction /> */}
       {/* <VideoCall /> */}
     </>
   );

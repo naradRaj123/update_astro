@@ -1,8 +1,14 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { PlayCircle, UserCheck } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import video1 from "../assets/images/video1.mp4";
+import video2 from "../assets/images/video2.mp4";
+import video3 from "../assets/images/video3.mp4";
+import video4 from "../assets/images/video4.mp4";
+import video5 from "../assets/images/video5.mp4";
+import video6 from "../assets/images/video6.mp4";
 
 const celebrityReviews = [
   {
@@ -10,25 +16,63 @@ const celebrityReviews = [
     profession: "Film Actor",
     reviewText: "AstroTruth's guidance has been invaluable for my career choices. Their astrologers are truly insightful!",
     avatarFallback: "AS",
-    videoThumbnailAlt: "Video thumbnail of Aarav Sharma giving a testimonial",
+    video: video1,
+    thumbnail: "https://images.unsplash.com/photo-1495488170890-ee9e49ff335d",
   },
   {
     name: "Priya Singh",
     profession: "Playback Singer",
     reviewText: "Whenever I face a dilemma, I turn to AstroTruth. Their predictions are accurate and advice practical.",
     avatarFallback: "PS",
-    videoThumbnailAlt: "Video thumbnail of Priya Singh sharing her experience",
+    video: video2,
+    thumbnail: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e",
   },
   {
     name: "Rohan Kapoor",
     profession: "TV Personality",
     reviewText: "The Vastu consultation for my new home was excellent. I feel a positive shift in energy already!",
     avatarFallback: "RK",
-    videoThumbnailAlt: "Video thumbnail of Rohan Kapoor discussing Vastu consultation",
+    video: video3,
+    thumbnail: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d",
+  },
+  {
+    name: "Sikha Sharma",
+    profession: "Film Actor",
+    reviewText: "AstroTruth's guidance has been invaluable for my career choices. Their astrologers are truly insightful!",
+    avatarFallback: "AS",
+    video: video4,
+    thumbnail: "https://images.unsplash.com/photo-1495488170890-ee9e49ff335d",
+  },
+  {
+    name: "Reena Singh",
+    profession: "Actress",
+    reviewText: "Whenever I face a dilemma, I turn to AstroTruth. Their predictions are accurate and advice practical.",
+    avatarFallback: "PS",
+    video: video5,
+    thumbnail: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e",
+  },
+  {
+    name: "Tania Kapoor",
+    profession: "TV Personality",
+    reviewText: "The Vastu consultation for my new home was excellent. I feel a positive shift in energy already!",
+    avatarFallback: "RK",
+    video: video6,
+    thumbnail: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d",
   },
 ];
 
 const CelebrityCustomers = () => {
+  const [playingIndex, setPlayingIndex] = useState(null);
+  const videoRefs = useRef([]); // array of refs for all videos
+
+  const handlePlay = (index) => {
+    setPlayingIndex(index);
+    const video = videoRefs.current[index];
+    if (video) {
+      video.play();
+    }
+  };
+
   return (
     <section className="py-16 bg-white">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -57,14 +101,25 @@ const CelebrityCustomers = () => {
             >
               <Card className="overflow-hidden shadow-lg hover:shadow-xl transition-shadow border border-yellow-200">
                 <div className="relative">
-                  <img 
+                  <video
+                    ref={(el) => (videoRefs.current[index] = el)}
                     className="w-full h-56 object-cover"
-                    alt={review.videoThumbnailAlt}
-                   src="https://images.unsplash.com/photo-1495488170890-ee9e49ff335d" />
-                  <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-                    <PlayCircle className="h-16 w-16 text-white/80 hover:text-white cursor-pointer transition-colors" />
-                  </div>
+                    src={review.video}
+                    poster={review.poster}
+                    controls={playingIndex === index}
+                    playsInline
+                  />
+
+                  {playingIndex !== index && (
+                    <div
+                      className="absolute inset-0 bg-black/40 flex items-center justify-center"
+                      onClick={() => handlePlay(index)}
+                    >
+                      <PlayCircle className="h-16 w-16 text-white/80 hover:text-white cursor-pointer transition-colors" />
+                    </div>
+                  )}
                 </div>
+
                 <CardContent className="p-6">
                   <div className="flex items-center mb-3">
                     <Avatar className="h-12 w-12 mr-3 border-2 border-yellow-500">

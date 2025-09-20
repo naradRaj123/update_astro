@@ -9,9 +9,9 @@ import { Mail, Phone, MapPin, Send } from 'lucide-react';
 
 const ContactPage = () => {
   return (
-    <div className="min-h-screen p-4 md:p-8 bg-yellow-50 common-margin-top">
+    <div className="min-h-screen py-4 md:py-10 bg-yellow-50 mt-14">
       <motion.div
-        className="container mx-auto"
+        className="container mx-auto w-screen"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}

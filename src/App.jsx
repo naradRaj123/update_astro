@@ -47,6 +47,7 @@ import JoinCall from "./pages/VideoCall/JoinCall";
 import ChatPage from "./pages/chat";
 
 import ChatComponent from "./pages/ChatComponent";
+import AboutUs from "./pages/AboutUs";
 
 
 // ✅ Import PrivateRoute
@@ -83,6 +84,7 @@ function App() {
 
             <Route path="/dashakoot" element={<DashakootPage />} />
             <Route path="/ashtakoot" element={<AshtakootPage />} />
+            <Route path="/about-us" element={<AboutUs />} />
             
             {/* admin routes */}
            

@@ -104,11 +104,11 @@ const UserDashboard = () => {
             onActionClick={() => navigate("/orders")}
           />
           <DashboardCard
-            title="Saved Astrologers"
-            description="Access your list of favorite astrologers for quick connections."
+            title="Store"
+            description="Access our store to get varities of product."
             icon={Star}
-            actionText="Manage Favorites"
-            onActionClick={() => navigate("/favorites")}
+            actionText="Visit Store"
+            onActionClick={() => navigate("/store")}
           />
           <DashboardCard
             title="Chat History"
