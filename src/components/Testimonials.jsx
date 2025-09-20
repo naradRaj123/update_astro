@@ -37,7 +37,7 @@ const testimonials = [
 
 const Testimonials = () => {
   return (
-    <section id="testimonials" className="py-16 bg-gradient-to-b from-gray-50 to-white">
+    <section id="testimonials" className="py-16 bg-gradient-to-b from-gray-50 to-white mt-6">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Star } from "lucide-react";
+import { MessageCircleIcon, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
@@ -82,7 +82,7 @@ const Astrologer = () => {
   return (
     <>
       <Navbar />
-      <section className="py-16 bg-gray-50">
+      <section className="py-20 bg-gray-50 mt-6">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-4xl font-bold mb-2">
@@ -167,7 +167,7 @@ const Astrologer = () => {
                         )}
                       </div>
 
-                      <div className="flex justify-between items-center mt-4">
+                      {/* <div className="flex justify-between items-center mt-4">
                         <Button
                           size="sm"
                           variant="outline"
@@ -178,13 +178,12 @@ const Astrologer = () => {
                         >
                           Book for Puja
                         </Button>
-                      </div>
+                      </div> */}
 
                       <div className="flex justify-between items-center mt-4">
-                        <Button
+                        <Button className="cosmic-gradient text-white"
                           size="sm"
                           variant="outline"
-                          className="rounded-full"
                           onClick={() => navigate("/user-chats", {
                             state: {
                               user: {
@@ -200,7 +199,7 @@ const Astrologer = () => {
                           }
                           )}
                         >
-                          Chat
+                          <MessageCircleIcon />
                         </Button>
                       </div>
 
@@ -215,13 +214,13 @@ const Astrologer = () => {
                         </Button>
                       </div> */}
 
-                      <div className="flex justify-between items-center mt-4">
+                      {/* <div className="flex justify-between items-center mt-4">
                         <VideoCall
                           channel={astrologer.agoraChannel}
                           token={astrologer.agoraToken}
                           uid={astrologer.agoraUID}
                         />
-                      </div>
+                      </div> */}
                     </CardContent>
                   </Card>
                 </motion.div>
