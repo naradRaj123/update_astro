@@ -3,8 +3,8 @@ import Navbar from "../components/Navbar";
 import {io} from 'socket.io-client';
 
 // connet socket io from backend
-const socket = io("https://astro-talk-backend.onrender.com/", {
-  autoConnect: true,  
+const socket = io("http://localhost:8000", {
+  autoConnect: false,  
 });
 
 const ChatPage = () => {

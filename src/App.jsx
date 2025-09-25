@@ -48,6 +48,7 @@ import ChatPage from "./pages/chat";
 
 import ChatComponent from "./pages/ChatComponent";
 import AboutUs from "./pages/AboutUs";
+import ChatComponentAstro from "./pages/ChatComponentAstro";
 
 
 // ✅ Import PrivateRoute
@@ -175,6 +176,14 @@ function App() {
               element={
                 <PrivateRoute>
                   <AstrologerDashboard />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/astro-chathistory"
+              element={
+                <PrivateRoute>
+                  <ChatComponentAstro />
                 </PrivateRoute>
               }
             />
