@@ -105,8 +105,8 @@ const Navbar = () => {
 
 
   return (
-    <section className="topheader-width">
-      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? "bg-white/90 backdrop-blur-md shadow-md" : "bg-transparent"}`}>
+    <section className="topheader-width bg-white ">
+      <nav className={`fixed top-0 left-0 right-0 z-50 bg-white transition-all duration-300 ${scrolled ? "bg-white/90 backdrop-blur-md shadow-md" : "bg-transparent"}`}>
         <div className="container mx-auto flex items-center justify-between h-[6rem] py-5">
           {/* Logo */}
           <div className="flex items-center flex-shrink-0 h-full">
@@ -116,7 +116,7 @@ const Navbar = () => {
           </div>
 
           {/* Desktop Navigation */}
-          <div className="hidden xl:flex flex-col items-center space-y-0 relative">
+          <div className="hidden xl:flex flex-col items-center space-y-0 bg-white  relative">
             {/* Top Row */}
             <div className="flex items-center space-x-1">
               {navLinksTop.map((link) =>

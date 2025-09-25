@@ -12,7 +12,7 @@ import VideoCall from "./VideoCall/VideoCall";
 import { io } from 'socket.io-client';
 
 // connet socket io from backend
-const socket = io("https://astro-talk-backend.onrender.com/", {
+const socket = io("http://localhost:8000/", {
   autoConnect: true,
 });
 
@@ -26,7 +26,7 @@ const Astrologer = () => {
 
   const fetchAstrologers = async () => {
     try {
-      const res = await axios.get("https://astro-talk-backend.onrender.com/web/astro/astrolist");
+      const res = await axios.get("http://localhost:8000/web/astro/astrolist");
       setAstrologerList(res.data?.data || []);
     } catch (err) {
       console.error("Error fetching astrologers:", err);
@@ -187,8 +187,8 @@ const Astrologer = () => {
                           onClick={() => navigate("/user-chats", {
                             state: {
                               user: {
-                                id: 1,
-                                name: "Alice",
+                                id: astrologer._id,
+                                name: astrologer.astroName,
                                 img: "https://i.pravatar.cc/50?img=1",
                                 messages: [
                                   { sender: "Alice", text: "Hi there!" },

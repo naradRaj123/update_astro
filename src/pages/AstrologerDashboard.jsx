@@ -35,7 +35,7 @@ import VideoCall from "./VideoCall/VideoCall";
 import { io } from "socket.io-client";
 
 const socket = io("https://astro-talk-backend.onrender.com/", {
-  autoConnect: true,
+  autoConnect: false,
 });
 
 const StatBox = ({
@@ -127,7 +127,7 @@ const AstrologerDashboard = () => {
   const [isChatEnabled, setIsChatEnabled] = useState(true);
   const [isVideoEnabled, setIsVideoEnabled] = useState(false);
 
-  const baseUrl=import.meta.env.VITE_BASE_URL;
+  const baseUrl = import.meta.env.VITE_BASE_URL;
   console.log(baseUrl);
 
   const navigate = useNavigate();
@@ -144,7 +144,7 @@ const AstrologerDashboard = () => {
     if (!token) {
       navigate("/astro-login");
     }
-    
+
   }, [navigate]);
 
   const handleLogout = () => {
@@ -161,7 +161,7 @@ const AstrologerDashboard = () => {
   // open withdrawal modal
   const [openModal, setOpenModal] = useState(false);
   const [walletInput, setWalletInput] = useState(astroFilterData.wallet);
-  const handleModal=()=>{
+  const handleModal = () => {
     setOpenModal(true);
   }
 
@@ -169,30 +169,30 @@ const AstrologerDashboard = () => {
 
 
   // login astrologer id
-  console.log("astrologer encripted data",astroFilterData);
-  
- const handlePaymentRequest = async (e) => {
-  e.preventDefault();
+  console.log("astrologer encripted data", astroFilterData._id);
 
-  try {
-    const response = await axios.post('https://astro-talk-backend.onrender.com/create-order', {
-      amount: Number(walletInput),
-      astrologerId: astroFilterData._id
-    });
-    console.log(response)
-    if (response.data.status) {
+  const handlePaymentRequest = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await axios.post('https://astro-talk-backend.onrender.com/create-order', {
+        amount: Number(walletInput),
+        astrologerId: astroFilterData._id
+      });
+      console.log(response)
+      if (response.data.status) {
+        setOpenModal(false);
+        toastr.success("Withdrawal request submitted successfully.");
+      } else {
+        setOpenModal(false);
+        toastr.error(response.data.message || "Request failed.");
+      }
+    } catch (error) {
       setOpenModal(false);
-      toastr.success("Withdrawal request submitted successfully.");
-    } else {
-      setOpenModal(false);
-      toastr.error(response.data.message || "Request failed.");
+      console.error("Payment request error:", error);
+      toastr.error(error.response?.data?.message || "Withdrawal request submission failed.");
     }
-  } catch (error) {
-    setOpenModal(false);
-    console.error("Payment request error:", error);
-    toastr.error(error.response?.data?.message || "Withdrawal request submission failed.");
-  }
-};
+  };
 
 
 
@@ -235,17 +235,17 @@ const AstrologerDashboard = () => {
           </div>
         </div>
 
-        <div  className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           <div onClick={(handleModal)}>
-          <StatBox
-            title="Today's Earnings"
-            value={`₹ ${astroFilterData.wallet}  `}
-            icon={DollarSign}
-            bgColor="bg-green-100"
-            textColor="text-green-700"
-            style={{ cursor: 'pointer' }}
-            
-          />
+            <StatBox
+              title="Today's Earnings"
+              value={`₹ ${astroFilterData.wallet}  `}
+              icon={DollarSign}
+              bgColor="bg-green-100"
+              textColor="text-green-700"
+              style={{ cursor: 'pointer' }}
+
+            />
           </div>
           <StatBox title="Total Earnings" value="₹85,600" icon={DollarSign} />
           <StatBox title="Followers" value="1.2K" icon={Users} />
@@ -276,7 +276,7 @@ const AstrologerDashboard = () => {
               <ActionButton
                 label={isChatEnabled ? "Disable Chat" : "Enable Chat"}
                 icon={MessageSquare}
-                onClick={() => setIsChatEnabled(!isChatEnabled)}
+                onClick={() => navigate('/astro-chathistory')}
                 variant={isChatEnabled ? "destructive" : "default"}
                 className={isChatEnabled ? "" : "bg-green-500 hover:bg-green-600"}
               />
@@ -318,6 +318,9 @@ const AstrologerDashboard = () => {
                 title="Chat History"
                 description="Review past client conversations."
                 icon={MessageSquare}
+                onClick={() => {
+                  alert("click")
+                }}
               />
               <DashboardActionItem
                 title="Call History"

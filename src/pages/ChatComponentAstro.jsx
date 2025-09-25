@@ -1,13 +1,12 @@
 import React, { useEffect, useState, useRef } from "react";
 import { ArrowLeft } from "lucide-react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import { io } from "socket.io-client";
 
-// Backend socket
-const socket = io("http://localhost:8000", { transports: ["websocket"] });
+const socket = io("http://localhost:8000"); // backend ka url
 
-const ChatComponent = () => {
+const ChatComponentAstro = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [users, setUsers] = useState([]);
@@ -16,42 +15,40 @@ const ChatComponent = () => {
   const [inputMsg, setInputMsg] = useState("");
   const messagesEndRef = useRef(null);
 
-  const userId = localStorage.getItem("userId");
+  const astroUser = JSON.parse(localStorage.getItem("astroUser") || "{}");
+  const astroId = astroUser?._id;
 
-  // Scroll to bottom
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  // 🔹 Socket listener for new messages
+  // 🔹 On Mount: Connect Astro to Socket
   useEffect(() => {
-    if (!userId) return;
-    // Register logged-in user
-    socket.emit("loggedInUsers", { userId });
-    // Define listener
-    const handleNewMessage = (msg) => {
+    if (astroId) {
+      socket.emit("loggedInAstro", { astroId });
+    }
+
+    // listen for new incoming messages
+    socket.on("newMessage", (msg) => {
       if (
-        (msg.senderId === userId && msg.receiverId === selectedUser?.id) ||
-        (msg.receiverId === userId && msg.senderId === selectedUser?.id)
+        selectedUser &&
+        (msg.senderId === selectedUser.id || msg.receiverId === selectedUser.id)
       ) {
         setMessages((prev) => [...prev, msg]);
         setTimeout(scrollToBottom, 100);
       }
-    };
-    // Attach listener
-    socket.on("newMessage", handleNewMessage);
-    // Cleanup to prevent duplicates
+    });
     return () => {
-      socket.off("newMessage", handleNewMessage);
+      socket.off("newMessage");
     };
-  }, [userId, selectedUser]);
+  }, [astroId, selectedUser]);
 
   // 🔹 Fetch chat list
   useEffect(() => {
     const fetchChatList = async () => {
-      if (!userId) return;
+      if (!astroId) return;
       try {
-        const res = await axios.post(`http://localhost:8000/listAstroChat/${userId}`);
+        const res = await axios.post(`http://localhost:8000/listUserChat/${astroId}`);
         if (res.data.status) {
           setUsers(res.data.data);
         }
@@ -60,16 +57,16 @@ const ChatComponent = () => {
       }
     };
     fetchChatList();
-  }, [userId]);
+  }, [astroId]);
 
-  // 🔹 Fetch messages for selected user
-  const fetchMessages = async (astroId) => {
+  // 🔹 Fetch messages with selected user
+  const fetchMessages = async (userId) => {
     try {
-      const res = await axios.post(`http://localhost:8000/getMessage/${astroId}`, {
-        currentLogginId: userId,
+      const res = await axios.post(`http://localhost:8000/getMessage/${userId}`, {
+        currentLogginId: astroId,
       });
       if (res.data && Array.isArray(res.data.messages)) {
-        setMessages(res.data.messages);
+        setMessages(res.data.messages || []);
         setTimeout(scrollToBottom, 100);
       }
     } catch (err) {
@@ -77,54 +74,55 @@ const ChatComponent = () => {
     }
   };
 
-  // Auto-select user if coming from route
+  // 🔹 Auto-select user from route state
   useEffect(() => {
-    if (location.state?.user) {
+    if (location.state) {
       setSelectedUser(location.state.user);
       fetchMessages(location.state.user.id);
     }
   }, [location.state]);
 
-  // Select user manually
+  // 🔹 Select user manually
   const handleSelectUser = (user) => {
     setSelectedUser(user);
     fetchMessages(user.id);
   };
 
-
+  // 🔹 Send message
   const handleSendMessage = async () => {
-    if (!inputMsg.trim() || !selectedUser) return;
-
-    const newMsg = {
-      senderId: userId,
-      receiverId: selectedUser.id,
-      message: inputMsg,
-      createdAt: new Date(),
-    };
-
-    // Local update
-    // setMessages((prev) => [...prev, newMsg]);
-    setInputMsg("");
-    scrollToBottom();
-
-    // Emit socket
-    socket.emit("sendMessage", newMsg);
+    if (!inputMsg.trim()) return;
 
     try {
-      await axios.post(`http://localhost:8000/sendMessage/${selectedUser.id}`, {
-        message: inputMsg,
-        currentLoginId: userId,
-      });
+      const res = await axios.post(
+        `http://localhost:8000/sendMessage/${selectedUser.id}`,
+        {
+          message: inputMsg,
+          currentLoginId: astroId,
+        }
+      );
+
+      const newMsg =
+        res.data.data || {
+          senderId: astroId,
+          receiverId: selectedUser.id,
+          message: inputMsg,
+          createdAt: new Date(),
+        };
+
+      // setMessages((prev) => [...prev, newMsg]);
+      setInputMsg("");
+      // Emit socket event to server
+      socket.emit("sendMessage", newMsg);
     } catch (err) {
-      console.error(err);
+      console.error("Error sending message:", err);
     }
   };
 
 
-  // Sidebar view
+  // 🔹 Sidebar
   if (!selectedUser) {
     return (
-      <div className="h-full flex items-center justify-center mt-[120px] my-10">
+      <div className="h-full flex items-center justify-center mt-[120px] my-10 ">
         <div className="md:w-[50%] w-[50%] bg-white shadow-lg h-full rounded-xl">
           <div className="p-4 border-b-4 flex justify-between">
             <button
@@ -159,11 +157,12 @@ const ChatComponent = () => {
         </div>
       </div>
     );
+
   }
 
-  // Chat window
+  // 🔹 Chat window
   return (
-    <div className="flex flex-col h-screen w-full md:w-1/2 mx-auto bg-white shadow-lg">
+    <div className="flex flex-col h-screen w-full md:w-1/2 mx-auto my-[8rem]  bg-white shadow-lg">
       {/* Header */}
       <div className="flex items-center p-4 border-b bg-white shadow sticky top-0 z-10">
         <button
@@ -185,7 +184,7 @@ const ChatComponent = () => {
         {messages.map((msg, index) => (
           <div
             key={index}
-            className={`p-2 rounded-lg max-w-xs ${msg.senderId === userId
+            className={`p-2 rounded-lg max-w-xs ${msg.senderId === astroId
                 ? "bg-blue-500 text-white self-end"
                 : "bg-gray-300 text-black self-start"
               }`}
@@ -218,4 +217,4 @@ const ChatComponent = () => {
   );
 };
 
-export default ChatComponent;
+export default ChatComponentAstro;
