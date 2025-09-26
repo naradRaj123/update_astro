@@ -1,11 +1,11 @@
 import React, { useEffect, useState, useRef } from "react";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, User } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { io } from "socket.io-client";
 
 // Backend socket
-const socket = io("http://localhost:8000", { transports: ["websocket"] });
+const socket = io("https://astro-talk-backend.onrender.com", { transports: ["websocket"] });
 
 const ChatComponent = () => {
   const navigate = useNavigate();
@@ -24,34 +24,86 @@ const ChatComponent = () => {
   };
 
   // 🔹 Socket listener for new messages
+  // useEffect(() => {
+  //   if (!userId) return;
+  //   // Register logged-in user
+  //   socket.emit("loggedInUsers", { userId });
+  //   // Define listener
+  //   const handleNewMessage = (msg) => {
+  //     if (
+  //       (msg.senderId === userId && msg.receiverId === selectedUser?.id) ||
+  //       (msg.receiverId === userId && msg.senderId === selectedUser?.id)
+  //     ) {
+  //       setMessages((prev) => [...prev, msg]);
+  //       setTimeout(scrollToBottom, 100);
+  //     }
+  //   };
+  //   // Attach listener
+  //   socket.on("newMessage", handleNewMessage);
+  //   // Cleanup to prevent duplicates
+  //   return () => {
+  //     socket.off("newMessage", handleNewMessage);
+  //   };
+  // }, [userId, selectedUser]);
+
+  // 🔹 Socket listener for new messages
   useEffect(() => {
     if (!userId) return;
-    // Register logged-in user
+
     socket.emit("loggedInUsers", { userId });
-    // Define listener
+
     const handleNewMessage = (msg) => {
       if (
         (msg.senderId === userId && msg.receiverId === selectedUser?.id) ||
         (msg.receiverId === userId && msg.senderId === selectedUser?.id)
       ) {
-        setMessages((prev) => [...prev, msg]);
+        setMessages((prev) => {
+          // If DB version arrives (has _id), replace optimistic one
+          if (msg._id) {
+            const withoutOptimistic = prev.filter(
+              (m) =>
+                !(
+                  m.message === msg.message &&
+                  m.senderId === msg.senderId &&
+                  m.receiverId === msg.receiverId &&
+                  !m._id // remove the one without _id
+                )
+            );
+            return [...withoutOptimistic, msg];
+          }
+
+          // If optimistic message already exists, skip
+          const exists = prev.some(
+            (m) =>
+              m.message === msg.message &&
+              m.senderId === msg.senderId &&
+              m.receiverId === msg.receiverId &&
+              !m._id // only skip if optimistic duplicate
+          );
+          if (exists) return prev;
+
+          return [...prev, msg];
+        });
+
         setTimeout(scrollToBottom, 100);
       }
     };
-    // Attach listener
+
+
     socket.on("newMessage", handleNewMessage);
-    // Cleanup to prevent duplicates
+
     return () => {
       socket.off("newMessage", handleNewMessage);
     };
   }, [userId, selectedUser]);
+
 
   // 🔹 Fetch chat list
   useEffect(() => {
     const fetchChatList = async () => {
       if (!userId) return;
       try {
-        const res = await axios.post(`http://localhost:8000/listAstroChat/${userId}`);
+        const res = await axios.post(`https://astro-talk-backend.onrender.com/listAstroChat/${userId}`);
         if (res.data.status) {
           setUsers(res.data.data);
         }
@@ -65,7 +117,7 @@ const ChatComponent = () => {
   // 🔹 Fetch messages for selected user
   const fetchMessages = async (astroId) => {
     try {
-      const res = await axios.post(`http://localhost:8000/getMessage/${astroId}`, {
+      const res = await axios.post(`https://astro-talk-backend.onrender.com/getMessage/${astroId}`, {
         currentLogginId: userId,
       });
       if (res.data && Array.isArray(res.data.messages)) {
@@ -111,7 +163,7 @@ const ChatComponent = () => {
     socket.emit("sendMessage", newMsg);
 
     try {
-      await axios.post(`http://localhost:8000/sendMessage/${selectedUser.id}`, {
+      await axios.post(`https://astro-talk-backend.onrender.com/sendMessage/${selectedUser.id}`, {
         message: inputMsg,
         currentLoginId: userId,
       });
@@ -121,11 +173,13 @@ const ChatComponent = () => {
   };
 
 
+  console.log("this is the chat data,", messages);
+
   // Sidebar view
   if (!selectedUser) {
     return (
-      <div className="h-full flex items-center justify-center mt-[120px] my-10">
-        <div className="md:w-[50%] w-[50%] bg-white shadow-lg h-full rounded-xl">
+      <div className="h-full flex items-center justify-center">
+        <div className=" w-[99%] bg-white shadow-lg h-full rounded-xl">
           <div className="p-4 border-b-4 flex justify-between">
             <button
               onClick={() => navigate("/user-dashboard")}
@@ -163,8 +217,9 @@ const ChatComponent = () => {
 
   // Chat window
   return (
-    <div className="flex flex-col h-screen w-full md:w-1/2 mx-auto bg-white shadow-lg">
+    <div className="flex flex-col h-screen w-full md:w-[98%] mx-auto bg-white shadow-lg">
       {/* Header */}
+
       <div className="flex items-center p-4 border-b bg-white shadow sticky top-0 z-10">
         <button
           onClick={() => setSelectedUser(null)}
@@ -172,13 +227,22 @@ const ChatComponent = () => {
         >
           <ArrowLeft size={20} />
         </button>
-        <img
-          src={selectedUser.img || "/placeholder.png"}
-          alt={selectedUser.name}
-          className="w-10 h-10 rounded-full ml-3"
-        />
+
+        {selectedUser.img ? (
+          <img
+            src={selectedUser.img}
+            alt={selectedUser.name}
+            className="w-10 h-10 rounded-full ml-3"
+          />
+        ) : (
+          <div className="w-10 h-10 ml-3 rounded-full bg-gray-200 flex items-center justify-center">
+            <User size={24} className="text-gray-600" />
+          </div>
+        )}
+
         <h2 className="font-bold text-lg ml-3">{selectedUser.name}</h2>
       </div>
+
 
       {/* Messages */}
       <div className="flex-1 p-4 overflow-y-auto flex flex-col gap-2 bg-gray-50">
@@ -186,8 +250,8 @@ const ChatComponent = () => {
           <div
             key={index}
             className={`p-2 rounded-lg max-w-xs ${msg.senderId === userId
-                ? "bg-blue-500 text-white self-end"
-                : "bg-gray-300 text-black self-start"
+              ? "bg-blue-500 text-white self-end"
+              : "bg-gray-300 text-black self-start"
               }`}
           >
             {msg.message}

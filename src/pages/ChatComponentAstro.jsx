@@ -1,10 +1,10 @@
 import React, { useEffect, useState, useRef } from "react";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, User } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import { io } from "socket.io-client";
 
-const socket = io("http://localhost:8000"); // backend ka url
+const socket = io("https://astro-talk-backend.onrender.com"); // backend ka url
 
 const ChatComponentAstro = () => {
   const navigate = useNavigate();
@@ -48,7 +48,7 @@ const ChatComponentAstro = () => {
     const fetchChatList = async () => {
       if (!astroId) return;
       try {
-        const res = await axios.post(`http://localhost:8000/listUserChat/${astroId}`);
+        const res = await axios.post(`https://astro-talk-backend.onrender.com/listUserChat/${astroId}`);
         if (res.data.status) {
           setUsers(res.data.data);
         }
@@ -62,7 +62,7 @@ const ChatComponentAstro = () => {
   // 🔹 Fetch messages with selected user
   const fetchMessages = async (userId) => {
     try {
-      const res = await axios.post(`http://localhost:8000/getMessage/${userId}`, {
+      const res = await axios.post(`https://astro-talk-backend.onrender.com/getMessage/${userId}`, {
         currentLogginId: astroId,
       });
       if (res.data && Array.isArray(res.data.messages)) {
@@ -92,38 +92,42 @@ const ChatComponentAstro = () => {
   const handleSendMessage = async () => {
     if (!inputMsg.trim()) return;
 
+    const newMsg = {
+      senderId: astroId,
+      receiverId: selectedUser.id,
+      message: inputMsg,
+      createdAt: new Date(),
+    };
+
+    // setMessages((prev) => [...prev, newMsg]);
+    // Emit socket event to server
+    setInputMsg("");
+    scrollToBottom();
+
+    socket.emit("sendMessage", newMsg);
+
     try {
-      const res = await axios.post(
-        `http://localhost:8000/sendMessage/${selectedUser.id}`,
+      await axios.post(
+        `https://astro-talk-backend.onrender.com/sendMessage/${selectedUser.id}`,
         {
           message: inputMsg,
           currentLoginId: astroId,
         }
       );
-
-      const newMsg =
-        res.data.data || {
-          senderId: astroId,
-          receiverId: selectedUser.id,
-          message: inputMsg,
-          createdAt: new Date(),
-        };
-
-      // setMessages((prev) => [...prev, newMsg]);
-      setInputMsg("");
-      // Emit socket event to server
-      socket.emit("sendMessage", newMsg);
     } catch (err) {
       console.error("Error sending message:", err);
     }
   };
 
 
+  console.log("this is the chat data,", messages);
+
+
   // 🔹 Sidebar
   if (!selectedUser) {
     return (
-      <div className="h-full flex items-center justify-center mt-[120px] my-10 ">
-        <div className="md:w-[50%] w-[50%] bg-white shadow-lg h-full rounded-xl">
+      <div className="h-full flex items-center justify-center ">
+        <div className="md:w-[98%] w-[99%] bg-white shadow-lg h-full rounded-xl">
           <div className="p-4 border-b-4 flex justify-between">
             <button
               onClick={() => navigate("/user-dashboard")}
@@ -142,11 +146,22 @@ const ChatComponentAstro = () => {
                   onClick={() => handleSelectUser(user)}
                   className="flex items-center gap-3 p-3 hover:bg-gray-200 cursor-pointer border-b-4"
                 >
-                  <img
+                  {user.img ? (
+                            <img
+                              src={user.img}
+                              alt={user.name}
+                              className="w-10 h-10 rounded-full ml-3"
+                            />
+                          ) : (
+                            <div className="w-10 h-10 ml-3 rounded-full bg-gray-200 flex items-center justify-center">
+                              <User size={24} className="text-gray-600" />
+                            </div>
+                          )}
+                  {/* <img
                     src={user.img || "/placeholder.png"}
                     alt={user.name}
                     className="w-10 h-10 rounded-full"
-                  />
+                  /> */}
                   <span className="font-medium">{user.name}</span>
                 </li>
               ))
@@ -162,7 +177,7 @@ const ChatComponentAstro = () => {
 
   // 🔹 Chat window
   return (
-    <div className="flex flex-col h-screen w-full md:w-1/2 mx-auto my-[8rem]  bg-white shadow-lg">
+    <div className="flex flex-col h-screen w-full md:w-[98%] mx-auto  bg-white shadow-lg">
       {/* Header */}
       <div className="flex items-center p-4 border-b bg-white shadow sticky top-0 z-10">
         <button
@@ -171,11 +186,17 @@ const ChatComponentAstro = () => {
         >
           <ArrowLeft size={20} />
         </button>
-        <img
-          src={selectedUser.img || "/placeholder.png"}
-          alt={selectedUser.name}
-          className="w-10 h-10 rounded-full ml-3"
-        />
+        {selectedUser.img ? (
+          <img
+            src={selectedUser.img}
+            alt={selectedUser.name}
+            className="w-10 h-10 rounded-full ml-3"
+          />
+        ) : (
+          <div className="w-10 h-10 ml-3 rounded-full bg-gray-200 flex items-center justify-center">
+            <User size={24} className="text-gray-600" />
+          </div>
+        )}
         <h2 className="font-bold text-lg ml-3">{selectedUser.name}</h2>
       </div>
 
@@ -185,8 +206,8 @@ const ChatComponentAstro = () => {
           <div
             key={index}
             className={`p-2 rounded-lg max-w-xs ${msg.senderId === astroId
-                ? "bg-blue-500 text-white self-end"
-                : "bg-gray-300 text-black self-start"
+              ? "bg-blue-500 text-white self-end"
+              : "bg-gray-300 text-black self-start"
               }`}
           >
             {msg.message}

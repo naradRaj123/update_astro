@@ -1,5 +1,6 @@
 import axios from "axios";
 import React from "react";
+import toast from "react-hot-toast";
 import { useParams, useLocation } from "react-router-dom";
 
 const Checkout = () => {
@@ -21,50 +22,85 @@ const Checkout = () => {
     });
   };
 
-  const handlePayment = async () => {
-    const isScriptLoaded = await loadRazorpayScript();
+  // const handlePayment = async () => {
+  //   const isScriptLoaded = await loadRazorpayScript();
 
-    if (!isScriptLoaded) {
-      alert("Razorpay SDK failed to load. Are you online?");
-      return;
-    }
+  //   if (!isScriptLoaded) {
+  //     alert("Razorpay SDK failed to load. Are you online?");
+  //     return;
+  //   }
 
+  //   try {
+  //     const { data } = await axios.post("https://astro-talk-backend.onrender.com/paynow", {
+  //       amount: product.price * 100, // Razorpay accepts paise
+  //       currency: "INR",
+  //     });
+
+  //     const { amount, id: order_id, currency } = data.order;
+
+  //     const options = {
+  //       key: "rzp_test_HC49LHGAmCT33i", // Replace with LIVE key in production
+  //       amount: amount.toString(),
+  //       currency: currency,
+  //       name: "AstroTruth",
+  //       description: "Astrology Consultation Payment",
+  //       image: "/logo.svg", // optional
+  //       order_id: order_id,
+  //       handler: function (response) {
+  //         alert("Payment successful!");
+  //         console.log("Payment Response:", response);
+  //         // Optionally send response to your backend for verification
+  //       },
+  //       prefill: {
+  //         name: "Narad Bhardwaj",
+  //         email: "narad@example.com",
+  //         contact: "9999999999",
+  //       },
+  //       theme: {
+  //         color: "#3399cc",
+  //       },
+  //     };
+
+  //     const rzp = new window.Razorpay(options);
+  //     rzp.open();
+  //   } catch (err) {
+  //     console.error(err);
+  //     alert("Something went wrong");
+  //   }
+  // };
+
+
+  const handlePayment = async (e) => {
+    e.preventDefault();
     try {
-      const { data } = await axios.post("https://astro-talk-backend.onrender.com/paynow", {
-        amount: product.price * 100, // Razorpay accepts paise
-        currency: "INR",
+      const { data } = await axios.post("https://kintora-backend.onrender.com/api/payment/create-order", {
+        amount: 500,
+        merchant_id: "userData?.id",
+        customer_name: "formData.name",  // Required by Cashfree
+        customer_email: "formData@gmail.com",  // Required by Cashfree
+        customer_phone: 9038898998  // Required by Cashfree
+      },
+      );
+      const payment_link = data.paymentData.link_url;
+      const orderId = data.data.order_id
+      if (!payment_link) {
+        throw new Error("Payment link not received from server");
+      }
+      // // Redirect to Cashfree payment page
+      window.open(payment_link, "_blank");
+
+      // setpaymentlink(payment_link);
+    } catch (error) {
+      console.error("Payment initiation failed:", error);
+      console.log(error)
+      toast({
+        title: "Error",
+        description: error?.response?.data?.message || "Something went wrong. Try Again ! ",
+        variant: "destructive",
+        style: { backgroundColor: "#fff", color: "#000" }
       });
-
-      const { amount, id: order_id, currency } = data.order;
-
-      const options = {
-        key: "rzp_test_HC49LHGAmCT33i", // Replace with LIVE key in production
-        amount: amount.toString(),
-        currency: currency,
-        name: "AstroTruth",
-        description: "Astrology Consultation Payment",
-        image: "/logo.svg", // optional
-        order_id: order_id,
-        handler: function (response) {
-          alert("Payment successful!");
-          console.log("Payment Response:", response);
-          // Optionally send response to your backend for verification
-        },
-        prefill: {
-          name: "Narad Bhardwaj",
-          email: "narad@example.com",
-          contact: "9999999999",
-        },
-        theme: {
-          color: "#3399cc",
-        },
-      };
-
-      const rzp = new window.Razorpay(options);
-      rzp.open();
-    } catch (err) {
-      console.error(err);
-      alert("Something went wrong");
+    } finally {
+      // setIsLoading(false);
     }
   };
 
