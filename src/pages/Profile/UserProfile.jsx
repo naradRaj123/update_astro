@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Card,
@@ -9,21 +9,105 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Settings, Bell, LogOut, ArrowLeft } from "lucide-react";
+import * as Dialog from "@radix-ui/react-dialog";
+import axios from "axios";
 
 const UserProfile = () => {
   const user = JSON.parse(localStorage.getItem("user") || "{}");
   const navigate = useNavigate();
-
   useEffect(() => {
-    const token = localStorage.getItem("userToken"); // ✅ Fixed token key
+    const token = localStorage.getItem("userToken");
     if (!token) navigate("/user-login");
   }, [navigate]);
 
   const handleLogout = () => {
-    localStorage.removeItem("userToken"); // ✅ Match token key used in login
+    localStorage.removeItem("userToken");
     localStorage.removeItem("user");
     navigate("/user-login");
   };
+
+  // update feature 
+  const [open, setOpen] = React.useState(false);
+  const [openRechange,setOpenRecharge]=useState(false);
+
+  const [formData, setFormData] = useState({
+    user_name: user?.user_name || "",
+    user_phone: user?.user_phone || "",
+    dob: user?.dob || "",
+    email: user?.email || "",
+    _id: user?._id || "",
+  });
+
+  const [rechangeAmount,setrecharngeAmount]=useState({
+    amount:0,
+  });
+
+  // handle change (generic for all inputs)
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    setrecharngeAmount((prev) => ({ ...prev, [name]: value }));
+  };
+  const handleModal = () => {
+    setOpen(true);
+  };
+
+  const handleModalOfRechange=()=>{
+    setOpenRecharge(true)
+  }
+
+
+  const handlePaymentRequest = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post("http://localhost:8000/web/user/profile", {
+        userData: formData,
+      });
+      if (response.data.status) {
+        // alert("✅ Profile updated successfully!");
+        setOpen(false);
+        localStorage.setItem("user", JSON.stringify(response.data.data));
+        // window.location.reload();       
+      } else {
+        alert("❌ " + response.data.msg);
+      }
+    } catch (error) {
+      console.error("Update failed:", error);
+      alert("Something went wrong");
+    }
+  };
+
+  // Recharge of wallet
+  const [loadingRechange,setLoadingRechange]=useState(false);
+  const payNow =async (e) => {
+    e.preventDefault();
+    setLoadingRechange(true)
+    try {
+      const { data } = await axios.post("http://localhost:8000/web/user/recharge", {
+        amount: rechangeAmount.amount,
+        user_id: user?._id,
+        customer_name: user?.user_name,    // Required by Cashfree
+        customer_email: user?.email,  // Required by Cashfree
+        customer_phone: user?.user_phone?.toString()  // Required by Cashfree
+      },        
+      );
+      const payment_link = data.paymentData.link_url;
+      setLoadingRechange(false);
+      window.location.href = payment_link;
+      if (!payment_link) {
+        throw new Error("Payment link not received from server");
+      }
+    } catch (error) {
+      console.error("Payment initiation failed:", error);
+      setLoadingRechange(false)
+      // toast({
+      //   title: "Error",
+      //   description: error?.response?.data?.message || "Something went wrong. Try Again ! ",
+      //   variant: "destructive",
+      //   style: { backgroundColor: "#fff", color: "#000" }
+      // });
+    } 
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-red-100 via-pink-100 to-rose-100 p-4 md:p-8">
@@ -97,12 +181,163 @@ const UserProfile = () => {
               <div><strong>Phone:</strong> {user?.user_phone || "N/A"}</div>
               <div><strong>Date of Birth:</strong> {user?.dob || "N/A"}</div>
               <div><strong>User ID:</strong> {user?._id || "N/A"}</div>
-              <div><strong>Wallet Balance:</strong> ₹{user?.wallet ?? "0"}</div>
+              <div  ><strong>Wallet Balance:</strong> ₹{user?.wallet ?? "0"} 
+              {/* <Button onClick={() => payNow(user?.wallet)} >Add Fund</Button>  */}
+              <Button onClick= {handleModalOfRechange} > Recharge </Button>
+              </div>
               <div><strong>Status:</strong> {user?.status ? "Active" : "Inactive"}</div>
+              <Button
+                onClick={handleModal}
+                className="cursor-pointer text-white bg-green-600 hover:bg-green-700 mt-4"
+              >
+                <strong>Update Profile:</strong>
+              </Button>
             </div>
           </CardContent>
         </Card>
       </div>
+
+      {/* ✅ Modal Section */}
+      <Dialog.Root open={open} onOpenChange={setOpen}>
+        <Dialog.Portal>
+          <Dialog.Overlay className="fixed inset-0 bg-black/50 z-40" />
+          <Dialog.Content className="fixed left-1/2 top-1/2 w-[90%] max-w-sm -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded-lg shadow-xl z-50">
+            <Dialog.Title className="text-lg font-semibold mb-4">Update Wallet</Dialog.Title>
+
+            <form onSubmit={handlePaymentRequest}>
+              <div className="mb-4">
+                <label
+                  htmlFor="walletInput"
+                  className="block text-sm font-medium text-gray-700 mb-1"
+                >
+                  Name
+                </label>
+                <input
+                  id="walletInput"
+                  type="text"
+                  name="user_name"
+                  className="w-full p-2 border border-gray-300 rounded"
+                  value={formData.user_name}
+                  onChange={handleChange}
+                  placeholder="Enter new wallet name"
+                />
+              </div>
+
+              <div className="mb-4">
+                <label
+                  htmlFor="walletInput"
+                  className="block text-sm font-medium text-gray-700 mb-1"
+                >
+                  Phone Number
+                </label>
+                <input
+                  id="walletInput"
+                  type="number"
+                  name="user_phone"
+                  className="w-full p-2 border border-gray-300 rounded"
+                  value={formData.user_phone}
+                  onChange={handleChange}
+                  placeholder="Enter new wallet amount"
+                />
+              </div>
+
+              <div className="mb-4">
+                <label
+                  htmlFor="walletInput"
+                  className="block text-sm font-medium text-gray-700 mb-1"
+                >
+                  Date of Birth
+                </label>
+                <input
+                  id="walletInput"
+                  type="date"
+                  name='dob'
+                  className="w-full p-2 border border-gray-300 rounded"
+                  value={formData.dob}
+                  onChange={handleChange}
+                  placeholder="Enter  Date of Birth"
+                />
+              </div>
+
+              <div className="mb-4">
+                <label
+                  htmlFor="walletInput"
+                  className="block text-sm font-medium text-gray-700 mb-1"
+                >
+                  Email
+                </label>
+                <input
+                  id="walletInput"
+                  type="email"
+                  name="email"
+                  className="w-full p-2 border border-gray-300 rounded"
+                  value={formData.email}
+                  onChange={handleChange}
+                  placeholder="Enter new email"
+                />
+              </div>
+
+
+              <div className="flex justify-end gap-2">
+                <Dialog.Close asChild>
+                  <button type="button" className="bg-gray-200 px-4 py-2 rounded">
+                    Cancel
+                  </button>
+                </Dialog.Close>
+                <button
+                  type="submit"
+                  className="bg-green-600 text-white px-4 py-2 rounded"
+                >
+                  Save
+                </button>
+              </div>
+            </form>
+          </Dialog.Content>
+        </Dialog.Portal>
+      </Dialog.Root>
+
+
+      {/* ✅ Rechange modal */}
+      <Dialog.Root open={openRechange} onOpenChange={setOpenRecharge}>
+        <Dialog.Portal>
+          <Dialog.Overlay className="fixed inset-0 bg-black/50 z-40" />
+          <Dialog.Content className="fixed left-1/2 top-1/2 w-[90%] max-w-sm -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded-lg shadow-xl z-50">
+            <Dialog.Title className="text-lg font-semibold mb-4">Update Wallet Balance </Dialog.Title>
+            <form onSubmit={payNow}>
+              <div className="mb-4">
+                <label
+                  htmlFor="walletInput"
+                  className="block text-sm font-medium text-gray-700 mb-1"
+                >
+                  Amount
+                </label>
+                <input
+                  id="walletInput"
+                  type="text"
+                  name="amount"
+                  className="w-full p-2 border border-gray-300 rounded"
+                  value={rechangeAmount.amount}
+                  onChange={handleChange}
+                  placeholder="Enter new wallet name"
+                />
+              </div>                               
+              <div className="flex justify-end gap-2">
+                <Dialog.Close asChild>
+                  <button type="button" className="bg-gray-200 px-4 py-2 rounded">
+                    Cancel
+                  </button>
+                </Dialog.Close>
+                <button
+                  type="submit"
+                  className="bg-green-600 text-white px-4 py-2 rounded"
+                >
+                  {loadingRechange ? ( <span className=" italic "> Please Wait ..... </span>) : "Pay Now"}
+                </button>
+              </div>
+            </form>
+          </Dialog.Content>
+        </Dialog.Portal>
+      </Dialog.Root>
     </div>
   );
 };

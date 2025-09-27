@@ -93,7 +93,7 @@ const UserDashboard = () => {
             description="View and update your personal information and preferences."
             icon={User}
             actionText="View Profile"
-            onActionClick={() => navigate("/profile")}
+            onActionClick={() => navigate("/user-profile")}
             bgColorClass="bg-red-50"
           />
           <DashboardCard
@@ -130,21 +130,7 @@ const UserDashboard = () => {
             }
             )}
           />
-          <DashboardCard
-            title="Call Recordings"
-            description="Listen to recordings of your previous call consultations."
-            icon={Video}
-            actionText="Access Recordings"
-            onActionClick={() => navigate("/calls")}
-          />
-          <DashboardCard
-            title="Support Center"
-            description="Get help with any issues or questions you may have."
-            icon={HelpCircle}
-            actionText="Contact Support"
-            onActionClick={() => navigate("/support")}
-            bgColorClass="bg-yellow-50"
-          />
+                   
         </div>
 
         <Card className="shadow-lg rounded-xl mb-8">

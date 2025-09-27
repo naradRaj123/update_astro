@@ -4,7 +4,9 @@ import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import { io } from "socket.io-client";
 
-const socket = io("http://localhost:8000"); // backend ka url
+// const socket = io("http://localhost:8000",{
+//   autoConnect: false,
+// }); // backend ka url
 
 const ChatComponentAstro = () => {
   const navigate = useNavigate();

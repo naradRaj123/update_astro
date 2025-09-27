@@ -5,7 +5,7 @@ import axios from "axios";
 import { io } from "socket.io-client";
 
 // Backend socket
-const socket = io("http://localhost:8000", { transports: ["websocket"] });
+// const socket = io("http://localhost:8000", { transports: ["websocket"] });
 
 const ChatComponent = () => {
   const navigate = useNavigate();

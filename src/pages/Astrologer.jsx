@@ -57,11 +57,9 @@ const Astrologer = () => {
   }, []);
 
   useEffect(() => {
-    console.log("this is useEffect 2")
     socket.on("onlineAstrologers", (data) => {
       console.log("✅ All online astrologers:", data);
     })
-
   }, []);
 
   console.log("online astro list", onlineAstrologers)
