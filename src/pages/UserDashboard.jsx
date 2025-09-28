@@ -115,20 +115,7 @@ const UserDashboard = () => {
             description="Review your past chat conversations with astrologers."
             icon={MessageSquare}
             actionText="View Chats"
-            onActionClick={() => navigate("/user-chats", {
-              state: {
-                user: {
-                  id: 1,
-                  name: "Alice",
-                  img: "https://i.pravatar.cc/50?img=1",
-                  messages: [
-                    { sender: "Alice", text: "Hi there!" },
-                    { sender: "me", text: "Hello Alice 👋" },
-                  ],
-                },
-              }
-            }
-            )}
+            onActionClick={() => navigate("/user-chats")}
           />
                    
         </div>
