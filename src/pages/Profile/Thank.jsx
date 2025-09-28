@@ -37,7 +37,7 @@ const ThankYouPage = () => {
             setLoading(true);            
             try {
                 const { data } = await axios.get(
-                    `http://localhost:8000/web/user/verifyrecharge/${paymentId}`
+                    `https://astro-talk-backend.onrender.com/web/user/verifyrecharge/${paymentId}`
                 );
                 console.log(data.data)
 

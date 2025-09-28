@@ -2,10 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Settings, Bell, LogOut, Home } from "lucide-react";
 import { Button } from "@/components/ui/button";
-
-import cadOne from "../../assets/images/card1.jpg";
-import cadTwo from "../../assets/images/card2.jpg";
-import cadThree from "../../assets/images/card3.jpg";
 import axios from "axios";
 
 // const products = [
@@ -49,7 +45,7 @@ const ProductDetail = () => {
   const [imgPath, setPath] = useState('');
   const getProduct = async () => {
     try {
-      const res = await axios.get("http://localhost:8000/web/productlist");
+      const res = await axios.get("https://astro-talk-backend.onrender.com/web/productlist");
       setPath(res.data.staticPath);
       setProducts(res.data.data)
     } catch (error) {
@@ -81,16 +77,15 @@ const ProductDetail = () => {
       navigate("/user-login", { state: { from: `/product/${product.id}` } });
     }
 
-    // buy online function
-    // productid , userid , user phone , user email, username , product amount  
+    console.log(user?.user_phone)
     try {
-      const { data } = await axios.post("http://localhost:8000/web/product/order", {
+      const { data } = await axios.post("https://astro-talk-backend.onrender.com/web/product/order", {
         product_id:products?._id,
         amount: products?.productPrice,
         user_id: user?._id,
         customer_name: user?.user_name,    // Required by Cashfree
         customer_email: user?.email,  // Required by Cashfree
-        customer_phone: user?.user_phone?.toString()  // Required by Cashfree
+        customer_phone: user?.user_phone  // Required by Cashfree
       },
       );
       const payment_link = data.paymentData.link_url;
@@ -103,7 +98,7 @@ const ProductDetail = () => {
 
     } catch (error) {
       console.log(error);
-      alert(error);
+      // alert(error);
     }
 
 

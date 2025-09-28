@@ -60,7 +60,7 @@ const UserProfile = () => {
   const handlePaymentRequest = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:8000/web/user/profile", {
+      const response = await axios.post("https://astro-talk-backend.onrender.com/web/user/profile", {
         userData: formData,
       });
       if (response.data.status) {
@@ -83,7 +83,7 @@ const UserProfile = () => {
     e.preventDefault();
     setLoadingRechange(true)
     try {
-      const { data } = await axios.post("http://localhost:8000/web/user/recharge", {
+      const { data } = await axios.post("https://astro-talk-backend.onrender.com/web/user/recharge", {
         amount: rechangeAmount.amount,
         user_id: user?._id,
         customer_name: user?.user_name,    // Required by Cashfree

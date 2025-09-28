@@ -5,7 +5,7 @@ import axios from "axios";
 import { io } from "socket.io-client";
 
 // Backend socket
-// const socket = io("http://localhost:8000", { transports: ["websocket"] });
+const socket = io("https://astro-talk-backend.onrender.com", { transports: ["websocket"] });
 
 const ChatComponent = () => {
   const navigate = useNavigate();
@@ -51,7 +51,7 @@ const ChatComponent = () => {
     const fetchChatList = async () => {
       if (!userId) return;
       try {
-        const res = await axios.post(`http://localhost:8000/listAstroChat/${userId}`);
+        const res = await axios.post(`https://astro-talk-backend.onrender.com/listAstroChat/${userId}`);
         if (res.data.status) {
           setUsers(res.data.data);
         }
@@ -65,7 +65,7 @@ const ChatComponent = () => {
   // 🔹 Fetch messages for selected user
   const fetchMessages = async (astroId) => {
     try {
-      const res = await axios.post(`http://localhost:8000/getMessage/${astroId}`, {
+      const res = await axios.post(`https://astro-talk-backend.onrender.com/getMessage/${astroId}`, {
         currentLogginId: userId,
       });
       if (res.data && Array.isArray(res.data.messages)) {
@@ -111,7 +111,7 @@ const ChatComponent = () => {
     socket.emit("sendMessage", newMsg);
 
     try {
-      await axios.post(`http://localhost:8000/sendMessage/${selectedUser.id}`, {
+      await axios.post(`https://astro-talk-backend.onrender.com/sendMessage/${selectedUser.id}`, {
         message: inputMsg,
         currentLoginId: userId,
       });

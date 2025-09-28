@@ -51,6 +51,7 @@ import AboutUs from "./pages/AboutUs";
 import ChatComponentAstro from "./pages/ChatComponentAstro";
 import ThankYouPage from "./pages/Profile/Thank";
 import OrderThankYou from "./components/Store/OrderPlace";
+import OrderList from "./components/Store/OrderList";
 
 
 // ✅ Import PrivateRoute
@@ -95,6 +96,18 @@ function App() {
             <Route path="/admin-login" element={<AdminLogin />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
 
+
+            <Route path="/order-placed/:id"
+              element={
+                <OrderThankYou />
+              }
+            />
+
+            <Route path="/orders"
+              element={
+                <OrderList />
+              }
+            />
 
 
             {/* Protected Admin Routes */}
@@ -173,20 +186,11 @@ function App() {
                 </PrivateRoute>
               }
             />
-            <Route
-              path="/order-placed/:id"
-              element={
-                <PrivateRoute>
-                  <OrderThankYou />
-                </PrivateRoute>
-              }
-            />
+
             <Route
               path="/thank/:id"
               element={
-                <PrivateRoute>
-                  <ThankYouPage />
-                </PrivateRoute>
+                <ThankYouPage />
               }
             />
             <Route

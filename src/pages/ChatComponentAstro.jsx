@@ -4,9 +4,9 @@ import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import { io } from "socket.io-client";
 
-// const socket = io("http://localhost:8000",{
-//   autoConnect: false,
-// }); // backend ka url
+const socket = io("https://astro-talk-backend.onrender.com",{
+  autoConnect: false,
+}); // backend ka url
 
 const ChatComponentAstro = () => {
   const navigate = useNavigate();
@@ -50,7 +50,7 @@ const ChatComponentAstro = () => {
     const fetchChatList = async () => {
       if (!astroId) return;
       try {
-        const res = await axios.post(`http://localhost:8000/listUserChat/${astroId}`);
+        const res = await axios.post(`https://astro-talk-backend.onrender.com/listUserChat/${astroId}`);
         if (res.data.status) {
           setUsers(res.data.data);
         }
@@ -64,7 +64,7 @@ const ChatComponentAstro = () => {
   // 🔹 Fetch messages with selected user
   const fetchMessages = async (userId) => {
     try {
-      const res = await axios.post(`http://localhost:8000/getMessage/${userId}`, {
+      const res = await axios.post(`https://astro-talk-backend.onrender.com/getMessage/${userId}`, {
         currentLogginId: astroId,
       });
       if (res.data && Array.isArray(res.data.messages)) {
@@ -96,7 +96,7 @@ const ChatComponentAstro = () => {
 
     try {
       const res = await axios.post(
-        `http://localhost:8000/sendMessage/${selectedUser.id}`,
+        `https://astro-talk-backend.onrender.com/sendMessage/${selectedUser.id}`,
         {
           message: inputMsg,
           currentLoginId: astroId,
@@ -128,7 +128,7 @@ const ChatComponentAstro = () => {
         <div className="md:w-[50%] w-[50%] bg-white shadow-lg h-full rounded-xl">
           <div className="p-4 border-b-4 flex justify-between">
             <button
-              onClick={() => navigate("/user-dashboard")}
+              onClick={() => navigate("/astro-dashboard")}
               className="p-2 rounded-full hover:bg-gray-200"
             >
               <ArrowLeft size={20} />

@@ -47,7 +47,7 @@ const Store = () => {
   const [imgPath,setPath]=useState('');
   const fetchData = async () => {
     try {
-      const res = await axios.get("http://localhost:8000/web/productlist");
+      const res = await axios.get("https://astro-talk-backend.onrender.com/web/productlist");
       setPath(res.data.staticPath);
       setProducts(res.data.data)
     } catch (error) {
