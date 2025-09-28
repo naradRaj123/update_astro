@@ -49,6 +49,9 @@ import ChatPage from "./pages/chat";
 import ChatComponent from "./pages/ChatComponent";
 import AboutUs from "./pages/AboutUs";
 import ChatComponentAstro from "./pages/ChatComponentAstro";
+import ThankYouPage from "./pages/Profile/Thank";
+import OrderThankYou from "./components/Store/OrderPlace";
+import OrderList from "./components/Store/OrderList";
 
 
 // ✅ Import PrivateRoute
@@ -60,7 +63,7 @@ function App() {
       <div className="min-h-screen bg-background">
         <Layouts>
           <Routes>
-            <Route path="/chat" element={<ChatPage/>} />
+            <Route path="/chat" element={<ChatPage />} />
             {/* Public Routes */}
             <Route path="/" element={<HomePage />} />
             <Route path="/user-login" element={<LoginPage />} />
@@ -86,14 +89,26 @@ function App() {
             <Route path="/dashakoot" element={<DashakootPage />} />
             <Route path="/ashtakoot" element={<AshtakootPage />} />
             <Route path="/about-us" element={<AboutUs />} />
-            
+
             {/* admin routes */}
-           
-            <Route path="/admin/paymentrequest" element={<PaymentRequestList/>} />
+
+            <Route path="/admin/paymentrequest" element={<PaymentRequestList />} />
             <Route path="/admin-login" element={<AdminLogin />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
 
-            
+
+            <Route path="/order-placed/:id"
+              element={
+                <OrderThankYou />
+              }
+            />
+
+            <Route path="/orders"
+              element={
+                <OrderList />
+              }
+            />
+
 
             {/* Protected Admin Routes */}
             <Route
@@ -169,6 +184,13 @@ function App() {
                 <PrivateRoute>
                   <ChatComponent />
                 </PrivateRoute>
+              }
+            />
+
+            <Route
+              path="/thank/:id"
+              element={
+                <ThankYouPage />
               }
             />
             <Route

@@ -19,6 +19,8 @@ const PrivateRoute = ({ children }) => {
     return adminToken ? children : <navigate to="admin-login" replace />;
   }
 
+  
+
   return <Navigate to="/" replace />;
 };
 

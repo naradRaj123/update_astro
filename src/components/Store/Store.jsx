@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ProductCard from "./ProductCard";
 import { Settings, Bell, LogOut, Home } from "lucide-react";
@@ -8,21 +8,22 @@ import malaImg from "../../assets/images/mala.jpeg";
 import cadOne from "../../assets/images/card1.jpg";
 import cadTwo from "../../assets/images/card2.jpg";
 import cadThree from "../../assets/images/card3.jpg";
+import axios from "axios";
 
-const products = [
-  { id: "1", image: malaImg, title: "Dhan Yog Bracelet", price: 599, oldPrice: 1499 },
-  { id: "2", image: cadOne, title: "Raw Pyrite Bracelet", price: 599, oldPrice: 1499 },
-  { id: "3", image: cadTwo, title: "Maha Dhan Yog Combo", price: 799, oldPrice: 5997 },
-  { id: "4", image: cadThree, title: "Energised Dhan Yog Bracelet", price: 699, oldPrice: 1499 },
-  { id: "5", image: cadOne, title: "Raw Pyrite Bracelet", price: 599, oldPrice: 1499 },
-  { id: "6", image: cadTwo, title: "Maha Dhan Yog Combo", price: 799, oldPrice: 5997 },
-  { id: "7", image: cadOne, title: "Raw Pyrite Bracelet", price: 599, oldPrice: 1499 },
-  { id: "8", image: cadTwo, title: "Maha Dhan Yog Combo", price: 799, oldPrice: 5997 },
-  { id: "9", image: cadThree, title: "Energised Dhan Yog Bracelet", price: 699, oldPrice: 1499 },
-  { id: "10", image: cadOne, title: "Raw Pyrite Bracelet", price: 599, oldPrice: 1499 },
-  { id: "11", image: cadThree, title: "Energised Dhan Yog Bracelet", price: 699, oldPrice: 1499 },
-  { id: "12", image: cadOne, title: "Raw Pyrite Bracelet", price: 599, oldPrice: 1499 },
-];
+// const products = [
+//   { id: "1", image: malaImg, title: "Dhan Yog Bracelet", price: 599, oldPrice: 1499 },
+//   { id: "2", image: cadOne, title: "Raw Pyrite Bracelet", price: 599, oldPrice: 1499 },
+//   { id: "3", image: cadTwo, title: "Maha Dhan Yog Combo", price: 799, oldPrice: 5997 },
+//   { id: "4", image: cadThree, title: "Energised Dhan Yog Bracelet", price: 699, oldPrice: 1499 },
+//   { id: "5", image: cadOne, title: "Raw Pyrite Bracelet", price: 599, oldPrice: 1499 },
+//   { id: "6", image: cadTwo, title: "Maha Dhan Yog Combo", price: 799, oldPrice: 5997 },
+//   { id: "7", image: cadOne, title: "Raw Pyrite Bracelet", price: 599, oldPrice: 1499 },
+//   { id: "8", image: cadTwo, title: "Maha Dhan Yog Combo", price: 799, oldPrice: 5997 },
+//   { id: "9", image: cadThree, title: "Energised Dhan Yog Bracelet", price: 699, oldPrice: 1499 },
+//   { id: "10", image: cadOne, title: "Raw Pyrite Bracelet", price: 599, oldPrice: 1499 },
+//   { id: "11", image: cadThree, title: "Energised Dhan Yog Bracelet", price: 699, oldPrice: 1499 },
+//   { id: "12", image: cadOne, title: "Raw Pyrite Bracelet", price: 599, oldPrice: 1499 },
+// ];
 
 const Store = () => {
   const navigate = useNavigate();
@@ -40,6 +41,24 @@ const Store = () => {
     localStorage.removeItem("user");
     navigate("/user-login");
   };
+
+  // fetch all product 
+  const [products,setProducts]=useState([]);
+  const [imgPath,setPath]=useState('');
+  const fetchData = async () => {
+    try {
+      const res = await axios.get("https://astro-talk-backend.onrender.com/web/productlist");
+      setPath(res.data.staticPath);
+      setProducts(res.data.data)
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  }
+
+  useEffect(() => {
+    fetchData();
+  }, [])
+
 
   return (
     <section className="bg-white min-h-screen py-10">
@@ -92,10 +111,12 @@ const Store = () => {
 
       {/* Products */}
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <h1 className="text-2xl font-bold mb-6 text-center">Bracelet Store</h1>
+        {/* <h1 className="text-2xl font-bold mb-6 text-center">Bracelet Store</h1> */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {products.map((product) => (
-            <ProductCard key={product.id} {...product} />
+          {Array.isArray(products) && products.map((product) => (
+            <>
+            <ProductCard key={product._id} {...product} imgPath={imgPath} />
+            </>
           ))}
         </div>
       </div>

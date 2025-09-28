@@ -1,65 +1,108 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Settings, Bell, LogOut, Home } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import axios from "axios";
 
-import cadOne from "../../assets/images/card1.jpg";
-import cadTwo from "../../assets/images/card2.jpg";
-import cadThree from "../../assets/images/card3.jpg";
-
-const products = [
-  {
-    id: "1",
-    image: cadThree,
-    title: "Dhan Yog Bracelet",
-    price: 599,
-    oldPrice: 1499,
-  },
-  {
-    id: "2",
-    image: cadOne,
-    title: "Raw Pyrite Bracelet",
-    price: 599,
-    oldPrice: 1499,
-  },
-  {
-    id: "3",
-    image: cadTwo,
-    title: "Maha Dhan Yog Combo",
-    price: 799,
-    oldPrice: 5997,
-  },
-  {
-    id: "4",
-    image: cadThree,
-    title: "Energised Dhan Yog Bracelet",
-    price: 699,
-    oldPrice: 1499,
-  },
-];
+// const products = [
+//   {
+//     id: "1",
+//     image: cadThree,
+//     title: "Dhan Yog Bracelet",
+//     price: 599,
+//     oldPrice: 1499,
+//   },
+//   {
+//     id: "2",
+//     image: cadOne,
+//     title: "Raw Pyrite Bracelet",
+//     price: 599,
+//     oldPrice: 1499,
+//   },
+//   {
+//     id: "3",
+//     image: cadTwo,
+//     title: "Maha Dhan Yog Combo",
+//     price: 799,
+//     oldPrice: 5997,
+//   },
+//   {
+//     id: "4",
+//     image: cadThree,
+//     title: "Energised Dhan Yog Bracelet",
+//     price: 699,
+//     oldPrice: 1499,
+//   },
+// ];
 
 const ProductDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem("user") || "{}");
 
-  const product = products.find((p) => p.id === id);
+  const [product, setProducts] = useState([]);
+
+  const [imgPath, setPath] = useState('');
+  const getProduct = async () => {
+    try {
+      const res = await axios.get("https://astro-talk-backend.onrender.com/web/productlist");
+      setPath(res.data.staticPath);
+      setProducts(res.data.data)
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  }
+
+  const products = product.find((p) => p._id === id);
+
+  useEffect(() => {
+    getProduct();
+  }, [id])
 
   useEffect(() => {
     const token = localStorage.getItem("userToken");
     if (!token) {
       navigate("/user-login");
     }
+
   }, [navigate]);
 
-  const handleBuyNow = () => {
+
+  const [loading,setLoading]=useState(false);
+  const handleBuyNow = async () => {
+    setLoading(true);
     const isLoggedIn = localStorage.getItem("userToken");
     if (!isLoggedIn) {
       alert("Please login first to buy the product.");
       navigate("/user-login", { state: { from: `/product/${product.id}` } });
-    } else {
-      navigate(`/checkout/${product.id}`, { state: { product } });
     }
+
+    console.log(user?.user_phone)
+    try {
+      const { data } = await axios.post("https://astro-talk-backend.onrender.com/web/product/order", {
+        product_id:products?._id,
+        amount: products?.productPrice,
+        user_id: user?._id,
+        customer_name: user?.user_name,    // Required by Cashfree
+        customer_email: user?.email,  // Required by Cashfree
+        customer_phone: user?.user_phone  // Required by Cashfree
+      },
+      );
+      const payment_link = data.paymentData.link_url;
+      setLoading(false);
+      console.log(payment_link);
+      window.location.href = payment_link;
+      if (!payment_link) {
+        throw new Error("Payment link not received from server");
+      }
+
+    } catch (error) {
+      console.log(error);
+      // alert(error);
+    }
+
+
+    console.log(user._id);
   };
 
   const handleLogout = () => {
@@ -68,12 +111,11 @@ const ProductDetail = () => {
     navigate("/user-login");
   };
 
-  if (!product) {
+  if (!products) {
     return (
       <div className="p-8 text-center text-red-600">Product Not Found</div>
     );
   }
-
   return (
     <section className="bg-white min-h-screen py-10">
       {/* Header */}
@@ -84,10 +126,10 @@ const ProductDetail = () => {
           </h1>
           <div className="flex flex-wrap gap-2">
             <Button
-            variant="outline"
+              variant="outline"
               className="border-red-500 text-red-500 hover:bg-red-500 hover:text-white"
               onClick={() => navigate("/user-dashboard")}
-             
+
             >
               <Home className="mr-2 h-4 w-4" />
               Go to Dashboard
@@ -127,16 +169,19 @@ const ProductDetail = () => {
 
         <div className="max-w-2xl mx-auto bg-white shadow-lg rounded-xl overflow-hidden">
           <img
-            src={product.image}
-            alt={product.title}
+            src={`${imgPath}/${products?.productCoverImg}`}
+            alt={products?.productName}
             className="w-full h-80 object-cover"
           />
           <div className="p-6">
-            <h2 className="text-2xl font-bold mb-2">{product.title}</h2>
-            <p className="text-red-600 text-xl font-semibold">₹{product.price}</p>
-            <p className="line-through text-gray-500">₹{product.oldPrice}</p>
+            <h2 className="text-2xl font-bold mb-2">{products?.productName}</h2>
+            <p className="text-red-600 text-xl font-semibold">₹{products?.productPrice}</p>
+            <p className="line-through text-gray-500">₹{products?.discount}</p>
             <p className="mt-4 text-gray-700">
-              This powerful bracelet is designed to bring prosperity, good fortune, and positive energy.
+              {products?.productSortTitle}
+            </p>
+            <p className="mt-4 text-gray-700">
+              {products?.productDesc}
             </p>
 
             <button
@@ -144,6 +189,7 @@ const ProductDetail = () => {
               className="mt-6 w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-all"
             >
               Buy Now
+              {loading ? "Placing Order..." : "Place Order"}
             </button>
           </div>
         </div>

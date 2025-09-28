@@ -4,7 +4,10 @@ import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import { io } from "socket.io-client";
 
+
+
 const socket = io("https://astro-talk-backend.onrender.com"); // backend ka url
+
 
 const ChatComponentAstro = () => {
   const navigate = useNavigate();
@@ -107,7 +110,9 @@ const ChatComponentAstro = () => {
     socket.emit("sendMessage", newMsg);
 
     try {
+
       await axios.post(
+
         `https://astro-talk-backend.onrender.com/sendMessage/${selectedUser.id}`,
         {
           message: inputMsg,
@@ -130,7 +135,7 @@ const ChatComponentAstro = () => {
         <div className="md:w-[98%] w-[99%] bg-white shadow-lg h-full rounded-xl">
           <div className="p-4 border-b-4 flex justify-between">
             <button
-              onClick={() => navigate("/user-dashboard")}
+              onClick={() => navigate("/astro-dashboard")}
               className="p-2 rounded-full hover:bg-gray-200"
             >
               <ArrowLeft size={20} />

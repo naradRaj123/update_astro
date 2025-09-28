@@ -21,27 +21,27 @@ const Hero = () => {
   <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
     <div className="text-center text-white">
       {/* Heading */}
-      <motion.h1
+      {/* <motion.h1
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
         className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold mb-6 drop-shadow-lg"
       >
         Your Trusted Guide to the Stars
-      </motion.h1>
+      </motion.h1> */}
 
       {/* Subtext */}
-      <motion.p
+      {/* <motion.p
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.2 }}
         className="text-base sm:text-lg md:text-xl lg:text-2xl max-w-3xl mx-auto mb-10 drop-shadow-sm"
       >
         Connect with India’s Best Astrologers for instant guidance on love, career, and life's challenges. Personalized readings, 24/7 availability.
-      </motion.p>
+      </motion.p> */}
 
       {/* Buttons */}
-      <motion.div
+      {/* <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.4 }}
@@ -53,10 +53,10 @@ const Hero = () => {
         <Button size="lg" variant="outline" className="border-white text-white font-semibold py-3 px-8 rounded-lg hover:bg-white hover:text-black transition-colors">
           <Users className="mr-2 h-6 w-6" /> View All Astrologers
         </Button>
-      </motion.div>
+      </motion.div> */}
 
       {/* Stats */}
-      <motion.div
+      {/* <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.6 }}
@@ -74,7 +74,7 @@ const Hero = () => {
           <PhoneCall className="h-5 w-5 mr-1.5" />
           <span>24/7 Support</span>
         </div>
-      </motion.div>
+      </motion.div> */}
     </div>
   </div>
 
