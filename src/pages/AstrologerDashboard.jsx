@@ -266,19 +266,19 @@ const AstrologerDashboard = () => {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <ActionButton
+              {/* <ActionButton
                 label={isCallEnabled ? "Disable Calls" : "Enable Calls"}
                 icon={Phone}
                 onClick={() => setIsCallEnabled(!isCallEnabled)}
                 variant={isCallEnabled ? "destructive" : "default"}
                 className={isCallEnabled ? "" : "bg-green-500 hover:bg-green-600"}
-              />
+              /> */}
               <ActionButton
-                label={isChatEnabled ? "Disable Chat" : "Enable Chat"}
+                label={"Open Chat"}
                 icon={MessageSquare}
                 onClick={() => navigate('/astro-chathistory')}
                 variant={isChatEnabled ? "destructive" : "default"}
-                className={isChatEnabled ? "" : "bg-green-500 hover:bg-green-600"}
+                className={"bg-green-500 hover:bg-green-600"}
               />
               <ActionButton
                 label={isVideoEnabled ? "Disable Video" : "Enable Video Call"}
@@ -288,17 +288,17 @@ const AstrologerDashboard = () => {
                 className={isVideoEnabled ? "" : "bg-green-500 hover:bg-green-600"}
               />
               <VideoCall channel={astroFilterData?.agoraChannel} uid={Math.floor(Math.random() * 1000000)} />
-              <ActionButton
+              {/* <ActionButton
                 label="Go Live"
                 icon={CalendarCheck2}
                 className="bg-red-500 hover:bg-red-600 text-white"
-              />
-              <ActionButton
+              /> */}
+              {/* <ActionButton
                 label="Boost My Profile"
                 icon={ShieldCheck}
                 variant="outline"
                 className="text-red-500 border-red-500 hover:bg-red-50"
-              />
+              /> */}
             </CardContent>
           </Card>
 
@@ -309,11 +309,11 @@ const AstrologerDashboard = () => {
               </CardTitle>
             </CardHeader>
             <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <DashboardActionItem
+              {/* <DashboardActionItem
                 title="View Performance"
                 description="Track your earnings and ratings."
                 icon={BarChart2}
-              />
+              /> */}
               <DashboardActionItem
                 title="Chat History"
                 description="Review past client conversations."
@@ -327,26 +327,26 @@ const AstrologerDashboard = () => {
                 description="Access records of previous calls."
                 icon={Video}
               />
-              <DashboardActionItem
+              {/* <DashboardActionItem
                 title="Support Center"
                 description="Get help and report issues."
                 icon={HelpCircle}
-              />
+              /> */}
               <DashboardActionItem
                 title="Edit Profile"
                 description="Update your details and expertise."
                 icon={Edit}
               />
-              <DashboardActionItem
+              {/* <DashboardActionItem
                 title="Free Chat/Call Offers"
                 description="Manage promotional offers."
                 icon={Gift}
-              />
-              <DashboardActionItem
+              /> */}
+              {/* <DashboardActionItem
                 title="Get Birth Details"
                 description="Access client birth information."
                 icon={Users}
-              />
+              /> */}
               <DashboardActionItem
                 title="Set Your Rate"
                 description="Adjust your consultation charges."
@@ -356,7 +356,7 @@ const AstrologerDashboard = () => {
           </Card>
         </div>
 
-        <Card className="shadow-lg rounded-xl">
+        {/* <Card className="shadow-lg rounded-xl">
           <CardHeader>
             <CardTitle className="text-xl font-semibold text-gray-700">
               Recent Activity
@@ -370,7 +370,7 @@ const AstrologerDashboard = () => {
               <p className="text-gray-400">No new activity.</p>
             </div>
           </CardContent>
-        </Card>
+        </Card> */}
       </motion.div>
 
       {/* withdrawal modal */}
