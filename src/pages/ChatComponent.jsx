@@ -496,7 +496,7 @@ const ChatComponent = () => {
         <div className=" w-[99%] bg-white shadow-lg h-full rounded-xl">
           <div className="p-4 border-b-4 flex justify-between">
             <button
-              onClick={() => navigate("/user-dashboard") }
+              onClick={() => navigate("/user-dashboard")}
               className="p-2 rounded-full hover:bg-gray-200"
             >
               <ArrowLeft size={20} />
@@ -505,20 +505,23 @@ const ChatComponent = () => {
             <div></div>
           </div>
           <ul>
-            {users.length ? (
+            {users.length > 0 ? (
               users.map((user) => (
                 <li
                   key={user.id}
                   onClick={() => handleSelectUser(user)}
                   className="flex items-center gap-3 p-3 hover:bg-gray-200 cursor-pointer border-b-4"
                 >
-                  <User className="w-10 h-10 rounded-full bg-gray-300 p-3"/>
+                  <User className="w-10 h-10 rounded-full bg-gray-300 p-3" />
                   <span className="font-medium">{user.name}</span>
                 </li>
               ))
+            ) : users.length === 0 ? (
+              <li className="p-4 text-center text-gray-500 italic">Loading Chat... </li>
             ) : (
-              <li className="p-4 text-center text-gray-500">No chats yet.</li>
+              <li className="p-4 text-center text-gray-500 italic">No chats available</li>
             )}
+
           </ul>
         </div>
       </div>
@@ -556,11 +559,10 @@ const ChatComponent = () => {
         {messages.map((msg, index) => (
           <div
             key={index}
-            className={`p-2 rounded-lg max-w-xs ${
-              msg.senderId === userId
+            className={`p-2 rounded-lg max-w-xs ${msg.senderId === userId
                 ? "bg-blue-500 text-white self-end"
                 : "bg-gray-300 text-black self-start"
-            }`}
+              }`}
           >
             {msg.message}
           </div>
@@ -588,4 +590,4 @@ const ChatComponent = () => {
   );
 };
 
-export default ChatComponent;
+export default ChatComponent;
