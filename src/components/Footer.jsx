@@ -265,7 +265,7 @@ const Footer = () => {
           <MessageCircle className="h-6 w-6" />
           <span className="text-xs">Chat</span>
         </Link>
-        <Link to="/astrologers" className="flex flex-col items-center text-gray-700">
+        <Link to="/store" className="flex flex-col items-center text-gray-700">
           <History className="h-6 w-6" />
           <span className="text-xs">History</span>
         </Link>
