@@ -9,6 +9,7 @@ import axios from "axios";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import VideoCall from "./VideoCall/VideoCall";
+import VoiceCall from "./VoiceCall/VoiceCall";
 import { io } from 'socket.io-client';
 
 // connet socket io from backend
@@ -199,6 +200,24 @@ const Astrologer = () => {
                         >
                           <MessageCircleIcon />
                         </Button>
+
+                        <div className="flex justify-between items-center">
+                        <VideoCall
+                          channel={astrologer.agoraChannel}
+                          token={astrologer.agoraToken}
+                          uid={astrologer.agoraUID}
+                          iconOnly={true}
+                        />
+                      </div>
+
+                      <div className="flex justify-between items-center">
+                        <VoiceCall
+                          channel={astrologer.agoraChannel}
+                          token={astrologer.agoraToken}
+                          uid={astrologer.agoraUID}
+                          iconOnly={true}
+                        />
+                      </div>
                       </div>
 
                       {/* <div className="flex justify-between items-center mt-4">
@@ -212,13 +231,7 @@ const Astrologer = () => {
                         </Button>
                       </div> */}
 
-                      {/* <div className="flex justify-between items-center mt-4">
-                        <VideoCall
-                          channel={astrologer.agoraChannel}
-                          token={astrologer.agoraToken}
-                          uid={astrologer.agoraUID}
-                        />
-                      </div> */}
+                      
                     </CardContent>
                   </Card>
                 </motion.div>

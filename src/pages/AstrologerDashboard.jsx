@@ -33,6 +33,7 @@ import toastr from 'toastr';
 import 'toastr/build/toastr.min.css';
 import VideoCall from "./VideoCall/VideoCall";
 import { io } from "socket.io-client";
+import AudioCall from "./VoiceCall/VoiceCall";
 
 const socket = io("https://astro-talk-backend.onrender.com/", {
   autoConnect: false,
@@ -280,14 +281,16 @@ const AstrologerDashboard = () => {
                 variant={isChatEnabled ? "destructive" : "default"}
                 className={"bg-green-500 hover:bg-green-600"}
               />
-              <ActionButton
+              {/* <ActionButton
                 label={isVideoEnabled ? "Disable Video" : "Enable Video Call"}
                 icon={Video}
                 onClick={() => setIsVideoEnabled(!isVideoEnabled)}
                 variant={isVideoEnabled ? "destructive" : "default"}
                 className={isVideoEnabled ? "" : "bg-green-500 hover:bg-green-600"}
-              />
+              /> */}
               <VideoCall channel={astroFilterData?.agoraChannel} uid={Math.floor(Math.random() * 1000000)} />
+
+              <AudioCall channel={astroFilterData?.agoraChannel} uid={Math.floor(Math.random() * 1000000)} />
               {/* <ActionButton
                 label="Go Live"
                 icon={CalendarCheck2}

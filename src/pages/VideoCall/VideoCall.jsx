@@ -13,11 +13,12 @@ import {
   HelpCircle,
   LogOut,
   Zap,
-  Heart
+  Heart,
+  VideoIcon
 } from 'lucide-react';
 
 
-const VideoCall = ({ channel, uid }) => {
+const VideoCall = ({ channel, uid, iconOnly = false }) => {
   const client = useRef(AgoraRTC.createClient({ mode: 'rtc', codec: 'vp8' }));
   const localAudioTrack = useRef(null);
   const localVideoTrack = useRef(null);
@@ -36,6 +37,7 @@ const VideoCall = ({ channel, uid }) => {
           Uid: uid,
         },
       });
+
       const { appId, token } = res.data;
 
       console.log("response data", res)
@@ -90,22 +92,29 @@ const VideoCall = ({ channel, uid }) => {
 
   return (
     <div>
-      {!joined ? (
+      {!iconOnly ? (
         <Button
-          variant="outline"
-          className="w-full justify-start text-left py-3 border-red-300 hover:border-red-500 hover:bg-red-50"
+          variant="default"
+          className="w-full flex items-center justify-center py-3 bg-green-500 hover:bg-green-600 text-white"
           onClick={joinCall}
         >
-          <MessageSquare className="mr-3 h-5 w-5 text-red-500" /> Join Call
+          <VideoIcon className="mr-3 h-5 w-5 " /> Join Video Call
         </Button>
       ) : (
-        <button onClick={leaveCall}>Leave Call</button>
+        <Button className="cosmic-gradient text-white"
+                    size="sm"
+                    variant="outline"
+                    onClick={joinCall} >
+                    <VideoIcon />
+                </Button>
       )}
+
       {/* <div style={{ display: 'flex', gap: '20px', marginTop: '20px' }}>
         <div ref={localRef} style={{ width: '320px', height: '240px', border: '1px solid #333' }}></div>
         <div ref={remoteRef} style={{ width: '320px', height: '240px', border: '1px solid #333' }}></div>
       </div> */}
       {/* Modal for Video Call */}
+
       {joined && (
         <div
           style={{

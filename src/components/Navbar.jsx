@@ -266,7 +266,7 @@ const Navbar = () => {
             transition={{ duration: 0.3 }}
             className="xl:hidden bg-white shadow-lg px-4"
           >
-            <div className="flex flex-col gap-2 py-4">
+            <div className="flex flex-col gap-2 py-4 max-h-[75vh] overflow-y-auto ">
               {navLinksTop.map((link) =>
                 link.dropdown ? (
                   <details key={link.name} className="px-3 py-1">
