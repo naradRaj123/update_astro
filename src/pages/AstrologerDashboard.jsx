@@ -290,7 +290,7 @@ const AstrologerDashboard = () => {
               /> */}
               <VideoCall channel={astroFilterData?.agoraChannel} uid={Math.floor(Math.random() * 1000000)} />
 
-              <AudioCall channel={astroFilterData?.agoraChannel} uid={Math.floor(Math.random() * 1000000)} />
+              <AudioCall channel={astroFilterData?.agoraChannel} uid={astroFilterData?.agoraUID} />
               {/* <ActionButton
                 label="Go Live"
                 icon={CalendarCheck2}

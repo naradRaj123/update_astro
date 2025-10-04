@@ -12,6 +12,11 @@ import VideoCall from "./VideoCall/VideoCall";
 import VoiceCall from "./VoiceCall/VoiceCall";
 import { io } from 'socket.io-client';
 
+const userData = localStorage.getItem("user")
+const jsUserData = JSON.parse(userData)
+
+console.log("userData", jsUserData?._id)
+
 // connet socket io from backend
 const socket = io("https://astro-talk-backend.onrender.com/", {
   autoConnect: true,
@@ -205,7 +210,7 @@ const Astrologer = () => {
                         <VideoCall
                           channel={astrologer.agoraChannel}
                           token={astrologer.agoraToken}
-                          uid={astrologer.agoraUID}
+                          uid={jsUserData._id | Math.floor(Math.random() * 1000000)}
                           iconOnly={true}
                         />
                       </div>
@@ -214,7 +219,7 @@ const Astrologer = () => {
                         <VoiceCall
                           channel={astrologer.agoraChannel}
                           token={astrologer.agoraToken}
-                          uid={astrologer.agoraUID}
+                          uid={jsUserData._id | Math.floor(Math.random() * 1000000)}
                           iconOnly={true}
                         />
                       </div>
