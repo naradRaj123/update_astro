@@ -524,7 +524,7 @@ const ChatComponent = () => {
             <div></div>
           </div>
           <ul>
-            {users.length ? (
+            {users.length > 0 ? (
               users.map((user) => (
                 <li
                   key={user.id}
@@ -535,9 +535,12 @@ const ChatComponent = () => {
                   <span className="font-medium">{user.name}</span>
                 </li>
               ))
+            ) : users.length === 0 ? (
+              <li className="p-4 text-center text-gray-500 italic">Loading Chat... </li>
             ) : (
-              <li className="p-4 text-center text-gray-500">No chats yet.</li>
+              <li className="p-4 text-center text-gray-500 italic">No chats available</li>
             )}
+
           </ul>
         </div>
       </div>
@@ -598,6 +601,8 @@ const ChatComponent = () => {
             className={`p-2 rounded-lg max-w-xs ${msg.senderId === userId
               ? "bg-blue-500 text-white self-end"
               : "bg-gray-300 text-black self-start"
+                ? "bg-blue-500 text-white self-end"
+                : "bg-gray-300 text-black self-start"
               }`}
           >
             {msg.message}
