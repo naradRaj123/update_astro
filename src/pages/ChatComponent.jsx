@@ -334,6 +334,8 @@ import { ArrowLeft, User } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { io } from "socket.io-client";
+import VideoCall from "./VideoCall/VideoCall";
+import VoiceCall from "./VoiceCall/VoiceCall";
 
 // Backend socket
 const socket = io("https://astro-talk-backend.onrender.com", { transports: ["websocket"] });
@@ -349,6 +351,7 @@ const ChatComponent = () => {
   const [sessionId, setSessionId] = useState(null);
   const timerRef = useRef(null);
   const messagesEndRef = useRef(null);
+  const [astroData, setAstroData] = useState([]);
 
   const userId = localStorage.getItem("userId");
 
@@ -414,6 +417,21 @@ const ChatComponent = () => {
     }
   };
 
+  // Fetch messages for selected astro
+  const fetchAstroData = async (astroId) => {
+    try {
+      const res = await axios.post(`https://astro-talk-backend.onrender.com/web/astro/astrolinfo`, {
+        astrologerId: astroId,
+      });
+      if (res.data) {
+        console.log("astro data", res.data.data)
+        setAstroData(res.data.data);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   // Auto select user from route
   useEffect(() => {
     if (location.state?.user) {
@@ -426,6 +444,7 @@ const ChatComponent = () => {
     setSelectedUser(user);
     fetchMessages(user.id);
     setTimer(0);
+    fetchAstroData(user.id);
 
     // Start session with backend
     socket.emit("startChat", { userId, astroId: user.id });
@@ -488,7 +507,7 @@ const ChatComponent = () => {
     return () => clearInterval(interval); // cleanup on unmount or when selectedUser changes
   }, [selectedUser]);
 
-
+  console.log("selected user data", selectedUser);
   // Sidebar
   if (!selectedUser) {
     return (
@@ -496,7 +515,7 @@ const ChatComponent = () => {
         <div className=" w-[99%] bg-white shadow-lg h-full rounded-xl">
           <div className="p-4 border-b-4 flex justify-between">
             <button
-              onClick={() => navigate("/user-dashboard") }
+              onClick={() => navigate("/user-dashboard")}
               className="p-2 rounded-full hover:bg-gray-200"
             >
               <ArrowLeft size={20} />
@@ -512,7 +531,7 @@ const ChatComponent = () => {
                   onClick={() => handleSelectUser(user)}
                   className="flex items-center gap-3 p-3 hover:bg-gray-200 cursor-pointer border-b-4"
                 >
-                  <User className="w-10 h-10 rounded-full bg-gray-300 p-3"/>
+                  <User className="w-10 h-10 rounded-full bg-gray-300 p-3" />
                   <span className="font-medium">{user.name}</span>
                 </li>
               ))
@@ -528,39 +547,58 @@ const ChatComponent = () => {
   // Chat window
   return (
     <div className="flex flex-col h-screen w-full md:w-[98%] mx-auto bg-white shadow-lg">
-      <div className="flex items-center p-4 border-b bg-white shadow sticky top-0 z-10">
-        <button
-          onClick={handleEndChat}
-          className="p-2 rounded-full hover:bg-gray-200 bg-red-500 "
-        >
-          <ArrowLeft size={20} />
-        </button>
+      <div className="flex justify-between items-center p-4 border-b bg-white shadow sticky top-0 z-10">
+        <div className="flex items-center ">
+          <button
+            onClick={handleEndChat}
+            className="p-2 rounded-full hover:bg-gray-200 bg-red-500 "
+          >
+            <ArrowLeft size={20} />
+          </button>
 
-        {selectedUser.img ? (
-          <img
-            src={selectedUser.img}
-            alt={selectedUser.name}
-            className="w-10 h-10 rounded-full ml-3"
-          />
-        ) : (
-          <div className="w-10 h-10 ml-3 rounded-full bg-gray-200 flex items-center justify-center">
-            <User size={24} className="text-gray-600" />
+          {selectedUser.img ? (
+            <img
+              src={selectedUser.img}
+              alt={selectedUser.name}
+              className="w-10 h-10 rounded-full ml-3"
+            />
+          ) : (
+            <div className="w-10 h-10 ml-3 rounded-full bg-gray-200 flex items-center justify-center">
+              <User size={24} className="text-gray-600" />
+            </div>
+          )}
+
+          <div className="ml-3">
+            <h2 className="font-bold text-lg">{selectedUser.name}</h2>
+            <span className=" font-medium text-gray-600">Time: {formatTime(timer)}</span>
           </div>
-        )}
+        </div>
 
-        <h2 className="font-bold text-lg ml-3">{selectedUser.name}</h2>
-        <span className="ml-4 font-medium text-gray-600">Time: {formatTime(timer)}</span>
+        <div className="flex gap-2 md:gap-6 items-center">
+          <VideoCall
+            channel={astroData.agoraChannel}
+            token={astroData.agoraToken}
+            uid={astroData.agoraUID}
+            iconOnly={true}
+          />
+
+          <VoiceCall
+            channel={astroData.agoraChannel}
+            token={astroData.agoraToken}
+            uid={astroData.agoraUID}
+            iconOnly={true}
+          />
+        </div>
       </div>
 
       <div className="flex-1 p-4 overflow-y-auto flex flex-col gap-2 bg-gray-50">
         {messages.map((msg, index) => (
           <div
             key={index}
-            className={`p-2 rounded-lg max-w-xs ${
-              msg.senderId === userId
-                ? "bg-blue-500 text-white self-end"
-                : "bg-gray-300 text-black self-start"
-            }`}
+            className={`p-2 rounded-lg max-w-xs ${msg.senderId === userId
+              ? "bg-blue-500 text-white self-end"
+              : "bg-gray-300 text-black self-start"
+              }`}
           >
             {msg.message}
           </div>
@@ -568,7 +606,7 @@ const ChatComponent = () => {
         <div ref={messagesEndRef} />
       </div>
 
-      <div className="flex p-3 border-t bg-white sticky bottom-0 z-10">
+      <div className="flex p-3 border-t bg-white sticky bottom-0 ">
         <input
           type="text"
           value={inputMsg}
@@ -588,4 +626,4 @@ const ChatComponent = () => {
   );
 };
 
-export default ChatComponent;
+export default ChatComponent;
