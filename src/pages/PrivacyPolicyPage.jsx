@@ -24,45 +24,82 @@ const PrivacyPolicyPage = () => {
             </motion.div>
             <CardTitle className="text-4xl font-bold text-gray-800">Privacy Policy</CardTitle>
             <CardDescription className="text-lg text-gray-700 mt-2">
-              Your privacy is important to us. Last updated: {new Date().toLocaleDateString()}.
+              Effective Date: October 2025
             </CardDescription>
           </CardHeader>
-          <CardContent className="p-6 md:p-10 space-y-6 bg-white text-gray-700 leading-relaxed">
+
+          <CardContent className="p-6 md:p-10 space-y-8 bg-white text-gray-700 leading-relaxed">
             <section>
-              <h2 className="text-xl font-semibold text-yellow-600 mb-2">1. Introduction</h2>
-              <p>Welcome to Astrotruth. We are committed to protecting your personal information and your right to privacy. If you have any questions or concerns about our policy, or our practices with regards to your personal information, please contact us.</p>
+              <h2 className="text-xl font-semibold text-yellow-600 mb-2">1. Information We Collect</h2>
+              <p>When you use our apps, we may collect the following types of information:</p>
+              <ul className="list-disc pl-6 mt-2 space-y-1">
+                <li><strong>Device or Other IDs:</strong> Unique identifiers from your device for app functionality and analytics.</li>
+                <li><strong>App Usage Data:</strong> Information about how you interact with our apps, such as pages visited, features used, and crash reports.</li>
+                <li><strong>Analytics Data:</strong> Collected through third-party services (e.g., Firebase, Google Analytics) to improve app performance.</li>
+                <li><strong>Optional User Data:</strong> Information you provide voluntarily, such as account details or feedback submissions.</li>
+              </ul>
             </section>
+
             <section>
-              <h2 className="text-xl font-semibold text-yellow-600 mb-2">2. Information We Collect</h2>
-              <p>We collect personal information that you voluntarily provide to us when registering at the Astrotruth, expressing an interest in obtaining information about us or our products and services, when participating in activities on the Astrotruth or otherwise contacting us. This may include name, birth details, email address, phone number, and payment information.</p>
+              <h2 className="text-xl font-semibold text-yellow-600 mb-2">2. How We Use Your Information</h2>
+              <ul className="list-disc pl-6 mt-2 space-y-1">
+                <li>To provide and improve our services and app functionality.</li>
+                <li>To analyze app usage and performance to enhance user experience.</li>
+                <li>To communicate with you regarding updates, support, or promotions if you opted in.</li>
+                <li>To comply with legal obligations.</li>
+              </ul>
             </section>
+
             <section>
-              <h2 className="text-xl font-semibold text-yellow-600 mb-2">3. How We Use Your Information</h2>
-              <p>We use personal information collected via our Astrotruth for a variety of business purposes described below. We process your personal information for these purposes in reliance on our legitimate business interests, in order to enter into or perform a contract with you, with your consent, and/or for compliance with our legal obligations.</p>
+              <h2 className="text-xl font-semibold text-yellow-600 mb-2">3. How We Share Your Information</h2>
+              <p>We do not sell your personal information. We may share data in the following situations:</p>
+              <ul className="list-disc pl-6 mt-2 space-y-1">
+                <li>With trusted service providers who perform services on our behalf (e.g., analytics, cloud hosting).</li>
+                <li>If required by law or to protect our legal rights.</li>
+              </ul>
             </section>
+
             <section>
-              <h2 className="text-xl font-semibold text-yellow-600 mb-2">4. Will Your Information Be Shared With Anyone?</h2>
-              <p>We only share information with your consent, to comply with laws, to provide you with services, to protect your rights, or to fulfill business obligations. We may share your data with third-party vendors, service providers, contractors or agents who perform services for us or on our behalf and require access to such information to do that work.</p>
+              <h2 className="text-xl font-semibold text-yellow-600 mb-2">4. Security</h2>
+              <p>
+                We implement appropriate technical and organizational measures to protect your data. 
+                All sensitive data is encrypted during transmission, and access is restricted to authorized personnel.
+              </p>
             </section>
+
             <section>
-              <h2 className="text-xl font-semibold text-yellow-600 mb-2">5. How Long Do We Keep Your Information?</h2>
-              <p>We will only keep your personal information for as long as it is necessary for the purposes set out in this privacy policy, unless a longer retention period is required or permitted by law (such as tax, accounting or other legal requirements).</p>
+              <h2 className="text-xl font-semibold text-yellow-600 mb-2">5. Your Choices</h2>
+              <p>You can manage your privacy preferences as follows:</p>
+              <ul className="list-disc pl-6 mt-2 space-y-1">
+                <li>You can opt out of personalized analytics or ads through device settings or in-app options.</li>
+                <li>You can request deletion of your personal data by contacting us at <a href="mailto:support@astrotruth.com" className="text-blue-600 underline">support@astrotruth.com</a>.</li>
+              </ul>
             </section>
+
             <section>
-              <h2 className="text-xl font-semibold text-yellow-600 mb-2">6. How Do We Keep Your Information Safe?</h2>
-              <p>We have implemented appropriate technical and organizational security measures designed to protect the security of any personal information we process. However, please also remember that we cannot guarantee that the internet itself is 100% secure.</p>
+              <h2 className="text-xl font-semibold text-yellow-600 mb-2">6. Children’s Privacy</h2>
+              <p>
+                Our apps are not intended for children under 13. We do not knowingly collect personal data from children.
+              </p>
             </section>
+
             <section>
-              <h2 className="text-xl font-semibold text-yellow-600 mb-2">7. Your Privacy Rights</h2>
-              <p>In some regions (like the European Economic Area), you have rights that allow you greater access to and control over your personal information. You may review, change, or terminate your account at any time.</p>
+              <h2 className="text-xl font-semibold text-yellow-600 mb-2">7. Changes to This Privacy Policy</h2>
+              <p>
+                We may update this Privacy Policy from time to time. Changes will be posted in the app and on our website.
+              </p>
             </section>
+
             <section>
-              <h2 className="text-xl font-semibold text-yellow-600 mb-2">8. Updates To This Policy</h2>
-              <p>We may update this privacy policy from time to time. The updated version will be indicated by an updated “Revised” date and the updated version will be effective as soon as it is accessible.</p>
-            </section>
-            <section>
-              <h2 className="text-xl font-semibold text-yellow-600 mb-2">9. How Can You Contact Us About This Policy?</h2>
-              <p>If you have questions or comments about this policy, you may email us at privacy@astrotruth.com or by post to: Astrotruth, Attn: Privacy Officer, 123 Astro Lane, Cosmic City, Universe 78901.</p>
+              <h2 className="text-xl font-semibold text-yellow-600 mb-2">8. Contact Us</h2>
+              <p>
+                If you have questions or concerns about your data or this policy, contact us at:
+              </p>
+              <div className="pl-4 mt-2">
+                <p><strong>Astrotruth India Pvt. Ltd.</strong></p>
+                <p>Email: <a href="mailto:support@astrotruth.com" className="text-blue-600 underline">support@astrotruth.com</a></p>
+                <p>Website: <a href="https://www.astrotruth.com/privacy-policy" target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">https://www.astrotruth.com/privacy-policy</a></p>
+              </div>
             </section>
           </CardContent>
         </Card>
