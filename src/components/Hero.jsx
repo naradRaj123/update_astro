@@ -4,17 +4,28 @@ import { Button } from "@/components/ui/button";
 import { PhoneCall, Users, ChevronRight, Star } from "lucide-react";
 import { Link } from "react-router-dom";
 import bgImg from "../assets/images/bannerAstro.jpg";
+import bannerPhone from "../assets/images/bannerPhone.png"
 
 const Hero = () => {
   return (
-    <section className="pt-20 md:pt-28 pb-10 md:pb-16 relative overflow-hidden min-h-screen flex flex-col justify-center">
+    <section className="mt-[5.5rem] pt-8 pb-0 md:pb-6 relative overflow-hidden min-h-[35vh] md:min-h-screen flex flex-col justify-center">
   {/* Background Image */}
   <div className="absolute inset-0 z-0">
-    <img
-      src={bgImg}
-      alt="Astrology Background"
-      className="w-full h-full object-cover"
-    />
+    <>
+  {/* Mobile image */}
+  <img
+    src={bannerPhone}
+    alt="Astrology Background Mobile"
+    className="w-full h-full object-contain block md:hidden"
+  />
+
+  {/* Desktop image */}
+  <img
+    src={bgImg}
+    alt="Astrology Background Desktop"
+    className="w-full h-full object-cover hidden md:block"
+  />
+</>
   </div>
 
   {/* Content */}

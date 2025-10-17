@@ -65,14 +65,14 @@ const AstrologerRegistrationPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-yellow-100 via-amber-50 to-white p-6 mt-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-yellow-100 via-amber-50 to-white">
       <motion.div
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
         className="w-full max-w-3xl"
       >
-        <form onSubmit={handleSubmit(onSubmit)} noValidate className='register-m-t'>
+        <form onSubmit={handleSubmit(onSubmit)} noValidate >
           <Card className="shadow-2xl rounded-xl border border-yellow-300 overflow-hidden relative">
             {/* Close Button */}
             <button
@@ -308,7 +308,7 @@ const AstrologerRegistrationPage = () => {
 
               {/* User Type Radio */}
               <div className="flex flex-col register-padding mt-4">
-                <div className="flex gap-4">
+                <div className="flex flex-col gap-2">
                   <label className="flex items-center gap-2">
                     <input type="radio" value="Karmkandi" {...register('userType', { required: "Please select a type" })} disabled={isSubmitting} />
                     Karmkandi

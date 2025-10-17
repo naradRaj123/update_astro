@@ -36,7 +36,7 @@ const remedies = [
 
 const AstrologicalRemedies = () => {
   return (
-    <section className="py-16 bg-yellow-50">
+    <section className="py-8 md:py-16 bg-yellow-50">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -44,7 +44,7 @@ const AstrologicalRemedies = () => {
           transition={{ duration: 0.5 }}
           className="text-center mb-12"
         >
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+          <h2 className="text-2xl md:text-4xl font-bold mb-4">
             Astrological Remedies for a <span className="text-yellow-600">Better Life</span>
           </h2>
           <p className="text-lg text-gray-700 max-w-2xl mx-auto">

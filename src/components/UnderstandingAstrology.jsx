@@ -2,8 +2,10 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, BookOpen } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const UnderstandingAstrology = () => {
+  const navigate = useNavigate()
   return (
     <section className="py-16 bg-white">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -32,7 +34,8 @@ const UnderstandingAstrology = () => {
             <p className="text-lg text-gray-600 mb-8 leading-relaxed">
               Our expert astrologers use these cosmic patterns to provide guidance, helping you make informed decisions and navigate life's challenges with greater clarity and confidence.
             </p>
-            <Button size="lg" className="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold">
+            <Button size="lg" className="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold"
+             onClick={()=> navigate("/astrologers")} >
               Learn More About Astrology <BookOpen className="ml-2 h-5 w-5" />
             </Button>
           </motion.div>

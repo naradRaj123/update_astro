@@ -19,6 +19,7 @@ import AccurateAnswers from "@/components/AccurateAnswers";
 import VideosPage from "./VideosPage";
 import VideoCall from "./VideoCall/VideoCall";
 import AboutUs from "./AboutUs";
+import Compatibility from "./Compatiblity";
 
 
 const HomePage = () => {

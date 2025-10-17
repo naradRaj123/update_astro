@@ -8,39 +8,39 @@ const ConnectWithAstrologers = () => {
 
   const navigate = useNavigate();
   return (
-    <section className="py-16 bg-gradient-to-r from-yellow-100 via-yellow-100 to-yellow-100 ">
+    <section className="py-10 md:py-16 bg-gradient-to-r from-yellow-100 via-yellow-100 to-yellow-100 ">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <h2 className="text-3xl main-title-color md:text-4xl font-bold mb-6">
+          <h3 className="text-2xl main-title-color md:text-4xl font-bold mb-6">
             Connect With Astrologers Instantly
-          </h2>
+          </h3>
           <p className="text-lg md:text-xl mb-10 max-w-2xl mx-auto color-black">
             Choose your preferred way to connect and get immediate astrological guidance.
           </p>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 max-w-8xl mx-auto">
+          <div className="grid grid-cols-1 grid-cols-4 gap-8 max-w-8xl mx-auto">
             <motion.div
               whileHover={{ scale: 1.05 }}
-              className="bg-white/20 backdrop-blur-md p-8 rounded-xl shadow-xl hover:bg-white/30 transition-all h-fit "
+              className="bg-white/20 backdrop-blur-md p-2 md:p-8 rounded-xl shadow-xl hover:bg-white/30 transition-all h-fit"
               onClick={() => navigate("/astrologers")}
             >
-              <Phone className="h-8 w-10 mx-auto mb-4 color-black " />
-              <h3 className="text-xl font-semibold">Talk to Astrologer</h3>
-              {/* <p className="color-black /80 mb-6">Speak directly with an astrologer for a personalized voice consultation.</p> */}
-              {/* <Button size="lg" className="bg-white text-yellow-600 hover:bg-gray-100 w-full font-semibold">
-                Start Call
-              </Button> */}
+              <Phone className="h-8 w-10 mx-auto md:mb-4 text-black" />
+
+              {/* Hide on mobile, show on md and above */}
+              <h3 className="text-xl font-semibold hidden md:block">
+                Talk to Astrologer
+              </h3>
             </motion.div>
             <motion.div
               whileHover={{ scale: 1.05 }}
-              className="bg-white/20 backdrop-blur-md p-8 rounded-xl shadow-xl hover:bg-white/30 transition-all h-fit"
+              className="bg-white/20 backdrop-blur-md p-2 md:p-8 rounded-xl shadow-xl hover:bg-white/30 transition-all h-fit"
               onClick={() => navigate("/astrologers")}
             >
-              <MessageSquareText className="h-8 w-10 mx-auto mb-4 color-black " />
-              <h3 className="text-xl font-semibold ">Chat with Astrologer</h3>
+              <MessageSquareText className="h-8 w-10 mx-auto md:mb-4 color-black " />
+              <h3 className="text-xl font-semibold hidden md:block">Chat with Astrologer</h3>
               {/* <p className="color-black /80 mb-6">Get your questions answered through a live chat session with an expert.</p>
               <Button size="lg" className="bg-white text-yellow-600 hover:bg-gray-100 w-full font-semibold">
                 Start Chat
@@ -48,11 +48,11 @@ const ConnectWithAstrologers = () => {
             </motion.div>
             <motion.div
               whileHover={{ scale: 1.05 }}
-              className="bg-white/20 backdrop-blur-md p-8 rounded-xl shadow-xl hover:bg-white/30 transition-all h-fit"
+              className="bg-white/20 backdrop-blur-md p-2 md:p-8 rounded-xl shadow-xl hover:bg-white/30 transition-all h-fit"
               onClick={() => navigate("/store")}
             >
-              <ShoppingBag className="h-8 w-10 mx-auto mb-4 color-black" />
-              <h3 className="text-xl font-semibold">Astrotruth Shop</h3>
+              <ShoppingBag className="h-8 w-10 mx-auto md:mb-4 color-black" />
+              <h3 className="text-xl font-semibold hidden md:block">Astrotruth Shop</h3>
               {/* <p className="color-black mb-6">Connect face-to-face with astrologers for an immersive experience.</p>
               <Button size="lg" className="bg-white/50 text-yellow-700 w-full font-semibold cursor-not-allowed" disabled>
                 Notify Me
@@ -60,17 +60,17 @@ const ConnectWithAstrologers = () => {
             </motion.div>
             <motion.div
               whileHover={{ scale: 1.05 }}
-              className="bg-white/20 backdrop-blur-md p-8 rounded-xl shadow-xl hover:bg-white/30 transition-all h-fit"
+              className="bg-white/20 backdrop-blur-md p-2 md:p-8 rounded-xl shadow-xl hover:bg-white/30 transition-all h-fit"
               onClick={() => navigate("/store")}
             >
-              <CalendarCheck className="h-8 w-10 mx-auto mb-4 color-black" />
-              <h3 className="text-xl font-semibold ">Book a Puja</h3>
+              <CalendarCheck className="h-8 w-10 mx-auto md:mb-4 color-black" />
+              <h3 className="text-xl font-semibold hidden md:block">Book a Puja</h3>
               {/* <p className="color-black mb-6">Connect face-to-face with astrologers for an immersive experience.</p>
               <Button size="lg" className="bg-white/50 text-yellow-700 w-full font-semibold cursor-not-allowed" disabled>
                 Notify Me
               </Button> */}
             </motion.div>
-            
+
           </div>
         </motion.div>
       </div>

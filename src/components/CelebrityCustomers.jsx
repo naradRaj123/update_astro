@@ -13,7 +13,7 @@ import video6 from "../assets/images/video6.mp4";
 const celebrityReviews = [
   {
     name: "Aarav Sharma",
-    profession: "Film Actor",
+    profession: "Creator",
     reviewText: "AstroTruth's guidance has been invaluable for my career choices. Their astrologers are truly insightful!",
     avatarFallback: "AS",
     video: video1,
@@ -21,7 +21,7 @@ const celebrityReviews = [
   },
   {
     name: "Priya Singh",
-    profession: "Playback Singer",
+    profession: "Creator",
     reviewText: "Whenever I face a dilemma, I turn to AstroTruth. Their predictions are accurate and advice practical.",
     avatarFallback: "PS",
     video: video2,
@@ -29,7 +29,7 @@ const celebrityReviews = [
   },
   {
     name: "Rohan Kapoor",
-    profession: "TV Personality",
+    profession: "Creator",
     reviewText: "The Vastu consultation for my new home was excellent. I feel a positive shift in energy already!",
     avatarFallback: "RK",
     video: video3,
@@ -37,7 +37,7 @@ const celebrityReviews = [
   },
   {
     name: "Sikha Sharma",
-    profession: "Film Actor",
+    profession: "Creator",
     reviewText: "AstroTruth's guidance has been invaluable for my career choices. Their astrologers are truly insightful!",
     avatarFallback: "AS",
     video: video4,
@@ -45,7 +45,7 @@ const celebrityReviews = [
   },
   {
     name: "Reena Singh",
-    profession: "Actress",
+    profession: "Creator",
     reviewText: "Whenever I face a dilemma, I turn to AstroTruth. Their predictions are accurate and advice practical.",
     avatarFallback: "PS",
     video: video5,
@@ -53,7 +53,7 @@ const celebrityReviews = [
   },
   {
     name: "Tania Kapoor",
-    profession: "TV Personality",
+    profession: "Creator",
     reviewText: "The Vastu consultation for my new home was excellent. I feel a positive shift in energy already!",
     avatarFallback: "RK",
     video: video6,
@@ -74,7 +74,7 @@ const CelebrityCustomers = () => {
   };
 
   return (
-    <section className="py-16 bg-white">
+    <section className="py-8 md:py-16 bg-white">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -82,7 +82,7 @@ const CelebrityCustomers = () => {
           transition={{ duration: 0.5 }}
           className="text-center mb-12"
         >
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+          <h2 className="text-2xl md:text-4xl font-bold mb-4">
             Our <span className="text-yellow-600">Celebrity Customers</span>
           </h2>
           <p className="text-lg text-gray-700 max-w-2xl mx-auto">

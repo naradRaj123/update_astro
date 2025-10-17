@@ -63,9 +63,9 @@ const Services = () => {
               <div className="text-4xl mb-4">{service.icon}</div>
               <h3 className="text-xl font-semibold mb-3">{service.title}</h3>
               <p className="text-gray-600 mb-4">{service.description}</p>
-              <Button variant="ghost" className="text-primary hover:text-primary/80 p-0 flex items-center">
+              {/* <Button variant="ghost" className="text-primary hover:text-primary/80 p-0 flex items-center">
                 Learn More <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
+              </Button> */}
             </motion.div>
           ))}
         </div>

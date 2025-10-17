@@ -37,7 +37,7 @@ const ChooseZodiac = () => {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
+        <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2 md:gap-6">
           {zodiacSigns.map((sign, index) => (
             <motion.div
               key={sign.name}
@@ -48,12 +48,21 @@ const ChooseZodiac = () => {
             >
               <Card className="text-center p-4 bg-white shadow-lg hover:shadow-yellow-500/30 border-yellow-400 border-2">
                 <CardContent className="flex flex-col items-center justify-center">
-                  <div className="text-6xl mb-3">{sign.icon}</div>
-                  <h3 className="text-xl font-semibold text-yellow-700">{sign.name}</h3>
-                  <p className="text-xs text-gray-500">{sign.date}</p>
-                  <Button variant="ghost" size="sm" className="mt-3 text-yellow-600 hover:bg-yellow-100">
+                  <div className="text-6xl mb-0 md:mb-3">{sign.icon}</div>
+                  <h3 className="text-lg md:text-xl font-semibold text-yellow-700 hidden md:block">
+                    {sign.name}
+                  </h3>
+                  <p className="text-xs text-gray-500 hidden md:block">
+                    {sign.date}
+                  </p>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="mt-3 text-yellow-600 hover:bg-yellow-100 hidden md:inline-flex"
+                  >
                     View Details <ArrowRight className="ml-1 h-4 w-4" />
                   </Button>
+
                 </CardContent>
               </Card>
             </motion.div>

@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
-  Menu, X, Phone, User, LogOut, ChevronDown
+  Menu, X, Phone, User, LogOut, ChevronDown,
+  User2Icon
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
@@ -30,11 +31,12 @@ const Navbar = () => {
 
   const navLinksTop = [
     { name: "Home", href: "/" },
-    { name: "Free Kundali", href: "/" },
+    { name: "Free Kundali", href: "/kundali" },
+    { name: "Kundali Matching", href: "/kundalimatching" },
+    { name: "Chat with Astrologer", href: "/astrologers" },
     { name: "Horoscope", href: "/horoscope" },
-    { name: "Kundali Matching", href: "/" },
-    { name: "Consult Astrologer", href: "/astrologers" },
     { name: "Karamkandi", href: "/karamkandi" },
+    {name: "Compatibility", href: "/compatibility"},
     { name: "Dashakoot", href: "/dashakoot" },
     { name: "Ashtakoot", href: "/ashtakoot" },
   ];
@@ -56,8 +58,8 @@ const Navbar = () => {
       name: "Calculator",
       icon: <ChevronDown className="ml-1 inline-block w-4 h-4" />,
       dropdown: [
-        { name: "Love Calculator", href: "/" },
-        { name: "Numerology Calculator", href: "/" },
+        { name: "Love Calculator", href: "/love-calculator" },
+        { name: "Numerology Calculator", href: "/numerology" },
       ],
     },
     {
@@ -111,7 +113,7 @@ const Navbar = () => {
           {/* Logo */}
           <div className="flex items-center flex-shrink-0 h-full">
             <Link to="/" className="flex items-center">
-              <img src={logo} className="w-auto h-[15rem]" alt="Logo" />
+              <img src={logo} className="w-[120px] h-[60px]" alt="Logo" />
             </Link>
           </div>
 
@@ -230,23 +232,9 @@ const Navbar = () => {
 
           {/* Mobile Buttons */}
           <div className="xl:hidden flex items-center gap-2">
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button variant="outline" size="sm">
-                  <Phone className="h-4 w-4" />
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-[425px] p-6">
-                <div className="grid gap-4">
-                  <h3 className="text-lg font-medium">Talk to an Astrologer Now</h3>
-                  <p className="text-sm text-gray-500">
-                    Enter your phone number and we'll connect you with an expert astrologer.
-                  </p>
-                  <Input placeholder="Enter your phone number" type="tel" />
-                  <Button className="cosmic-gradient text-white w-full">Connect Now</Button>
-                </div>
-              </DialogContent>
-            </Dialog>
+            <Button variant="outline" size="sm">
+              <User2Icon className="h-4 w-4" />
+            </Button>
 
             <button
               onClick={() => setIsOpen(!isOpen)}

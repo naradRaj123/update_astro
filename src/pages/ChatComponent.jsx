@@ -1,339 +1,25 @@
-// import React, { useEffect, useState, useRef } from "react";
-// import { ArrowLeft, User } from "lucide-react";
-// import { useLocation, useNavigate } from "react-router-dom";
-// import axios from "axios";
-// import { io } from "socket.io-client";
-
-// // Backend socket
-// const socket = io("https://astro-talk-backend.onrender.com", { transports: ["websocket"] });
-
-// const ChatComponent = () => {
-//   const navigate = useNavigate();
-//   const location = useLocation();
-//   const [users, setUsers] = useState([]);
-//   const [selectedUser, setSelectedUser] = useState(null);
-//   const [messages, setMessages] = useState([]);
-//   const [inputMsg, setInputMsg] = useState("");
-//   const messagesEndRef = useRef(null);
-
-//   const userId = localStorage.getItem("userId");
-
-//   // Scroll to bottom
-//   const scrollToBottom = () => {
-//     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-//   };
-
-//   // 🔹 Socket listener for new messages
-//   // useEffect(() => {
-//   //   if (!userId) return;
-//   //   // Register logged-in user
-//   //   socket.emit("loggedInUsers", { userId });
-//   //   // Define listener
-//   //   const handleNewMessage = (msg) => {
-//   //     if (
-//   //       (msg.senderId === userId && msg.receiverId === selectedUser?.id) ||
-//   //       (msg.receiverId === userId && msg.senderId === selectedUser?.id)
-//   //     ) {
-//   //       setMessages((prev) => [...prev, msg]);
-//   //       setTimeout(scrollToBottom, 100);
-//   //     }
-//   //   };
-//   //   // Attach listener
-//   //   socket.on("newMessage", handleNewMessage);
-//   //   // Cleanup to prevent duplicates
-//   //   return () => {
-//   //     socket.off("newMessage", handleNewMessage);
-//   //   };
-//   // }, [userId, selectedUser]);
-
-//   // 🔹 Socket listener for new messages
-//   useEffect(() => {
-//     if (!userId) return;
-
-//     socket.emit("loggedInUsers", { userId });
-
-//     const handleNewMessage = (msg) => {
-//       if (
-//         (msg.senderId === userId && msg.receiverId === selectedUser?.id) ||
-//         (msg.receiverId === userId && msg.senderId === selectedUser?.id)
-//       ) {
-//         setMessages((prev) => {
-//           // If DB version arrives (has _id), replace optimistic one
-//           if (msg._id) {
-//             const withoutOptimistic = prev.filter(
-//               (m) =>
-//                 !(
-//                   m.message === msg.message &&
-//                   m.senderId === msg.senderId &&
-//                   m.receiverId === msg.receiverId &&
-//                   !m._id // remove the one without _id
-//                 )
-//             );
-//             return [...withoutOptimistic, msg];
-//           }
-
-//           // If optimistic message already exists, skip
-//           const exists = prev.some(
-//             (m) =>
-//               m.message === msg.message &&
-//               m.senderId === msg.senderId &&
-//               m.receiverId === msg.receiverId &&
-//               !m._id // only skip if optimistic duplicate
-//           );
-//           if (exists) return prev;
-
-//           return [...prev, msg];
-//         });
-
-//         setTimeout(scrollToBottom, 100);
-//       }
-//     };
-
-
-//     socket.on("newMessage", handleNewMessage);
-
-//     return () => {
-//       socket.off("newMessage", handleNewMessage);
-//     };
-//   }, [userId, selectedUser]);
-
-
-//   // 🔹 Fetch chat list
-//   useEffect(() => {
-//     const fetchChatList = async () => {
-//       if (!userId) return;
-//       try {
-//         const res = await axios.post(`https://astro-talk-backend.onrender.com/listAstroChat/${userId}`);
-//         if (res.data.status) {
-//           setUsers(res.data.data);
-//         }
-//       } catch (err) {
-//         console.error("Error fetching chat list:", err);
-//       }
-//     };
-//     fetchChatList();
-//   }, [userId]);
-
-//   // 🔹 Fetch messages for selected user
-//   const fetchMessages = async (astroId) => {
-//     try {
-//       const res = await axios.post(`https://astro-talk-backend.onrender.com/getMessage/${astroId}`, {
-//         currentLogginId: userId,
-//       });
-//       if (res.data && Array.isArray(res.data.messages)) {
-//         setMessages(res.data.messages);
-//         setTimeout(scrollToBottom, 100);
-//       }
-//     } catch (err) {
-//       console.error("Error fetching messages:", err);
-//     }
-//   };
-
-//   // Auto-select user if coming from route
-//   useEffect(() => {
-//     if (location.state?.user) {
-//       setSelectedUser(location.state.user);
-//       fetchMessages(location.state.user.id);
-//     }
-//   }, [location.state]);
-
-//   // Select user manually
-//   const handleSelectUser = (user) => {
-//     setSelectedUser(user);
-//     fetchMessages(user.id);
-//   };
-
-
-//   const handleSendMessage = async () => {
-//     if (!inputMsg.trim() || !selectedUser) return;
-
-//     const newMsg = {
-//       senderId: userId,
-//       receiverId: selectedUser.id,
-//       message: inputMsg,
-//       createdAt: new Date(),
-//     };
-
-//     // Local update
-//     // setMessages((prev) => [...prev, newMsg]);
-//     setInputMsg("");
-//     scrollToBottom();
-
-//     // Emit socket
-//     socket.emit("sendMessage", newMsg);
-
-//     try {
-//       await axios.post(`https://astro-talk-backend.onrender.com/sendMessage/${selectedUser.id}`, {
-//         message: inputMsg,
-//         currentLoginId: userId,
-//       });
-//     } catch (err) {
-//       console.error(err);
-//     }
-//   };
-
-
-//   console.log("this is the chat data,", messages);
-
-//   // Sidebar view
-//   if (!selectedUser) {
-//     return (
-//       <div className="h-full flex items-center justify-center">
-//         <div className=" w-[99%] bg-white shadow-lg h-full rounded-xl">
-//           <div className="p-4 border-b-4 flex justify-between">
-//             <button
-//               onClick={() => navigate("/user-dashboard")}
-//               className="p-2 rounded-full hover:bg-gray-200"
-//             >
-//               <ArrowLeft size={20} />
-//             </button>
-//             <h2 className="text-lg font-bold">Chat History</h2>
-//             <div></div>
-//           </div>
-//           <ul>
-//             {users.length ? (
-//               users.map((user) => (
-//                 <li
-//                   key={user.id}
-//                   onClick={() => handleSelectUser(user)}
-//                   className="flex items-center gap-3 p-3 hover:bg-gray-200 cursor-pointer border-b-4"
-//                 >
-//                   <img
-//                     src={user.img || "/placeholder.png"}
-//                     alt={user.name}
-//                     className="w-10 h-10 rounded-full"
-//                   />
-//                   <span className="font-medium">{user.name}</span>
-//                 </li>
-//               ))
-//             ) : (
-//               <li className="p-4 text-center text-gray-500">No chats yet.</li>
-//             )}
-//           </ul>
-//         </div>
-//       </div>
-//     );
-//   }
-
-//   // Chat window
-//   return (
-//     <div className="flex flex-col h-screen w-full md:w-[98%] mx-auto bg-white shadow-lg">
-//       {/* Header */}
-
-//       <div className="flex items-center p-4 border-b bg-white shadow sticky top-0 z-10">
-//         <button
-//           onClick={() => setSelectedUser(null)}
-//           className="p-2 rounded-full hover:bg-gray-200"
-//         >
-//           <ArrowLeft size={20} />
-//         </button>
-
-//         {selectedUser.img ? (
-//           <img
-//             src={selectedUser.img}
-//             alt={selectedUser.name}
-//             className="w-10 h-10 rounded-full ml-3"
-//           />
-//         ) : (
-//           <div className="w-10 h-10 ml-3 rounded-full bg-gray-200 flex items-center justify-center">
-//             <User size={24} className="text-gray-600" />
-//           </div>
-//         )}
-
-//         <h2 className="font-bold text-lg ml-3">{selectedUser.name}</h2>
-//       </div>
-
-
-//       {/* Messages */}
-//       <div className="flex-1 p-4 overflow-y-auto flex flex-col gap-2 bg-gray-50">
-//         {messages.map((msg, index) => (
-//           <div
-//             key={index}
-//             className={`p-2 rounded-lg max-w-xs ${msg.senderId === userId
-//               ? "bg-blue-500 text-white self-end"
-//               : "bg-gray-300 text-black self-start"
-//               }`}
-//           >
-//             {msg.message}
-//           </div>
-//         ))}
-//         <div ref={messagesEndRef} />
-//       </div>
-
-//       {/* Input */}
-//       <div className="flex p-3 border-t bg-white sticky bottom-0 z-10">
-//         <input
-//           type="text"
-//           value={inputMsg}
-//           onChange={(e) => setInputMsg(e.target.value)}
-//           placeholder="Type a message..."
-//           className="flex-1 border rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-//           onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
-//         />
-//         <button
-//           onClick={handleSendMessage}
-//           className="ml-2 bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600"
-//         >
-//           Send
-//         </button>
-//       </div>
-//     </div>
-
-//   );
-// };
-
-// export default ChatComponent;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 import React, { useEffect, useState, useRef } from "react";
-import { ArrowLeft, User } from "lucide-react";
+import { 
+  ArrowLeft, 
+  User, 
+  Phone, 
+  Video, 
+  Image, 
+  Smile, 
+  Send, 
+  Paperclip,
+  MoreVertical,
+  Tag,
+  Clock,
+  Mic,
+  Camera,
+  Star,
+  Shield
+} from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { io } from "socket.io-client";
+import EmojiPicker from 'emoji-picker-react';
 import VideoCall from "./VideoCall/VideoCall";
 import VoiceCall from "./VoiceCall/VoiceCall";
 
@@ -347,11 +33,16 @@ const ChatComponent = () => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [messages, setMessages] = useState([]);
   const [inputMsg, setInputMsg] = useState("");
-  const [timer, setTimer] = useState(0); // in seconds
+  const [timer, setTimer] = useState(0);
   const [sessionId, setSessionId] = useState(null);
+  const [astroData, setAstroData] = useState([]);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [showAttachmentMenu, setShowAttachmentMenu] = useState(false);
+  const [discountUsed, setDiscountUsed] = useState(false);
+
   const timerRef = useRef(null);
   const messagesEndRef = useRef(null);
-  const [astroData, setAstroData] = useState([]);
+  const fileInputRef = useRef(null);
 
   const userId = localStorage.getItem("userId");
 
@@ -372,7 +63,7 @@ const ChatComponent = () => {
         (msg.receiverId === userId && msg.senderId === selectedUser?.id)
       ) {
         setMessages((prev) => [...prev, msg]);
-        scrollToBottom();
+        setTimeout(scrollToBottom, 100);
       }
     });
 
@@ -410,14 +101,14 @@ const ChatComponent = () => {
       });
       if (res.data && Array.isArray(res.data.messages)) {
         setMessages(res.data.messages);
-        scrollToBottom();
+        setTimeout(scrollToBottom, 100);
       }
     } catch (err) {
       console.error(err);
     }
   };
 
-  // Fetch messages for selected astro
+  // Fetch astrologer data
   const fetchAstroData = async (astroId) => {
     try {
       const res = await axios.post(`https://astro-talk-backend.onrender.com/web/astro/astrolinfo`, {
@@ -445,8 +136,6 @@ const ChatComponent = () => {
     fetchMessages(user.id);
     setTimer(0);
     fetchAstroData(user.id);
-
-    // Start session with backend
     socket.emit("startChat", { userId, astroId: user.id });
   };
 
@@ -459,9 +148,11 @@ const ChatComponent = () => {
       receiverId: selectedUser.id,
       message: inputMsg,
       createdAt: new Date(),
+      type: 'text'
     };
 
     setInputMsg("");
+    setShowEmojiPicker(false);
     scrollToBottom();
     socket.emit("sendMessage", newMsg);
 
@@ -473,6 +164,54 @@ const ChatComponent = () => {
     } catch (err) {
       console.error(err);
     }
+  };
+
+  // Handle emoji click
+  const handleEmojiClick = (emojiData) => {
+    setInputMsg(prev => prev + emojiData.emoji);
+  };
+
+  // Handle file upload
+  const handleFileUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      if (file.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const imageMsg = {
+            senderId: userId,
+            receiverId: selectedUser.id,
+            message: e.target.result,
+            createdAt: new Date(),
+            type: 'image'
+          };
+          
+          socket.emit("sendMessage", imageMsg);
+          setMessages(prev => [...prev, imageMsg]);
+          scrollToBottom();
+          
+          console.log("Image uploaded:", file.name);
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+    setShowAttachmentMenu(false);
+  };
+
+  // Request discount
+  const handleRequestDiscount = () => {
+    const discountMsg = {
+      senderId: userId,
+      receiverId: selectedUser.id,
+      message: "🔔 Hi! I'm interested in any available discounts for consultations.",
+      createdAt: new Date(),
+      type: 'discount'
+    };
+
+    socket.emit("sendMessage", discountMsg);
+    setMessages(prev => [...prev, discountMsg]);
+    setDiscountUsed(true);
+    scrollToBottom();
   };
 
   // End chat
@@ -494,137 +233,346 @@ const ChatComponent = () => {
     return `${m}:${s}`;
   };
 
+  // Format message time
+  const formatMessageTime = (dateString) => {
+    return new Date(dateString).toLocaleTimeString('en-IN', {
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  };
+
   useEffect(() => {
     let interval;
 
     if (selectedUser) {
-      setTimer(0); // reset when user changes
+      setTimer(0);
       interval = setInterval(() => {
         setTimer((prev) => prev + 1);
       }, 1000);
     }
 
-    return () => clearInterval(interval); // cleanup on unmount or when selectedUser changes
+    return () => clearInterval(interval);
   }, [selectedUser]);
 
-  console.log("selected user data", selectedUser);
-  // Sidebar
+  // Message component
+  const MessageBubble = ({ msg }) => {
+    const isSent = msg.senderId === userId;
+
+    if (msg.type === 'image') {
+      return (
+        <div className={`flex ${isSent ? 'justify-end' : 'justify-start'} mb-3`}>
+          <div className={`max-w-xs ${isSent ? 'bg-blue-500' : 'bg-gray-200'} rounded-2xl p-2`}>
+            <img 
+              src={msg.message} 
+              alt="Shared content" 
+              className="rounded-lg max-w-full h-auto"
+            />
+            <div className={`text-xs mt-1 ${isSent ? 'text-blue-100' : 'text-gray-500'} text-right`}>
+              {formatMessageTime(msg.createdAt)}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    if (msg.type === 'discount') {
+      return (
+        <div className={`flex ${isSent ? 'justify-end' : 'justify-start'} mb-3`}>
+          <div className={`max-w-xs rounded-2xl p-3 ${isSent ? 'bg-yellow-500 text-white rounded-br-none' : 'bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-bl-none'}`}>
+            <div className="text-sm break-words">{msg.message}</div>
+            <div className={`text-xs mt-1 ${isSent ? 'text-yellow-100' : 'text-green-100'} text-right`}>
+              {formatMessageTime(msg.createdAt)}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div className={`flex ${isSent ? 'justify-end' : 'justify-start'} mb-3`}>
+        <div className={`max-w-xs rounded-2xl p-3 ${isSent ? 'bg-blue-500 text-white rounded-br-none' : 'bg-gray-200 text-gray-800 rounded-bl-none'}`}>
+          <div className="text-sm break-words">{msg.message}</div>
+          <div className={`text-xs mt-1 ${isSent ? 'text-blue-100' : 'text-gray-500'} text-right`}>
+            {formatMessageTime(msg.createdAt)}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  // Sidebar - Chat List
   if (!selectedUser) {
     return (
-      <div className="h-full flex items-center justify-center">
-        <div className=" w-[99%] bg-white shadow-lg h-full rounded-xl">
-          <div className="p-4 border-b-4 flex justify-between">
-            <button
-              onClick={() => navigate("/user-dashboard")}
-              className="p-2 rounded-full hover:bg-gray-200"
-            >
-              <ArrowLeft size={20} />
-            </button>
-            <h2 className="text-lg font-bold">Chat History</h2>
-            <div></div>
+      <div className=" h-screen bg-gradient-to-br from-purple-50 to-blue-50 flex">
+        <div className="w-full max-w-md md:max-w-7xl mx-auto bg-white shadow-lg h-full flex flex-col">
+          {/* Header */}
+          <div className="p-4 border-b bg-white sticky top-0 z-10">
+            <div className="flex items-center justify-between">
+              <button
+                onClick={() => navigate("/user-dashboard")}
+                className="p-2 rounded-full hover:bg-gray-100 transition-colors"
+              >
+                <ArrowLeft size={20} />
+              </button>
+              <h2 className="text-lg font-bold text-gray-800">Chat History</h2>
+              <div className="w-8"></div>
+            </div>
           </div>
-          <ul>
+
+          {/* Chat List */}
+          <div className="flex-1 overflow-y-auto">
             {users.length > 0 ? (
               users.map((user) => (
-                <li
+                <div
                   key={user.id}
                   onClick={() => handleSelectUser(user)}
-                  className="flex items-center gap-3 p-3 hover:bg-gray-200 cursor-pointer border-b-4"
+                  className="flex items-center gap-3 p-4 hover:bg-gray-50 cursor-pointer border-b border-gray-100 transition-colors"
                 >
-                  <User className="w-10 h-10 rounded-full bg-gray-300 p-3" />
-                  <span className="font-medium">{user.name}</span>
-                </li>
+                  <div className="relative">
+                    {user.img ? (
+                      <img
+                        src={user.img}
+                        alt={user.name}
+                        className="w-12 h-12 rounded-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-12 h-12 rounded-full bg-gradient-to-r from-purple-500 to-blue-500 flex items-center justify-center">
+                        <User size={20} className="text-white" />
+                      </div>
+                    )}
+                    <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex justify-between items-center mb-1">
+                      <h3 className="font-semibold text-gray-800 truncate">{user.name}</h3>
+                      <span className="text-xs text-gray-500">12:30 PM</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <div className="flex items-center space-x-1">
+                        <Star className="h-3 w-3 text-yellow-500 fill-current" />
+                        <span className="text-xs text-gray-600">{user.rating || "4.8"}</span>
+                      </div>
+                      <span className="text-xs text-gray-500">•</span>
+                      <span className="text-xs text-gray-600 truncate">Last message preview...</span>
+                    </div>
+                  </div>
+                </div>
               ))
             ) : users.length === 0 ? (
-              <li className="p-4 text-center text-gray-500 italic">Loading Chat... </li>
+              <div className="flex flex-col items-center justify-center h-full text-gray-500">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-500 mb-4"></div>
+                <p className="text-lg font-medium mb-2">Loading Chats...</p>
+              </div>
             ) : (
-              <li className="p-4 text-center text-gray-500 italic">No chats available</li>
+              <div className="flex flex-col items-center justify-center h-full text-gray-500">
+                <User size={48} className="mb-4 opacity-50" />
+                <p className="text-lg font-medium mb-2">No chats available</p>
+                <p className="text-sm text-center px-4">Start a new conversation with an astrologer</p>
+              </div>
             )}
-
-          </ul>
+          </div>
         </div>
       </div>
     );
   }
 
-  // Chat window
+  // Chat Window
   return (
-    <div className="flex flex-col h-screen w-full md:w-[98%] mx-auto bg-white shadow-lg">
-      <div className="flex justify-between items-center p-4 border-b bg-white shadow sticky top-0 z-10">
-        <div className="flex items-center ">
-          <button
-            onClick={handleEndChat}
-            className="p-2 rounded-full hover:bg-gray-200 bg-red-500 "
-          >
-            <ArrowLeft size={20} />
-          </button>
-
-          {selectedUser.img ? (
-            <img
-              src={selectedUser.img}
-              alt={selectedUser.name}
-              className="w-10 h-10 rounded-full ml-3"
-            />
-          ) : (
-            <div className="w-10 h-10 ml-3 rounded-full bg-gray-200 flex items-center justify-center">
-              <User size={24} className="text-gray-600" />
+    <div className="h-screen bg-gradient-to-br from-purple-50 to-blue-50 flex flex-col">
+      {/* Header */}
+      <div className="bg-white shadow-sm border-b sticky top-0 z-20">
+        <div className="p-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <button
+                onClick={handleEndChat}
+                className="p-2 rounded-full hover:bg-gray-100 transition-colors"
+              >
+                <ArrowLeft size={20} />
+              </button>
+              <div className="relative">
+                {selectedUser.img ? (
+                  <img
+                    src={selectedUser.img}
+                    alt={selectedUser.name}
+                    className="w-10 h-10 rounded-full object-cover"
+                  />
+                ) : (
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-r from-purple-500 to-blue-500 flex items-center justify-center">
+                    <User size={18} className="text-white" />
+                  </div>
+                )}
+                <div className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 rounded-full border-2 border-white"></div>
+              </div>
+              <div>
+                <div className="flex items-center space-x-2">
+                  <h2 className="font-bold text-gray-800">{selectedUser.name}</h2>
+                  {selectedUser.isVerified && (
+                    <Shield className="h-4 w-4 text-blue-500" />
+                  )}
+                </div>
+                <div className="flex items-center space-x-1">
+                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                  <span className="text-xs text-gray-600">Online</span>
+                  <Clock size={12} className="text-gray-400" />
+                  <span className="text-xs text-gray-600">Time: {formatTime(timer)}</span>
+                </div>
+              </div>
             </div>
-          )}
 
-          <div className="ml-3">
-            <h2 className="font-bold text-lg">{selectedUser.name}</h2>
-            <span className=" font-medium text-gray-600">Time: {formatTime(timer)}</span>
+            <div className="flex items-center space-x-2">
+              {/* Call Buttons */}
+              <VoiceCall
+                channel={astroData.agoraChannel}
+                token={astroData.agoraToken}
+                uid={astroData.agoraUID}
+                iconOnly={true}
+              />
+
+              <VideoCall
+                channel={astroData.agoraChannel}
+                token={astroData.agoraToken}
+                uid={astroData.agoraUID}
+                iconOnly={true}
+              />
+              
+              {/* Discount Button */}
+              {!discountUsed && (
+                <button 
+                  onClick={handleRequestDiscount}
+                  className="p-2 rounded-full bg-orange-50 text-orange-600 hover:bg-orange-100 transition-colors"
+                >
+                  <Tag size={18} />
+                </button>
+              )}
+              
+              {/* More Options */}
+              <button className="p-2 rounded-full hover:bg-gray-100 transition-colors">
+                <MoreVertical size={18} />
+              </button>
+            </div>
           </div>
-        </div>
-
-        <div className="flex gap-2 md:gap-6 items-center">
-          <VideoCall
-            channel={astroData.agoraChannel}
-            token={astroData.agoraToken}
-            uid={astroData.agoraUID}
-            iconOnly={true}
-          />
-
-          <VoiceCall
-            channel={astroData.agoraChannel}
-            token={astroData.agoraToken}
-            uid={astroData.agoraUID}
-            iconOnly={true}
-          />
         </div>
       </div>
 
-      <div className="flex-1 p-4 overflow-y-auto flex flex-col gap-2 bg-gray-50">
-        {messages.map((msg, index) => (
-          <div
-            key={index}
-            className={`p-2 rounded-lg max-w-xs ${msg.senderId === userId
-              ? "bg-blue-500 text-white self-end"
-              : "bg-gray-300 text-black self-start"
-                ? "bg-blue-500 text-white self-end"
-                : "bg-gray-300 text-black self-start"
-              }`}
-          >
-            {msg.message}
+      {/* Messages Area */}
+      <div className="flex-1 overflow-y-auto p-4 space-y-2">
+        {/* Welcome Message */}
+        <div className="text-center mb-6">
+          <div className="inline-block bg-white rounded-2xl px-4 py-2 shadow-sm">
+            <p className="text-sm text-gray-600">
+              Chat started with {selectedUser.name} • {formatMessageTime(new Date())}
+            </p>
           </div>
+        </div>
+
+        {/* Messages */}
+        {messages.map((msg, index) => (
+          <MessageBubble key={index} msg={msg} />
         ))}
         <div ref={messagesEndRef} />
       </div>
 
-      <div className="flex p-3 border-t bg-white sticky bottom-0 ">
+      {/* Emoji Picker */}
+      {showEmojiPicker && (
+        <div className="absolute bottom-16 left-4 z-30">
+          <EmojiPicker 
+            onEmojiClick={handleEmojiClick}
+            height={350}
+            width={300}
+          />
+        </div>
+      )}
+
+      {/* Attachment Menu */}
+      {showAttachmentMenu && (
+        <div className="absolute bottom-16 left-4 bg-white rounded-2xl shadow-lg border p-3 z-30">
+          <div className="grid grid-cols-2 gap-2">
+            <button 
+              onClick={() => fileInputRef.current?.click()}
+              className="flex flex-col items-center p-3 rounded-xl hover:bg-gray-50 transition-colors"
+            >
+              <Image size={20} className="text-blue-500 mb-1" />
+              <span className="text-xs">Photo</span>
+            </button>
+            <button className="flex flex-col items-center p-3 rounded-xl hover:bg-gray-50 transition-colors">
+              <Camera size={20} className="text-purple-500 mb-1" />
+              <span className="text-xs">Camera</span>
+            </button>
+            <button className="flex flex-col items-center p-3 rounded-xl hover:bg-gray-50 transition-colors">
+              <Paperclip size={20} className="text-green-500 mb-1" />
+              <span className="text-xs">Document</span>
+            </button>
+            <button className="flex flex-col items-center p-3 rounded-xl hover:bg-gray-50 transition-colors">
+              <Mic size={20} className="text-red-500 mb-1" />
+              <span className="text-xs">Audio</span>
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Input Area */}
+      <div className="bg-white border-t p-4 sticky bottom-0 z-10">
+        <div className="flex items-center space-x-2">
+          {/* Attachment Button */}
+          <button 
+            onClick={() => setShowAttachmentMenu(!showAttachmentMenu)}
+            className="p-2 rounded-full text-gray-500 hover:bg-gray-100 transition-colors"
+          >
+            <Paperclip size={20} />
+          </button>
+
+          {/* Emoji Button */}
+          <button 
+            onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+            className="p-2 rounded-full text-gray-500 hover:bg-gray-100 transition-colors"
+          >
+            <Smile size={20} />
+          </button>
+
+          {/* Message Input */}
+          <div className="flex-1 relative">
+            <input
+              type="text"
+              value={inputMsg}
+              onChange={(e) => setInputMsg(e.target.value)}
+              placeholder="Type a message..."
+              className="w-full border border-gray-300 rounded-full px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
+            />
+          </div>
+
+          {/* Send Button */}
+          <button
+            onClick={handleSendMessage}
+            disabled={!inputMsg.trim()}
+            className={`p-3 rounded-full transition-all duration-200 ${
+              inputMsg.trim() 
+                ? 'bg-blue-500 hover:bg-blue-600 text-white shadow-md' 
+                : 'bg-gray-200 text-gray-400'
+            }`}
+          >
+            <Send size={18} />
+          </button>
+        </div>
+
+        {/* Hidden File Input */}
         <input
-          type="text"
-          value={inputMsg}
-          onChange={(e) => setInputMsg(e.target.value)}
-          placeholder="Type a message..."
-          className="flex-1 border rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-          onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
+          type="file"
+          ref={fileInputRef}
+          onChange={handleFileUpload}
+          accept="image/*"
+          className="hidden"
         />
+      </div>
+
+      {/* End Chat Button */}
+      <div className="bg-white border-t p-3">
         <button
-          onClick={handleSendMessage}
-          className="ml-2 bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600"
+          onClick={handleEndChat}
+          className="w-full bg-red-500 hover:bg-red-600 text-white py-3 rounded-xl font-medium transition-colors shadow-sm"
         >
-          Send
+          End Chat Session
         </button>
       </div>
     </div>

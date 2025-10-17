@@ -24,7 +24,7 @@ const KarmkandiDetail = () => {
     };
 
     fetchAstrologerDetails();
-  }, [id]);
+  }, []);
 
   if (loading) {
     return (
@@ -43,18 +43,18 @@ const KarmkandiDetail = () => {
   }
 
   // Construct image URL if exists
-  const imageUrl = astrologer.image
-    ? `https://astro-talk-backend.onrender.com/${astrologer.image.replace(/^\/?/, "")}`
-    : "https://via.placeholder.com/600x400?text=No+Image";
+  // const imageUrl = astrologer.image
+  //   ? `https://astro-talk-backend.onrender.com/${astrologer.image.replace(/^\/?/, "")}`
+  //   : "https://via.placeholder.com/600x400?text=No+Image";
 
   return (
     <section className="p-6 max-w-4xl mx-auto bg-white shadow-md rounded-lg mt-10">
       <img
-        src={imageUrl}
-        onError={(e) => {
-          e.target.onerror = null;
-          e.target.src = "https://via.placeholder.com/600x400?text=Image+Not+Found";
-        }}
+        // src={imageUrl}
+        // onError={(e) => {
+        //   e.target.onerror = null;
+        //   e.target.src = "https://via.placeholder.com/600x400?text=Image+Not+Found";
+        // }}
         alt={astrologer.astroName || "Astrologer"}
         className="w-full h-64 object-cover rounded-md mb-4"
       />
