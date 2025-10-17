@@ -11,13 +11,13 @@ const ContactPage = () => {
   return (
     <div className="min-h-screen py-4 md:py-10 bg-yellow-50 mt-14">
       <motion.div
-        className="container mx-auto w-screen"
+        className="mb-6 mx-auto w-screen"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
       >
         <Card className="shadow-2xl rounded-xl overflow-hidden border-2 border-yellow-400">
-          <CardHeader className="text-center p-8 bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-300">
+          <CardHeader className="text-center py-8 bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-300">
             <motion.div
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}

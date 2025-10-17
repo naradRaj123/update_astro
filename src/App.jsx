@@ -52,6 +52,10 @@ import ChatComponentAstro from "./pages/ChatComponentAstro";
 import ThankYouPage from "./pages/Profile/Thank";
 import OrderThankYou from "./components/Store/OrderPlace";
 import OrderList from "./components/Store/OrderList";
+import LoveCalculator from "./pages/LoveCalculator";
+import NumerologyCalculator from "./pages/Numerology";
+import Compatibility from "./pages/Compatiblity";
+import KundaliMatching from "./pages/KundaliMatching";
 
 
 // ✅ Import PrivateRoute
@@ -83,12 +87,15 @@ function App() {
             <Route path="/product/:id" element={<ProductDetail />} />
             <Route path="/checkout/:id" element={<Checkout />} />
             <Route path="/karmkandidet/:id" element={<KaramkandiDetail />} />
-            <Route path="/kundalimatch" element={<KundliPage />} />
+            <Route path="/kundali" element={<KundliPage />} />
             <Route path="/horoscope" element={<HoroscopePage />} />
-
+            <Route path="/kundalimatching" element={<KundaliMatching />} />
             <Route path="/dashakoot" element={<DashakootPage />} />
             <Route path="/ashtakoot" element={<AshtakootPage />} />
             <Route path="/about-us" element={<AboutUs />} />
+            <Route path="/love-calculator" element={<LoveCalculator /> } />
+            <Route path="/numerology" element={<NumerologyCalculator /> } />
+            <Route path="/compatibility" element={<Compatibility /> } />
 
             {/* admin routes */}
 

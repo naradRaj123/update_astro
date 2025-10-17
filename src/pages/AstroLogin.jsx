@@ -90,13 +90,13 @@ const AstroLogin = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-astro-indigo via-astro-purple to-astro-pink p-4 pt-24 star-bg">
+    <div className="h-[100vh] overflow-hidden">
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <Card className="w-full max-w-md shadow-2xl relative">
+        <Card className="w-full h-[100vh] shadow-2xl relative">
           {/* Close Button */}
           <button
             onClick={() => navigate("/")}

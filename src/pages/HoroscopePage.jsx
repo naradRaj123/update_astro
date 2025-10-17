@@ -48,9 +48,9 @@ const HoroscopePage = () => {
   };
 
   return (
-    <div className="min-h-screen p-4 md:p-8 mt-14" style={{ backgroundColor: 'hsl(var(--light-red-secondary))' }}>
+    <div className="min-h-screen py-4 md:p-8 mt-14" style={{ backgroundColor: 'hsl(var(--light-red-secondary))' }}>
       <motion.div
-        className="container mx-auto"
+        className=" mx-auto"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}

@@ -3,6 +3,8 @@ import AgoraRTC from "agora-rtc-sdk-ng";
 import axios from "axios";
 import { Button } from "@/components/ui/button";
 import { Phone } from "lucide-react";
+import { motion } from 'framer-motion';
+import { cn } from '@/lib/utils';
 
 const AudioCall = ({ channel, token, uid, iconOnly = false }) => {
   const client = useRef(AgoraRTC.createClient({ mode: "rtc", codec: "vp8" }));
@@ -125,13 +127,35 @@ const AudioCall = ({ channel, token, uid, iconOnly = false }) => {
   return (
     <div>
       {!iconOnly ? (
-        <Button
-          variant="default"
-          className="w-full flex items-center justify-center py-3 bg-green-500 hover:bg-green-600 text-white"
+        <motion.div
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          className="flex items-center justify-between p-4 bg-white rounded-2xl shadow-md border"
           onClick={joinCall}
         >
-          <Phone className="mr-3 h-5 w-5" /> Join Audio Call
-        </Button>
+          <div className="flex items-center space-x-3">
+            <div className={cn(
+              "w-10 h-10 rounded-lg flex items-center justify-center bg-blue-500"
+            )}>
+              <Phone className="h-5 w-5 text-white" />
+            </div>
+            <div>
+              <p className="font-semibold text-gray-800">Voice Calls</p>
+              <p className={cn(
+                "text-sm font-medium text-green-600",
+              )}>
+                ACTIVE
+              </p>
+            </div>
+          </div>
+        </motion.div>
+        // <Button
+        //   variant="default"
+        //   className="w-full flex items-center justify-center py-3 bg-green-500 hover:bg-green-600 text-white"
+        //   onClick={joinCall}
+        // >
+        //   <Phone className="mr-3 h-5 w-5" /> Join Audio Call
+        // </Button>
       ) : (
         <Button
           className="cosmic-gradient text-white"

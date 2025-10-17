@@ -53,12 +53,8 @@ const Karamkandi = () => {
                       src={
                         astrologer.image
                           ? `https://astro-talk-backend.onrender.com/${astrologer.image.replace(/^\/?/, "")}`
-                          : "https://via.placeholder.com/300x200?text=No+Image"
+                          : ""
                       }
-                      onError={(e) => {
-                        e.target.onerror = null;
-                        e.target.src = "https://via.placeholder.com/300x200?text=Image+Not+Found";
-                      }}
                       alt={astrologer.astroName || "Astrologer"}
                       className="w-full h-48 object-cover"
                     />

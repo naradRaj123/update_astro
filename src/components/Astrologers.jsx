@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Star, PhoneCall, MessageCircle } from "lucide-react";
+import { Star, PhoneCall, MessageCircle, Video } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
@@ -38,10 +38,10 @@ const Astrologers = () => {
 
 
   return (
-    <section id="astrologers" className="py-16 bg-gray-50 common-margin-top">
+    <section id="astrologers" className=" md:py-16 bg-gray-50 common-margin-top">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+          <h2 className="text-2xl md:text-4xl font-bold mb-4">
             Our Expert <span className="cosmic-text">Astrologers</span>
           </h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
@@ -74,7 +74,7 @@ const Astrologers = () => {
                       {/* <p className="text-sm text-gray-500">{astrologer.specialty}</p> */}
                     </div>
                     <div className="flex items-center bg-yellow-50 px-2 py-1 rounded">
-                      <Star className="h-4 w-4 text-yellow-500 mr-1" fill="currentColor" />
+                      {/* <Star className="h-4 w-4 text-yellow-500 mr-1" fill="currentColor" /> */}
                       {/* <span className="text-sm font-medium">{astrologer.rating}</span> */}
                     </div>
                   </div>
@@ -94,11 +94,14 @@ const Astrologers = () => {
 
                   <div className="flex justify-between items-center">
                     <div className="flex space-x-2">
-                      <Button size="sm" variant="outline" className="rounded-full">
+                      {/* <Button size="sm" className="cosmic-gradient rounded-full">
                         <MessageCircle className="h-4 w-4" />
+                      </Button> */}
+                      <Button size="sm" className="cosmic-gradient rounded-full">
+                        <PhoneCall className="h-4 w-4 " />
                       </Button>
                       <Button size="sm" className="cosmic-gradient rounded-full">
-                        <PhoneCall className="h-4 w-4 mr-1" /> Call
+                        <Video className="h-4 w-4 " />
                       </Button>
                     </div>
                   </div>
