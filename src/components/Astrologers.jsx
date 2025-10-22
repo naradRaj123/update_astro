@@ -7,13 +7,23 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import axios from "axios";
 import { io } from "socket.io-client";
+import { useLocation } from "react-router-dom";
 
 const socket = io("https://astro-talk-backend.onrender.com/", {
   autoConnect: true,  
 });
 
+/////////////////////// khatarnak ////////////////////////////
 const Astrologers = () => {
   const [astrologerList, setAstrologerList] = useState([]);
+  const location = useLocation(); // ✅ gives current route info
+  const currentPath = location.pathname;
+
+  useEffect(() => {
+    console.log("Current Path:", location);
+  }, [location]);
+
+  console.log("console dhinka chika")
 
   const fetchAstrologers = async () => {
     try {
@@ -29,7 +39,7 @@ const Astrologers = () => {
 
     // listen message from backend
     socket.on("onlineUsers", (data) => {
-      console.log("✅ All Online users:", data);
+      // console.log("✅ All Online users:", data);
     });
     socket.on('onlineAstrologers',(allAstro)=>{
       console.log(allAstro);
@@ -42,7 +52,7 @@ const Astrologers = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <h2 className="text-2xl md:text-4xl font-bold mb-4">
-            Our Expert <span className="cosmic-text">Astrologers</span>
+            My Expert <span className="cosmic-text">Astrologers</span>
           </h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
             Connect with India's most trusted astrologers for personalized guidance

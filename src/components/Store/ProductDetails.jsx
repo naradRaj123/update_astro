@@ -188,8 +188,7 @@ const ProductDetail = () => {
               onClick={handleBuyNow}
               className="mt-6 w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-all"
             >
-              Buy Now
-              {loading ? "Placing Order..." : "Place Order"}
+              {loading ? "Placing Order..." : "Buy Now"}
             </button>
           </div>
         </div>

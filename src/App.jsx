@@ -75,6 +75,7 @@ function App() {
             <Route path="/user-register" element={<RegisterPage />} />
             <Route path="/astro-register" element={<AstrologerRegistrationPage />} />
             <Route path="/astrologers" element={<Astrologers />} />
+            <Route path="/personalConsulting" element={<Astrologers />} />
             <Route path="/joinCall" element={<JoinCall />} />
             <Route path="/services" element={<Services />} />
             <Route path="/testimonials" element={<Testimonials />} />

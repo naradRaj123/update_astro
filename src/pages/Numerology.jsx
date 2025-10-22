@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { 
-  Calculator, 
-  Sparkles, 
-  User, 
-  Calendar, 
-  Hash, 
-  Star, 
+import {
+  Calculator,
+  Sparkles,
+  User,
+  Calendar,
+  Hash,
+  Star,
   Target,
   Heart,
   Brain,
@@ -24,6 +24,7 @@ import { Badge } from "@/components/ui/badge";
 // import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
+import axios from "axios";
 
 const NumerologyCalculator = () => {
   const [fullName, setFullName] = useState("");
@@ -31,125 +32,18 @@ const NumerologyCalculator = () => {
   const [result, setResult] = useState(null);
   const [isCalculating, setIsCalculating] = useState(false);
   const [activeTab, setActiveTab] = useState("lifePath");
+  const VEDIC_API_KEY = "349e48af-b57e-58aa-ad9c-623f1ab5a5f7";
 
-  // Numerology data
-  const numerologyData = {
-    lifePath: {
-      1: {
-        title: "The Leader",
-        traits: ["Ambitious", "Independent", "Innovative", "Determined"],
-        strengths: ["Natural leadership", "Courage", "Originality", "Initiative"],
-        challenges: ["Impatience", "Arrogance", "Dominating", "Self-centered"],
-        career: ["Entrepreneur", "Manager", "Inventor", "Pioneer"],
-        compatibility: [3, 5, 7],
-        description: "You are a born leader with strong individuality and the drive to achieve great things. Your path is about learning to lead with wisdom and compassion."
-      },
-      2: {
-        title: "The Peacemaker",
-        traits: ["Cooperative", "Diplomatic", "Sensitive", "Intuitive"],
-        strengths: ["Teamwork", "Patience", "Harmony", "Understanding"],
-        challenges: ["Over-sensitivity", "Indecisiveness", "Shyness", "Dependency"],
-        career: ["Mediator", "Counselor", "Teacher", "Healer"],
-        compatibility: [4, 6, 8],
-        description: "You are the diplomat and peacemaker, bringing harmony and balance to every situation. Your path is about learning to trust your intuition."
-      },
-      3: {
-        title: "The Creative",
-        traits: ["Expressive", "Artistic", "Optimistic", "Sociable"],
-        strengths: ["Creativity", "Communication", "Joy", "Self-expression"],
-        challenges: ["Scattered energy", "Superficiality", "Exaggeration", "Moodiness"],
-        career: ["Artist", "Writer", "Performer", "Communicator"],
-        compatibility: [1, 5, 7],
-        description: "You are the creative communicator, here to express joy and inspire others. Your path is about channeling your creativity positively."
-      },
-      4: {
-        title: "The Builder",
-        traits: ["Practical", "Disciplined", "Reliable", "Hardworking"],
-        strengths: ["Stability", "Organization", "Loyalty", "Patience"],
-        challenges: ["Rigidity", "Stubbornness", "Limited vision", "Over-cautious"],
-        career: ["Engineer", "Accountant", "Architect", "Administrator"],
-        compatibility: [2, 6, 8],
-        description: "You are the practical builder, creating stable foundations for the future. Your path is about learning flexibility within structure."
-      },
-      5: {
-        title: "The Adventurer",
-        traits: ["Adaptable", "Freedom-loving", "Progressive", "Versatile"],
-        strengths: ["Adaptability", "Curiosity", "Resourcefulness", "Courage"],
-        challenges: ["Restlessness", "Irresponsibility", "Impatience", "Inconsistency"],
-        career: ["Explorer", "Sales", "Marketing", "Journalist"],
-        compatibility: [1, 3, 7],
-        description: "You are the freedom-loving adventurer, seeking variety and new experiences. Your path is about learning discipline with freedom."
-      },
-      6: {
-        title: "The Nurturer",
-        traits: ["Responsible", "Caring", "Compassionate", "Protective"],
-        strengths: ["Nurturing", "Responsibility", "Harmony", "Service"],
-        challenges: ["Worrying", "Interference", "Self-righteousness", "Martyrdom"],
-        career: ["Teacher", "Healer", "Parent", "Counselor"],
-        compatibility: [2, 4, 8],
-        description: "You are the nurturing caregiver, creating harmony and serving others. Your path is about learning to care without controlling."
-      },
-      7: {
-        title: "The Seeker",
-        traits: ["Analytical", "Spiritual", "Introspective", "Wise"],
-        strengths: ["Analysis", "Intuition", "Perfection", "Wisdom"],
-        challenges: ["Skepticism", "Isolation", "Pessimism", "Secretiveness"],
-        career: ["Scientist", "Researcher", "Philosopher", "Mystic"],
-        compatibility: [1, 3, 5],
-        description: "You are the spiritual seeker, searching for truth and inner wisdom. Your path is about balancing analysis with faith."
-      },
-      8: {
-        title: "The Achiever",
-        traits: ["Ambitious", "Powerful", "Authoritative", "Efficient"],
-        strengths: ["Leadership", "Organization", "Ambition", "Efficiency"],
-        challenges: ["Materialism", "Workaholism", "Intolerance", "Impatience"],
-        career: ["Executive", "Banker", "Manager", "Entrepreneur"],
-        compatibility: [2, 4, 6],
-        description: "You are the powerful achiever, mastering material world success. Your path is about balancing power with compassion."
-      },
-      9: {
-        title: "The Humanitarian",
-        traits: ["Compassionate", "Idealistic", "Tolerant", "Artistic"],
-        strengths: ["Compassion", "Idealism", "Creativity", "Global awareness"],
-        challenges: ["Emotionalism", "Self-sacrifice", "Dreaminess", "Possessiveness"],
-        career: ["Humanitarian", "Artist", "Healer", "Philanthropist"],
-        compatibility: [3, 6, 9],
-        description: "You are the compassionate humanitarian, serving humanity with love. Your path is about learning to give without losing yourself."
-      },
-      11: {
-        title: "The Intuitive",
-        traits: ["Inspirational", "Idealistic", "Intuitive", "Visionary"],
-        strengths: ["Inspiration", "Intuition", "Idealism", "Sensitivity"],
-        challenges: ["Nervous energy", "Perfectionism", "Unrealistic expectations"],
-        career: ["Visionary", "Teacher", "Artist", "Healer"],
-        compatibility: [2, 4, 6],
-        description: "You are the intuitive master, bringing spiritual illumination to others. Your path is about grounding your spiritual insights."
-      },
-      22: {
-        title: "The Master Builder",
-        traits: ["Practical", "Powerful", "Visionary", "Ambitious"],
-        strengths: ["Vision", "Practicality", "Leadership", "Global thinking"],
-        challenges: ["Overwhelm", "Anxiety", "Perfectionism", "Pressure"],
-        career: ["Architect", "Global leader", "Visionary entrepreneur"],
-        compatibility: [4, 6, 8],
-        description: "You are the master builder, turning grand visions into reality. Your path is about balancing grand vision with practical action."
-      },
-      33: {
-        title: "The Master Teacher",
-        traits: ["Compassionate", "Healing", "Inspirational", "Nurturing"],
-        strengths: ["Healing", "Teaching", "Compassion", "Service"],
-        challenges: ["Over-responsibility", "Martyrdom", "Perfectionism"],
-        career: ["Master teacher", "Healer", "Spiritual guide"],
-        compatibility: [6, 9],
-        description: "You are the master teacher, bringing love and healing to humanity. Your path is about serving while maintaining personal balance."
-      }
-    }
-  };
+  function formatDate(dateString) {
+  const [year, month, day] = dateString.split("/");
+  return `${day}/${month}/${year}`;
+}
+
 
   // Calculate Life Path Number
   const calculateLifePathNumber = (date) => {
     const [year, month, day] = date.split('-').map(Number);
-    
+
     const reduceNumber = (num) => {
       while (num > 9 && num !== 11 && num !== 22 && num !== 33) {
         num = num.toString().split('').reduce((sum, digit) => sum + parseInt(digit), 0);
@@ -162,7 +56,7 @@ const NumerologyCalculator = () => {
     const yearReduced = reduceNumber(year);
 
     let lifePath = dayReduced + monthReduced + yearReduced;
-    
+
     // Check for master numbers before final reduction
     if ([11, 22, 33].includes(lifePath)) {
       return lifePath;
@@ -245,13 +139,29 @@ const NumerologyCalculator = () => {
     return reduceNumber(consonantSum);
   };
 
-  const handleCalculate = () => {
+  const handleCalculate = async () => {
     if (!fullName.trim() || !birthDate) {
       alert("Please enter your full name and birth date!");
       return;
     }
 
     setIsCalculating(true);
+
+    const params = {
+      api_key: VEDIC_API_KEY,
+      name: fullName,
+      date: formatDate(birthDate),
+      lang: "en"
+    }
+    try {
+      const response = await axios.get("https://api.vedicastroapi.com/v3-json/prediction/numerology", {params})
+
+      console.log("this is the result", response?.data)
+      setResult(response?.data?.response);
+
+    } catch (e) {
+      console.log("error", e)
+    }
 
     setTimeout(() => {
       const lifePath = calculateLifePathNumber(birthDate);
@@ -269,18 +179,17 @@ const NumerologyCalculator = () => {
         timestamp: new Date().toLocaleString()
       };
 
-      setResult(newResult);
       setIsCalculating(false);
     }, 2000);
   };
 
   const handleRandomGenerate = () => {
     const randomNames = [
-      "Priya Sharma", "Raj Kumar", "Anjali Patel", "Amit Singh", 
+      "Priya Sharma", "Raj Kumar", "Anjali Patel", "Amit Singh",
       "Sonia Gupta", "Rahul Verma", "Maya Reddy", "Arjun Joshi",
       "Neha Kapoor", "Vikram Malhotra", "Kavita Choudhary", "Sanjay Mehta"
     ];
-    
+
     const randomDates = [
       "1990-05-15", "1985-12-08", "1992-07-22", "1988-03-30",
       "1995-11-14", "1987-09-05", "1993-02-18", "1991-08-25"
@@ -326,48 +235,8 @@ const NumerologyCalculator = () => {
       </CardHeader>
       <CardContent className="p-6">
         <p className="text-gray-700 mb-4">{description}</p>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-          <div>
-            <h4 className="font-semibold text-gray-800 mb-2 flex items-center">
-              <Star className="h-4 w-4 mr-1 text-yellow-500" />
-              Key Traits
-            </h4>
-            <div className="space-y-1">
-              {data.traits.map((trait, index) => (
-                <Badge key={index} variant="outline" className="mr-1 mb-1">
-                  {trait}
-                </Badge>
-              ))}
-            </div>
-          </div>
-          
-          <div>
-            <h4 className="font-semibold text-gray-800 mb-2 flex items-center">
-              <Target className="h-4 w-4 mr-1 text-green-500" />
-              Ideal Careers
-            </h4>
-            <div className="space-y-1">
-              {data.career.slice(0, 3).map((career, index) => (
-                <div key={index} className="text-gray-600 text-sm">• {career}</div>
-              ))}
-            </div>
-          </div>
-        </div>
 
-        <div className="mt-4 pt-4 border-t border-gray-200">
-          <h4 className="font-semibold text-gray-800 mb-2 flex items-center">
-            <Heart className="h-4 w-4 mr-1 text-red-500" />
-            Best Compatibility
-          </h4>
-          <div className="flex space-x-2">
-            {data.compatibility.map((num) => (
-              <Badge key={num} className={cn("bg-gradient-to-r text-white", getNumberColor(num))}>
-                {num}
-              </Badge>
-            ))}
-          </div>
-        </div>
+        
       </CardContent>
     </Card>
   );
@@ -426,7 +295,9 @@ const NumerologyCalculator = () => {
                   <Input
                     type="date"
                     value={birthDate}
-                    onChange={(e) => setBirthDate(e.target.value)}
+                    onChange={(e) => {setBirthDate(e.target.value)
+                      console.log("date value when select", e.target.value)
+                    }}
                     className="rounded-xl border-gray-300 focus:border-purple-500"
                   />
                 </div>
@@ -508,23 +379,23 @@ const NumerologyCalculator = () => {
                       <div className="flex flex-col md:flex-row items-center justify-between">
                         <div className="text-center md:text-left mb-4 md:mb-0">
                           <h2 className="text-2xl font-bold mb-2">
-                            {result.fullName}'s Numerology Profile
+                            {fullName}'s Numerology Profile
                           </h2>
                           <p className="text-purple-100">
-                            Born on {new Date(result.birthDate).toLocaleDateString()}
+                            Born on {new Date(birthDate).toLocaleDateString()}
                           </p>
                         </div>
                         <div className="flex space-x-4">
                           <div className="text-center">
-                            <div className="text-3xl font-bold">{result.lifePath}</div>
+                            {/* <div className="text-3xl font-bold">{result.lifePath}</div> */}
                             <div className="text-sm text-purple-100">Life Path</div>
                           </div>
                           <div className="text-center">
-                            <div className="text-3xl font-bold">{result.destiny}</div>
+                            <div className="text-3xl font-bold">{result.destiny.number}</div>
                             <div className="text-sm text-purple-100">Destiny</div>
                           </div>
                           <div className="text-center">
-                            <div className="text-3xl font-bold">{result.soulUrge}</div>
+                            <div className="text-3xl font-bold">{result.soul.number}</div>
                             <div className="text-sm text-purple-100">Soul Urge</div>
                           </div>
                         </div>
@@ -551,39 +422,48 @@ const NumerologyCalculator = () => {
 
                     <TabsContent value="lifePath">
                       <NumberCard
-                        number={result.lifePath}
+                        number={result.attitude.number}
                         title="Life Path"
-                        description={numerologyData.lifePath[result.lifePath]?.description || "Your life's purpose and journey."}
-                        data={numerologyData.lifePath[result.lifePath] || numerologyData.lifePath[1]}
+                        description={result.attitude.meaning}
+                        data={result.attitude.description}
                       />
                     </TabsContent>
 
                     <TabsContent value="destiny">
                       <NumberCard
-                        number={result.destiny}
+                        number={result.destiny.number}
                         title="Destiny"
-                        description={numerologyData.lifePath[result.destiny]?.description || "Your natural talents and destiny."}
-                        data={numerologyData.lifePath[result.destiny] || numerologyData.lifePath[1]}
+                        description={result.destiny.meaning}
+                        data={result.destiny.description}
                       />
                     </TabsContent>
 
                     <TabsContent value="soulUrge">
                       <NumberCard
-                        number={result.soulUrge}
+                        number={result.soul.number}
                         title="Soul Urge"
-                        description={numerologyData.lifePath[result.soulUrge]?.description || "Your inner desires and motivations."}
-                        data={numerologyData.lifePath[result.soulUrge] || numerologyData.lifePath[1]}
-                      />
+                        description={result.soul.meaning}
+                        data={result.soul.description}
+                        />
                     </TabsContent>
 
                     <TabsContent value="personality">
                       <NumberCard
-                        number={result.personality}
+                        number={result.personality.number}
                         title="Personality"
-                        description={numerologyData.lifePath[result.personality]?.description || "How others perceive you."}
-                        data={numerologyData.lifePath[result.personality] || numerologyData.lifePath[1]}
-                      />
+                        description={result.personality.meaning}
+                        data={result.personality.description}
+                        />
                     </TabsContent>
+
+                    {/* <TabsContent value="character">
+                      <NumberCard
+                        number={result.character.number}
+                        title="Character"
+                        description={result.character.meaning}
+                        data={result.character.description}
+                        />
+                    </TabsContent> */}
                   </Tabs>
 
                   {/* Action Buttons */}

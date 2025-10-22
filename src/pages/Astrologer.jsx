@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { MessageCircle, Star, Phone, Video, Shield, Clock, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -13,6 +13,16 @@ import VideoCall from "./VideoCall/VideoCall";
 import VoiceCall from "./VoiceCall/VoiceCall";
 import { io } from 'socket.io-client';
 import { cn } from "@/lib/utils";
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import { useToast } from "@/components/ui/use-toast";
+
 
 const userData = localStorage.getItem("user")
 const jsUserData = JSON.parse(userData)
@@ -25,6 +35,60 @@ const Astrologer = () => {
   const [astrologerList, setAstrologerList] = useState([]);
   const navigate = useNavigate();
   const [onlineAstrologers, setOnlineAstrologers] = useState([]);
+  const location = useLocation(); // ✅ gives current route info
+  const currentPath = location.pathname;
+  const [openDialog, setOpenDialog] = useState(false);
+  const [selectedTime, setSelectedTime] = useState();
+  const [selectedAstro, setSelectedAStro] = useState("");
+  const { toast } = useToast();
+  const [consultingAstro, setConsultingAstro] = useState("");
+
+  console.log("currentpath", currentPath);
+  console.log("current selectedAstro", selectedAstro);
+  console.log("current consultingAstro", consultingAstro)
+
+
+  const onClose = () => {
+    setOpenDialog(false);
+
+  }
+
+  const handleBookcounsilting = async () => {
+    const userid = localStorage.getItem("userId")
+
+    const body = {
+      userId: userid,
+      astrologerId: selectedAstro,
+      joiningTime: new Date().toISOString(),
+      duration: `min${selectedTime}`,
+    }
+
+    try {
+      const response = await axios.post("https://astro-talk-backend.onrender.com/join/personal-consult", body);
+
+      console.log("response of consult", response);
+      if (response.data.status) {
+        setConsultingAstro(selectedAstro);
+        setOpenDialog(false);
+        toast({
+          title: "Booking Successful!",
+          description: "connect to strologer now.",
+        });
+      } else {
+        toast({
+          title: "Booking Failed!",
+          description: "Please check your balance now.",
+        });
+      }
+    } catch (e) {
+      console.log("error", e);
+      toast({
+        title: "Booking Failed!",
+        description: "Please check your balance now.",
+      });
+    }
+  }
+
 
   const fetchAstrologers = async () => {
     try {
@@ -39,15 +103,15 @@ const Astrologer = () => {
     fetchAstrologers();
 
     socket.on("onlineUsers", (data) => {
-      console.log("✅ All Online users:", data);
+      // console.log("✅ All Online users:", data);
     });
 
     socket.on("onlineAstrologers", (data) => {
-      console.log("✅ All Online astrologers:", data);
+      // console.log("✅ All Online astrologers:", data);
     });
 
     socket.on("onlineAstrologers", (onlineAstrolist) => {
-      console.log("🔮 Full Online Astrologers:", onlineAstrolist);
+      // console.log("🔮 Full Online Astrologers:", onlineAstrolist);
     });
 
     return () => {
@@ -57,7 +121,7 @@ const Astrologer = () => {
 
   useEffect(() => {
     socket.on("onlineAstrologers", (data) => {
-      console.log("✅ All online astrologers:", data);
+      // console.log("✅ All online astrologers:", data);
     })
   }, []);
 
@@ -99,7 +163,7 @@ const Astrologer = () => {
             {astrologerList.length > 0 ? (
               astrologerList.map((astrologer, index) => {
                 const isOnline = onlineAstrologers.includes(astrologer._id);
-                
+
                 return (
                   <motion.div
                     key={astrologer._id}
@@ -115,15 +179,15 @@ const Astrologer = () => {
                         <div className="flex items-start justify-between mb-3">
                           <div className="flex items-start space-x-3 flex-1">
                             <Avatar className="h-12 w-12 border-2 border-white shadow-md">
-                              <AvatarImage 
-                                src={astrologer.image || "https://via.placeholder.com/100?text=Astro"} 
+                              <AvatarImage
+                                src={astrologer.image || "https://via.placeholder.com/100?text=Astro"}
                                 alt={astrologer.astroName}
-                              />
+                              />+
                               <AvatarFallback className="bg-gradient-to-r from-purple-500 to-blue-500 text-white font-semibold">
                                 {astrologer.astroName?.split(' ').map(n => n[0]).join('') || "A"}
                               </AvatarFallback>
                             </Avatar>
-                            
+
                             <div className="flex-1 min-w-0">
                               <div className="flex items-center space-x-2 mb-1">
                                 <h3 className="font-semibold text-gray-800 text-sm">
@@ -131,7 +195,7 @@ const Astrologer = () => {
                                 </h3>
                                 <Shield className="h-3 w-3 text-blue-500" />
                               </div>
-                              
+
                               <div className="flex items-center space-x-2 mb-2">
                                 <div className="flex items-center space-x-1">
                                   <Star className="h-3 w-3 text-yellow-500 fill-current" />
@@ -176,9 +240,9 @@ const Astrologer = () => {
                         {/* Expertise Tags */}
                         {astrologer.expertise && astrologer.expertise.length > 0 && (
                           <div className="flex flex-wrap gap-1 mb-4">
-                              <Badge variant="outline" className="text-xs text-purple-600 border-purple-200">
-                                {astrologer?.expertise}
-                              </Badge>
+                            <Badge variant="outline" className="text-xs text-purple-600 border-purple-200">
+                              {astrologer?.expertise}
+                            </Badge>
                             {astrologer.expertise.length > 3 && (
                               <Badge variant="outline" className="text-xs text-gray-500 border-gray-200">
                                 +{astrologer.expertise.length - 3}
@@ -188,40 +252,61 @@ const Astrologer = () => {
                         )}
 
                         {/* Action Buttons */}
-                        <div className="flex space-x-2">
-                          <Button 
-                            size="sm"
-                            className="flex-1 bg-purple-500 hover:bg-purple-600 text-white rounded-xl"
-                            onClick={() => navigate("/user-chats", {
-                              state: {
-                                user: {
-                                  id: astrologer._id,
-                                  name: astrologer.astroName,
-                                  img: astrologer.image,
-                                },
-                              }
-                            })}
-                          >
-                            <MessageCircle className="h-4 w-4 mr-2" />
-                            Chat
-                          </Button>
-                          
-                          <VoiceCall
-                            channel={astrologer.agoraChannel}
-                            token={astrologer.agoraToken}
-                            uid={ Math.floor(Math.random() * 1000000)}
-                            iconOnly={true}
-                            className="rounded-xl"
-                          />
+                        {currentPath === "/personalConsulting" && astrologer._id != consultingAstro ? (
+                          <div>
+                            <Button
+                              size="sm"
+                              className="flex-1 bg-purple-500 hover:bg-purple-600 text-white rounded-xl"
+                              onClick={() => {
+                                setOpenDialog(true)
+                                setSelectedAStro(astrologer._id);
+                                console.log("current onclick id", astrologer._id);
+                              }}
+                            >
+                              {/* <MessageCircle className="h-4 w-4 mr-2" /> */}
+                              Book Personal Consulting
+                            </Button>
+                          </div>
+                        ) : (
+                          <div className="flex space-x-2">
+                            <Button
+                              size="sm"
+                              className="flex-1 bg-purple-500 hover:bg-purple-600 text-white rounded-xl"
+                              onClick={() => navigate("/user-chats", {
+                                state: {
+                                  user: {
+                                    id: astrologer._id,
+                                    name: astrologer.astroName,
+                                    img: astrologer.image,
+                                  },
+                                }
+                              })}
+                            >
+                              <MessageCircle className="h-4 w-4 mr-2" />
+                              Chat
+                            </Button>
 
-                          <VideoCall
-                            channel={astrologer.agoraChannel}
-                            token={astrologer.agoraToken}
-                            uid={ Math.floor(Math.random() * 1000000)}
-                            iconOnly={true}
-                            className="rounded-xl"
-                          />
-                        </div>
+                            <VoiceCall
+                              channel={astrologer.agoraChannel}
+                              token={astrologer.agoraToken}
+                              uid={Math.floor(Math.random() * 1000000)}
+                              iconOnly={true}
+                              className="rounded-xl"
+                              time={selectedTime}
+                              setConsultingAstro={setConsultingAstro}
+                            />
+
+                            <VideoCall
+                              channel={astrologer.agoraChannel}
+                              token={astrologer.agoraToken}
+                              uid={Math.floor(Math.random() * 1000000)}
+                              iconOnly={true}
+                              className="rounded-xl"
+                              time={selectedTime}
+                              setConsultingAstro={setConsultingAstro}
+                            />
+                          </div>
+                        )}
 
                         {/* Quick Stats */}
                         <div className="flex justify-between items-center mt-3 pt-3 border-t border-gray-100 text-xs text-gray-500">
@@ -247,8 +332,8 @@ const Astrologer = () => {
 
           {/* Load More Button */}
           <div className="text-center mt-12">
-            <Button 
-              size="lg" 
+            <Button
+              size="lg"
               className="bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white rounded-xl shadow-md"
             >
               View All Astrologers
@@ -274,6 +359,46 @@ const Astrologer = () => {
               <div className="text-sm text-gray-600">Available</div>
             </Card>
           </div>
+
+
+          <Dialog open={openDialog} onOpenChange={onClose}>
+            <DialogContent className="max-w-md">
+              <DialogHeader>
+                <DialogTitle>Booking</DialogTitle>
+              </DialogHeader>
+
+              {/* Dropdown for duration */}
+              <div className="mt-4">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Select Duration
+                </label>
+                <select
+                  value={selectedTime}
+                  onChange={(e) => setSelectedTime(Number(e.target.value))}
+                  className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value={""} >Options </option>
+                  <option value={15}>15 min</option>
+                  <option value={30}>30 min</option>
+                  <option value={45}>45 min</option>
+                  <option value={60}>60 min</option>
+                </select>
+              </div>
+
+              {/* Buttons */}
+              <div className="flex justify-end mt-6 space-x-3">
+                <Button variant="outline" onClick={onClose}>
+                  Cancel
+                </Button>
+                <Button
+                  onClick={() => handleBookcounsilting()}
+                  className="bg-blue-500 text-white hover:bg-blue-600"
+                >
+                  Proceed
+                </Button>
+              </div>
+            </DialogContent>
+          </Dialog>
         </div>
       </section>
     </>

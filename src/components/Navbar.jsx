@@ -16,6 +16,9 @@ const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const { user, logout } = useAuth();
   const location = useLocation();
+  const userData = JSON.parse(localStorage.getItem("user"));
+  const astroData = JSON.parse(localStorage.getItem("astroUser"));
+  console.log("user logged in", userData)
 
   useEffect(() => {
     const handleScroll = () => {
@@ -42,7 +45,7 @@ const Navbar = () => {
   ];
 
   const navLinksBottom = [
-    { name: "Personal Consulting", href: "/astrologers" },
+    { name: "Personal Consulting", href: "/personalConsulting" },
     { name: "Astrotruth Store", href: "/store" },
     // { name: "Blog", href: "/blog" },
     // { name: "Contact", href: "/contact" },
@@ -152,10 +155,10 @@ const Navbar = () => {
               )}
 
               {/* Auth Buttons */}
-              {user ? (
+              {astroData ? (
                 <>
                   <span className="text-sm text-gray-700">
-                    Welcome, {user.email.split("@")[0]}!
+                    {/* Welcome, {user.email.split("@")[0]}! */}
                   </span>
                   <Button variant="outline" size="sm" onClick={logout}>
                     <LogOut className="mr-2 h-4 w-4" /> Logout
@@ -207,14 +210,11 @@ const Navbar = () => {
               )}
 
               {/* Auth Buttons */}
-              {user ? (
+              {userData ? (
                 <>
-                  <span className="text-sm text-gray-700">
-                    Welcome, {user.email.split("@")[0]}!
-                  </span>
-                  <Button variant="outline" size="sm" onClick={logout}>
-                    <LogOut className="mr-2 h-4 w-4" /> Logout
-                  </Button>
+                  {/* <span className="text-sm text-gray-700">
+                    Welcome, {userData.email.split("@")[0]}!
+                  </span> */}
                 </>
               ) : (
                 <>
