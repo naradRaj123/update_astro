@@ -251,9 +251,11 @@ const UserDashboard = () => {
   const [user, setUser] = useState({});
   const [walletBalance, setWalletBalance] = useState(250);
 
+  console.log("userData", user)
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem("user") || "{}");
     setUser(userData);
+    setWalletBalance(userData?.wallet)
     
     const token = localStorage.getItem("userToken");
     if (!token) {
@@ -273,7 +275,7 @@ const UserDashboard = () => {
       icon: User,
       description: "Personal & astro details",
       gradient: "from-blue-500 to-cyan-500",
-      onClick: () => navigate("/profile")
+      onClick: () => navigate("/user-profile")
     },
     {
       title: "My Orders",
@@ -291,7 +293,7 @@ const UserDashboard = () => {
       badge: "Low",
       badgeColor: "bg-red-500",
       gradient: "from-green-500 to-emerald-500",
-      onClick: () => navigate("/wallet")
+      onClick: () => navigate("/user-profile")
     },
     {
       title: "Astrology Assists",
@@ -300,22 +302,22 @@ const UserDashboard = () => {
       badge: "Live",
       badgeColor: "bg-green-500",
       gradient: "from-purple-500 to-pink-500",
-      onClick: () => navigate("/astrology-assist")
+      onClick: () => navigate("/astrologers")
     },
-    {
-      title: "Card Recharge",
-      icon: CreditCard,
-      description: "Recharge your card",
-      gradient: "from-indigo-500 to-purple-500",
-      onClick: () => navigate("/card-recharge")
-    },
-    {
-      title: "Top Up",
-      icon: Zap,
-      description: "Instant wallet topup",
-      gradient: "from-yellow-500 to-amber-500",
-      onClick: () => navigate("/topup")
-    },
+    // {
+    //   title: "Card Recharge",
+    //   icon: CreditCard,
+    //   description: "Recharge your card",
+    //   gradient: "from-indigo-500 to-purple-500",
+    //   onClick: () => navigate("/card-recharge")
+    // },
+    // {
+    //   title: "Top Up",
+    //   icon: Zap,
+    //   description: "Instant wallet topup",
+    //   gradient: "from-yellow-500 to-amber-500",
+    //   onClick: () => navigate("/topup")
+    // },
     {
       title: "Shop",
       icon: Gem,
@@ -323,22 +325,22 @@ const UserDashboard = () => {
       badge: "New",
       badgeColor: "bg-pink-500",
       gradient: "from-pink-500 to-rose-500",
-      onClick: () => navigate("/shop")
+      onClick: () => navigate("/store")
     },
     {
       title: "History",
       icon: History,
       description: "Past consultations",
       gradient: "from-gray-500 to-slate-600",
-      onClick: () => navigate("/history")
+      onClick: () => navigate("/user-chats")
     },
-    {
-      title: "Settings",
-      icon: Settings,
-      description: "App preferences",
-      gradient: "from-slate-600 to-gray-700",
-      onClick: () => navigate("/settings")
-    },
+    // {
+    //   title: "Settings",
+    //   icon: Settings,
+    //   description: "App preferences",
+    //   gradient: "from-slate-600 to-gray-700",
+    //   onClick: () => navigate("/settings")
+    // },
     {
       title: "Help & Support",
       icon: HelpCircle,
@@ -351,7 +353,7 @@ const UserDashboard = () => {
       icon: Shield,
       description: "Data security",
       gradient: "from-blue-600 to-indigo-600",
-      onClick: () => navigate("/privacy")
+      onClick: () => navigate("/privacy-policy")
     },
     {
       title: "Logout",
@@ -412,7 +414,7 @@ const UserDashboard = () => {
           <h1 className="text-2xl font-bold text-gray-800">
             Welcome, {user?.user_name || "User"}!
           </h1>
-          <p className="text-gray-600 text-sm mt-1">Pisces • Moon in Cancer</p>
+          {/* <p className="text-gray-600 text-sm mt-1">Pisces • Moon in Cancer</p> */}
           <div className="flex justify-center space-x-2 mt-3">
             <span className="bg-purple-100 text-purple-800 text-xs px-3 py-1 rounded-full">
               Balance: ₹{walletBalance}
@@ -470,7 +472,7 @@ const UserDashboard = () => {
         </motion.div>
 
         {/* Bottom Stats */}
-        <motion.div 
+        {/* <motion.div 
           className="grid grid-cols-3 gap-3 mt-6"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -488,7 +490,7 @@ const UserDashboard = () => {
             <div className="text-2xl font-bold text-blue-600">4.8</div>
             <div className="text-xs text-gray-600">Rating</div>
           </Card>
-        </motion.div>
+        </motion.div> */}
       </motion.div>
     </div>
   );

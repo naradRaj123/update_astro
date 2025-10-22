@@ -5,10 +5,14 @@ import { Button } from "@/components/ui/button";
 import { Phone } from "lucide-react";
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
+import { useToast } from "@/components/ui/use-toast";
 
-const AudioCall = ({ channel, token, uid, iconOnly = false }) => {
+
+const AudioCall = ({ channel, token, uid, iconOnly = false, time, setConsultingAstro }) => {
   const client = useRef(AgoraRTC.createClient({ mode: "rtc", codec: "vp8" }));
   const localAudioTrack = useRef(null);
+    const { toast } = useToast();
+  
 
   const [joined, setJoined] = useState(false);
   const [localSpeaking, setLocalSpeaking] = useState(false);
@@ -44,6 +48,23 @@ const AudioCall = ({ channel, token, uid, iconOnly = false }) => {
       }, 1000);
     }
   }, [localJoined, remoteJoined]);
+
+  // 🔹 Auto-disconnect when time limit reached
+  useEffect(() => {
+    console.log("maxSeconds new use", seconds)
+    if (!time) return; // no limit set
+    const maxSeconds = time * 60; // convert minutes → seconds
+    console.log("maxSeconds in new", maxSeconds)
+
+    if (seconds >= maxSeconds) {
+      console.log("⏰ Time limit reached, ending call...");
+      leaveCall();
+      toast({
+          title: "Session Duration Complete.",
+          description: "Your session duration has been complete. Thnak you!",
+        });
+    }
+  }, [seconds, time]);
 
   const formatTime = (sec) => {
     const m = Math.floor(sec / 60).toString().padStart(2, "0");
@@ -118,6 +139,10 @@ const AudioCall = ({ channel, token, uid, iconOnly = false }) => {
       if (timerRef.current) {
         clearInterval(timerRef.current);
         timerRef.current = null;
+      }
+
+      if (time) {
+        setConsultingAstro("")
       }
     } catch (err) {
       console.error("Error leaving audio call:", err);
