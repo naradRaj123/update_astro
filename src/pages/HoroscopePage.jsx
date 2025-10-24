@@ -2,49 +2,115 @@ import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Card, CardHeader, CardContent } from '@/components/ui/card';
-import { Star, Sun, Moon, TrendingUp, Heart, Briefcase, UserCircle, Info } from 'lucide-react';
+import { 
+  Heart, 
+  Briefcase, 
+  Sun, 
+  TrendingUp, 
+  Info, 
+  Palette, 
+  Hash, 
+  Star, 
+  DollarSign, 
+  Activity, 
+  Users, 
+  Smile, 
+  MapPin, 
+  User ,
+  UserCircle
+} from 'lucide-react';
 import axios from 'axios';
 
 const zodiacSigns = [
-  { name: "Aries", icon: UserCircle, date: "Mar 21 - Apr 19" }, 
-  { name: "Taurus", icon: UserCircle, date: "Apr 20 - May 20" }, 
-  { name: "Gemini", icon: UserCircle, date: "May 21 - Jun 20" }, 
-  { name: "Cancer", icon: UserCircle, date: "Jun 21 - Jul 22" },
-  { name: "Leo", icon: UserCircle, date: "Jul 23 - Aug 22" }, 
-  { name: "Virgo", icon: UserCircle, date: "Aug 23 - Sep 22" },
-  { name: "Libra", icon: UserCircle, date: "Sep 23 - Oct 22" }, 
-  { name: "Scorpio", icon: UserCircle, date: "Oct 23 - Nov 21" },
-  { name: "Sagittarius", icon: UserCircle, date: "Nov 22 - Dec 21" }, 
-  { name: "Capricorn", icon: UserCircle, date: "Dec 22 - Jan 19" },
-  { name: "Aquarius", icon: UserCircle, date: "Jan 20 - Feb 18" }, 
-  { name: "Pisces", icon: UserCircle, date: "Feb 19 - Mar 20" }
+  { name: "Aries", icon: UserCircle, value: 1 },
+  { name: "Taurus", icon: UserCircle, value: 2 },
+  { name: "Gemini", icon: UserCircle, value: 3 },
+  { name: "Cancer", icon: UserCircle, value: 4 },
+  { name: "Leo", icon: UserCircle, value: 5 },
+  { name: "Virgo", icon: UserCircle, value: 6 },
+  { name: "Libra", icon: UserCircle, value: 7 },
+  { name: "Scorpio", icon: UserCircle, value: 8 },
+  { name: "Sagittarius", icon: UserCircle, value: 9 },
+  { name: "Capricorn", icon: UserCircle, value: 10 },
+  { name: "Aquarius", icon: UserCircle, value: 11 },
+  { name: "Pisces", icon: UserCircle, value: 12 }
 ];
 
 const HoroscopePage = () => {
-  const { type } = useParams(); // Optional if you use different types
   const [selectedZodiac, setSelectedZodiac] = useState(zodiacSigns[0]);
   const [horoscopeData, setHoroscopeData] = useState(null);
+  const [weeklyHoroscopeData, setWeeklyHoroscopeData] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [selectedPeriod, setSelectedPeriod] = useState('today'); // 'today', 'thisweek', 'nextweek'
 
   const handleZodiacSelect = async (sign) => {
     setSelectedZodiac(sign);
     setHoroscopeData(null);
+    setWeeklyHoroscopeData(null);
+    setSelectedPeriod('today');
+    await fetchTodaysHoroscope(sign);
+  };
+
+  const fetchTodaysHoroscope = async (sign) => {
     setLoading(true);
     const currentDate = new Date();
     const formattedDate = currentDate.toLocaleDateString('en-GB'); // DD/MM/YYYY
-     try {
-    const response = await axios.post('https://astro-talk-backend.onrender.com/prediction/daily', {
-      zodiacName: sign.name,
+
+    const params = {
+      zodiac: sign.value,
       date: formattedDate,
-    });
-    // console.log("✅ Horoscope Data:", response.data.response);
-    setHoroscopeData(response.data.response);
-  } catch (error) {
-    console.error("❌ API Error:", error?.response?.data || error.message);
-    setHoroscopeData(null);
-  } finally {
-    setLoading(false);
-  }
+      api_key: "349e48af-b57e-58aa-ad9c-623f1ab5a5f7",
+      split: true,
+      type: "big",
+      lang: "en"
+    };
+    
+    try {
+      const response = await axios.get('https://api.vedicastroapi.com/v3-json/prediction/daily-sun', {params});
+      setHoroscopeData(response.data.response);
+      setWeeklyHoroscopeData(null); // Clear weekly data when switching to today
+    } catch (error) {
+      console.error("❌ API Error:", error?.response?.data || error.message);
+      setHoroscopeData(null);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchWeeklyHoroscope = async (weekType) => {
+    setLoading(true);
+    setSelectedPeriod(weekType);
+    
+    const params = {
+      zodiac: selectedZodiac.value,
+      api_key: "349e48af-b57e-58aa-ad9c-623f1ab5a5f7",
+      week: weekType === 'thisweek' ? 'thisweek' : 'nextweek',
+      type: "big",
+      lang: "en"
+    };
+    
+    try {
+      const response = await axios.get('https://api.vedicastroapi.com/v3-json/prediction/weekly-sun', {params});
+      setWeeklyHoroscopeData({
+        ...response.data.response,
+        weekType: weekType
+      });
+      setHoroscopeData(null); // Clear daily data when switching to weekly
+    } catch (error) {
+      console.error("❌ Weekly API Error:", error?.response?.data || error.message);
+      setWeeklyHoroscopeData(null);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handlePeriodChange = (period) => {
+    setSelectedPeriod(period);
+    if (period === 'today') {
+      fetchTodaysHoroscope(selectedZodiac);
+    } else {
+      fetchWeeklyHoroscope(period);
+    }
   };
 
   return (
@@ -89,15 +155,74 @@ const HoroscopePage = () => {
               </div>
             </div>
 
-            {loading && <p className="text-center text-gray-600 mt-4">🔮 कुंडली प्राप्त की जा रही है...</p>}
+            {/* Period Selection Buttons */}
+            {(horoscopeData || weeklyHoroscopeData) && (
+              <motion.div 
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="flex justify-center mb-6"
+              >
+                <div className="bg-gray-100 p-1 rounded-lg flex gap-1">
+                  {[
+                    { key: 'today', label: "Today's Horoscope" },
+                    { key: 'thisweek', label: 'This Week' },
+                    { key: 'nextweek', label: 'Next Week' }
+                  ].map((period) => (
+                    <button
+                      key={period.key}
+                      onClick={() => handlePeriodChange(period.key)}
+                      className={`px-4 py-2 rounded-md font-medium transition-all duration-200 ${
+                        selectedPeriod === period.key
+                          ? 'bg-primary-theme text-gray-700 shadow-md'
+                          : 'text-gray-400 hover:text-primary-theme hover:bg-white'
+                      }`}
+                    >
+                      {period.label}
+                    </button>
+                  ))}
+                </div>
+              </motion.div>
+            )}
 
-            {horoscopeData && (
+            {loading && (
+              <div className="text-center py-8">
+                <div className="inline-flex items-center gap-3 bg-gradient-to-r from-red-50 to-pink-50 px-6 py-4 rounded-full border border-red-200">
+                  <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary-theme"></div>
+                  <p className="text-gray-600 font-medium">🔮 कुंडली प्राप्त की जा रही है...</p>
+                </div>
+              </div>
+            )}
+
+            {/* Today's Horoscope */}
+            {horoscopeData && selectedPeriod === 'today' && (
+              <TodaysHoroscope 
+                selectedZodiac={selectedZodiac} 
+                horoscopeData={horoscopeData} 
+              />
+            )}
+
+            {/* Weekly Horoscope */}
+            {weeklyHoroscopeData && (selectedPeriod === 'thisweek' || selectedPeriod === 'nextweek') && (
+              <WeeklyHoroscope 
+                selectedZodiac={selectedZodiac} 
+                weeklyData={weeklyHoroscopeData} 
+              />
+            )}
+          </CardContent>
+        </Card>
+      </motion.div>
+    </div>
+  );
+};
+
+const TodaysHoroscope = ({ selectedZodiac, horoscopeData }) => {
+  return (
               <motion.div
-                key={selectedZodiac.name}
+                key={`today-${selectedZodiac.name}`}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
-                className="mt-8 p-6 border border-red-200 rounded-lg bg-rose-50 shadow-inner"
+                className="mt-4 p-6 border border-red-200 rounded-lg bg-rose-50 shadow-inner"
               >
                 <div className="flex items-center mb-6">
                   {React.createElement(selectedZodiac.icon, { className: "w-16 h-16 text-primary-theme mr-4" })}
@@ -114,38 +239,346 @@ const HoroscopePage = () => {
                   </div>
                 </div>
 
-                <div className="space-y-5">
-                  <HoroscopeAspect icon={Heart} title="Love" text={horoscopeData.love} color="text-pink-500" />
-                  <HoroscopeAspect icon={Briefcase} title="Career" text={horoscopeData.career} color="text-blue-500" />
-                  <HoroscopeAspect icon={Sun} title="Health" text={horoscopeData.health} color="text-green-500" />
-                  <HoroscopeAspect icon={TrendingUp} title="Lucky color" text={horoscopeData.lucky_color} color="text-yellow-600" /><span className='w-5 p-3 h-5 ' style={{ backgroundColor: horoscopeData.lucky_color_code }} ></span>
-                  <HoroscopeAspect icon={TrendingUp} title="Finance" text={horoscopeData.finances} color="text-yellow-600" />
-                  <HoroscopeAspect icon={Info} title="Information" text={horoscopeData.bot_response} color="text-yellow-600" />
+                {/* Lucky Color & Number */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                  <div className="bg-white p-4 rounded-lg border border-red-100 shadow-sm">
+                    <div className="flex items-center mb-2">
+                      <Palette className="w-5 h-5 text-purple-500 mr-2" />
+                      <h3 className="font-semibold text-gray-700">Lucky Color</h3>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div
+                        className="w-8 h-8 rounded-full border-2 border-gray-300 shadow-sm"
+                        style={{ backgroundColor: horoscopeData.lucky_color_code }}
+                      ></div>
+                      <span className="font-medium text-gray-800 capitalize">{horoscopeData.lucky_color}</span>
+                      <code className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
+                        {horoscopeData.lucky_color_code}
+                      </code>
+                    </div>
+                  </div>
+
+                  <div className="bg-white p-4 rounded-lg border border-red-100 shadow-sm">
+                    <div className="flex items-center mb-2">
+                      <Hash className="w-5 h-5 text-blue-500 mr-2" />
+                      <h3 className="font-semibold text-gray-700">Lucky Numbers</h3>
+                    </div>
+                    <div className="flex gap-2">
+                      {horoscopeData.lucky_number.map((number, index) => (
+                        <span
+                          key={index}
+                          className="w-10 h-10 flex items-center justify-center bg-blue-100 text-blue-700 font-bold rounded-full border-2 border-blue-200"
+                        >
+                          {number}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
                 </div>
 
-                {horoscopeData.tip && (
-                  <div className="mt-6 p-4 bg-red-100 border-l-4 border-primary-theme rounded">
-                    <p className="font-semibold text-red-700">✨ एस्ट्रो टिप:</p>
-                    <p className="text-gray-700">{horoscopeData.tip}</p>
+                {/* Overall Score */}
+                <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-4 rounded-lg border border-green-200 mb-6">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center">
+                      <Star className="w-6 h-6 text-yellow-500 mr-2" />
+                      <h3 className="text-xl font-bold text-gray-800">Overall Score</h3>
+                    </div>
+                    <div className="text-right">
+                      <span className="text-2xl font-bold text-green-600">
+                        {horoscopeData.bot_response.total_score.score}/100
+                      </span>
+                    </div>
                   </div>
-                )}
+                  <div className="w-full bg-gray-200 rounded-full h-3">
+                    <div
+                      className="bg-gradient-to-r from-green-400 to-emerald-500 h-3 rounded-full transition-all duration-500"
+                      style={{ width: `${horoscopeData.bot_response.total_score.score}%` }}
+                    ></div>
+                  </div>
+                  <p className="text-gray-700 mt-3 text-sm leading-relaxed">
+                    {horoscopeData.bot_response.total_score.split_response}
+                  </p>
+                </div>
+
+                {/* Horoscope Aspects Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <HoroscopeAspect
+                    icon={Heart}
+                    title="Relationship"
+                    score={horoscopeData.bot_response.relationship.score}
+                    text={horoscopeData.bot_response.relationship.split_response}
+                    color="text-pink-500"
+                    bgColor="bg-pink-50"
+                  />
+                  <HoroscopeAspect
+                    icon={Briefcase}
+                    title="Career"
+                    score={horoscopeData.bot_response.career.score}
+                    text={horoscopeData.bot_response.career.split_response}
+                    color="text-blue-500"
+                    bgColor="bg-blue-50"
+                  />
+                  <HoroscopeAspect
+                    icon={DollarSign}
+                    title="Finances"
+                    score={horoscopeData.bot_response.finances.score}
+                    text={horoscopeData.bot_response.finances.split_response}
+                    color="text-green-500"
+                    bgColor="bg-green-50"
+                  />
+                  <HoroscopeAspect
+                    icon={Activity}
+                    title="Health"
+                    score={horoscopeData.bot_response.health.score}
+                    text={horoscopeData.bot_response.health.split_response}
+                    color="text-red-500"
+                    bgColor="bg-red-50"
+                  />
+                  <HoroscopeAspect
+                    icon={Users}
+                    title="Family"
+                    score={horoscopeData.bot_response.family.score}
+                    text={horoscopeData.bot_response.family.split_response}
+                    color="text-purple-500"
+                    bgColor="bg-purple-50"
+                  />
+                  <HoroscopeAspect
+                    icon={Smile}
+                    title="Friends"
+                    score={horoscopeData.bot_response.friends.score}
+                    text={horoscopeData.bot_response.friends.split_response}
+                    color="text-orange-500"
+                    bgColor="bg-orange-50"
+                  />
+                  <HoroscopeAspect
+                    icon={MapPin}
+                    title="Travel"
+                    score={horoscopeData.bot_response.travel.score}
+                    text={horoscopeData.bot_response.travel.split_response}
+                    color="text-cyan-500"
+                    bgColor="bg-cyan-50"
+                  />
+                  <HoroscopeAspect
+                    icon={User}
+                    title="Physique"
+                    score={horoscopeData.bot_response.physique.score}
+                    text={horoscopeData.bot_response.physique.split_response}
+                    color="text-indigo-500"
+                    bgColor="bg-indigo-50"
+                  />
+                </div>
+
+                {/* Status Section */}
+                <div className="mt-6 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg">
+                  <div className="flex items-center justify-between mb-2">
+                    <h3 className="text-lg font-semibold text-blue-700 flex items-center">
+                      <TrendingUp className="w-5 h-5 mr-2" />
+                      Daily Status
+                    </h3>
+                    <span className="text-lg font-bold text-blue-600">
+                      {horoscopeData.bot_response.status.score}/100
+                    </span>
+                  </div>
+                  <p className="text-gray-700 leading-relaxed">
+                    {horoscopeData.bot_response.status.split_response}
+                  </p>
+                </div>
               </motion.div>
-            )}
-          </CardContent>
-        </Card>
-      </motion.div>
+            )};
+
+
+const HoroscopeAspect = ({ icon, title, text, color, bgColor, score }) => {
+  const Icon = icon;
+
+  const getScoreColor = (score) => {
+    if (score >= 80) return 'text-green-500';
+    if (score >= 60) return 'text-yellow-500';
+    if (score >= 40) return 'text-orange-500';
+    return 'text-red-500';
+  };
+
+  const getScoreBg = (score) => {
+    if (score >= 80) return 'bg-green-500';
+    if (score >= 60) return 'bg-yellow-500';
+    if (score >= 40) return 'bg-orange-500';
+    return 'bg-red-500';
+  };
+
+  return (
+    <div className={`p-4 rounded-lg border ${bgColor} border-opacity-50 transition-all duration-200 hover:shadow-md`}>
+      <div className="flex items-start justify-between mb-3">
+        <div className="flex items-center">
+          <Icon className={`w-6 h-6 ${color} mr-3 flex-shrink-0`} />
+          <h4 className={`text-lg font-semibold ${color}`}>{title}</h4>
+        </div>
+        <div className="text-right">
+          <span className={`text-sm font-bold ${getScoreColor(score)}`}>
+            {score}/100
+          </span>
+          <div className="w-16 bg-gray-200 rounded-full h-2 mt-1">
+            <div
+              className={`h-2 rounded-full ${getScoreBg(score)}`}
+              style={{ width: `${score}%` }}
+            ></div>
+          </div>
+        </div>
+      </div>
+      <p className="text-gray-700 leading-relaxed text-sm">{text}</p>
     </div>
   );
 };
 
-const HoroscopeAspect = ({ icon, title, text, color }) => {
-  const Icon = icon;
+const WeeklyHoroscope = ({ selectedZodiac, weeklyData }) => {
+  const getWeekRange = () => {
+    const today = new Date();
+    const startOfWeek = new Date(today);
+    const dayOfWeek = today.getDay();
+    const diff = today.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1);
+    startOfWeek.setDate(diff);
+    
+    const endOfWeek = new Date(startOfWeek);
+    endOfWeek.setDate(startOfWeek.getDate() + 6);
+    
+    if (weeklyData.weekType === 'nextweek') {
+      startOfWeek.setDate(startOfWeek.getDate() + 7);
+      endOfWeek.setDate(endOfWeek.getDate() + 7);
+    }
+    
+    return {
+      start: startOfWeek.toLocaleDateString('hi-IN', { day: 'numeric', month: 'short' }),
+      end: endOfWeek.toLocaleDateString('hi-IN', { day: 'numeric', month: 'short', year: 'numeric' })
+    };
+  };
+
+  const weekRange = getWeekRange();
+
   return (
-    <div className="flex items-start">
-      <Icon className={`w-7 h-7 ${color} mr-3 mt-1 flex-shrink-0`} />
-      <div>
-        <h4 className={`text-xl font-semibold ${color}`}>{title}</h4>
-        <p className="text-gray-700 leading-relaxed">{text}</p>
+    <motion.div
+      key={`${weeklyData.weekType}-${selectedZodiac.name}`}
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="mt-4 p-6 border border-blue-200 rounded-lg bg-blue-50 shadow-inner"
+    >
+      <div className="flex items-center mb-6">
+        {React.createElement(selectedZodiac.icon, { className: "w-16 h-16 text-blue-600 mr-4" })}
+        <div>
+          <h2 className="text-2xl font-bold text-blue-600">{selectedZodiac.name}</h2>
+          <p className="text-gray-600 text-md">
+            {weeklyData.weekType === 'thisweek' ? 'This Week' : 'Next Week'} ({weekRange.start} - {weekRange.end})
+          </p>
+        </div>
+      </div>
+
+      {/* Overall Score */}
+      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-4 rounded-lg border border-blue-200 mb-6">
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center">
+            <Star className="w-6 h-6 text-yellow-500 mr-2" />
+            <h3 className="text-xl font-bold text-gray-800">Weekly Overall Score</h3>
+          </div>
+          <div className="text-right">
+            <span className="text-2xl font-bold text-blue-600">
+              {weeklyData.total_score}/100
+            </span>
+          </div>
+        </div>
+        <div className="w-full bg-gray-200 rounded-full h-3">
+          <div 
+            className="bg-gradient-to-r from-blue-400 to-indigo-500 h-3 rounded-full transition-all duration-500"
+            style={{ width: `${weeklyData.total_score}%` }}
+          ></div>
+        </div>
+      </div>
+
+      {/* Lucky Color & Number */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+        <div className="bg-white p-4 rounded-lg border border-blue-100 shadow-sm">
+          <div className="flex items-center mb-2">
+            <Palette className="w-5 h-5 text-purple-500 mr-2" />
+            <h3 className="font-semibold text-gray-700">Lucky Color</h3>
+          </div>
+          <div className="flex items-center gap-3">
+            <div 
+              className="w-8 h-8 rounded-full border-2 border-gray-300 shadow-sm"
+              style={{ backgroundColor: weeklyData.lucky_color_code }}
+            ></div>
+            <span className="font-medium text-gray-800 capitalize">{weeklyData.lucky_color}</span>
+            <code className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
+              {weeklyData.lucky_color_code}
+            </code>
+          </div>
+        </div>
+        
+        <div className="bg-white p-4 rounded-lg border border-blue-100 shadow-sm">
+          <div className="flex items-center mb-2">
+            <Hash className="w-5 h-5 text-blue-500 mr-2" />
+            <h3 className="font-semibold text-gray-700">Lucky Numbers</h3>
+          </div>
+          <div className="flex gap-2">
+            {weeklyData.lucky_number.map((number, index) => (
+              <span 
+                key={index}
+                className="w-10 h-10 flex items-center justify-center bg-blue-100 text-blue-700 font-bold rounded-full border-2 border-blue-200"
+              >
+                {number}
+              </span>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Weekly Aspects Grid */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+        <WeeklyAspect title="Career" score={weeklyData.career} />
+        <WeeklyAspect title="Relationship" score={weeklyData.relationship} />
+        <WeeklyAspect title="Finances" score={weeklyData.finances} />
+        <WeeklyAspect title="Health" score={weeklyData.health} />
+        <WeeklyAspect title="Family" score={weeklyData.family} />
+        <WeeklyAspect title="Friends" score={weeklyData.friends} />
+        <WeeklyAspect title="Travel" score={weeklyData.travel} />
+        <WeeklyAspect title="Status" score={weeklyData.status} />
+      </div>
+
+      {/* Detailed Prediction */}
+      <div className="bg-white p-4 rounded-lg border border-blue-200">
+        <h3 className="text-lg font-semibold text-blue-700 mb-3 flex items-center">
+          <TrendingUp className="w-5 h-5 mr-2" />
+          Weekly Prediction
+        </h3>
+        <p className="text-gray-700 leading-relaxed text-justify">
+          {weeklyData.bot_response}
+        </p>
+      </div>
+    </motion.div>
+  );
+};
+
+// Weekly Aspect Component
+const WeeklyAspect = ({ title, score }) => {
+  const getScoreColor = (score) => {
+    if (score >= 80) return 'text-green-500 bg-green-50 border-green-200';
+    if (score >= 60) return 'text-yellow-500 bg-yellow-50 border-yellow-200';
+    if (score >= 40) return 'text-orange-500 bg-orange-50 border-orange-200';
+    return 'text-red-500 bg-red-50 border-red-200';
+  };
+
+  const scoreColor = getScoreColor(score);
+
+  return (
+    <div className={`p-3 rounded-lg border text-center transition-all duration-200 hover:shadow-md ${scoreColor}`}>
+      <h4 className="font-semibold text-gray-700 text-sm mb-2">{title}</h4>
+      <div className="flex flex-col items-center">
+        <span className="text-lg font-bold">{score}/100</span>
+        <div className="w-full bg-gray-200 rounded-full h-2 mt-1">
+          <div 
+            className="h-2 rounded-full transition-all duration-500"
+            style={{ 
+              width: `${score}%`,
+              backgroundColor: score >= 80 ? '#10B981' : score >= 60 ? '#F59E0B' : score >= 40 ? '#F97316' : '#EF4444'
+            }}
+          ></div>
+        </div>
       </div>
     </div>
   );
